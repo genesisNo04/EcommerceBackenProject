@@ -5,21 +5,28 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-public class Item {
+@NoArgsConstructor
+public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String itemName;
+    private User user;
 
-    private double price;
+    private LocalDateTime createdAt;
 
-    private int stocks;
+    private LocalDateTime modifiedAt;
 
+    public ShoppingCart(User user) {
+        this.user = user;
+    }
 }
