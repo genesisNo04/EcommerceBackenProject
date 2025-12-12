@@ -1,16 +1,13 @@
 package com.example.EcommerceBackendProject.Entity;
 
-import com.example.EcommerceBackendProject.Enum.Category;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,25 +19,45 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String productName;
 
     private String description;
 
-    private double price;
+    @Column(nullable = false)
+    private BigDecimal price;
 
-    private int stockQuantity;
+    private Integer stockQuantity;
 
-    private List<Category> categoryList;
+    @ManyToMany
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns  = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
 
-    public Product(String productName, String description, double price, int stockQuantity, List<Category> categoryList) {
+    public Product(String productName, String description, BigDecimal price, Integer stockQuantity, Set<Category> categories) {
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.categoryList = categoryList;
+        this.categories = categories;
+    }
+
+    @PrePersist
+    private void createdAt() {
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void modifiedAt() {
+        this.modifiedAt = LocalDateTime.now();
     }
 }
