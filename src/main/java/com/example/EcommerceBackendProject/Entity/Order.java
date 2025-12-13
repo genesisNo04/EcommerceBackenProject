@@ -1,13 +1,12 @@
 package com.example.EcommerceBackendProject.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.EcommerceBackendProject.Enum.Status;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +20,32 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private BigDecimal totalAmount;
+
+    private Status status;
+
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 
-    private LocalDateTime createAt;
+    @OneToOne(mappedBy = "order")
+    private Payment payment;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
+    @PrePersist
+    private void createdAt() {
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void modifiedAt() {
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

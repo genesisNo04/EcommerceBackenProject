@@ -5,22 +5,28 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category {
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    @ManyToOne
+    private User user;
 
-    private String description;
+    private String street;
 
-    @ManyToMany(mappedBy = "categories")
-    private List<Product> products;
+    private String city;
+
+    private String state;
+
+    private String country;
+
+    private String zipCode;
+
+    private boolean isDefault;
 }

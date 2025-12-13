@@ -2,40 +2,30 @@ package com.example.EcommerceBackendProject.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-public class ShoppingCart {
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
-    private Set<ShoppingCartItem> items;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    private int rating;
+
+    private String comment;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
-
-    public ShoppingCart(User user) {
-        this.user = user;
-    }
 
     @PrePersist
     private void createdAt() {

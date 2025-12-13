@@ -37,17 +37,20 @@ public class Product {
     )
     private Set<Category> categories;
 
+    private String imageUrl;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
 
-    public Product(String productName, String description, BigDecimal price, Integer stockQuantity, Set<Category> categories) {
+    public Product(String productName, String description, BigDecimal price, Integer stockQuantity, Set<Category> categories, String imageUrl) {
         this.productName = productName;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.categories = categories;
+        this.imageUrl = imageUrl;
     }
 
     @PrePersist
