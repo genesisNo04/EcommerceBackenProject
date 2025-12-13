@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -32,8 +32,8 @@ public class User {
 
     private String lastName;
 
-    @OneToMany(mappedBy = "user")
-    private Address address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> address;
 
     private String phoneNumber;
 
@@ -55,7 +55,7 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orderList;
 
-    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, Address address, String lastName, String firstName, String password, String email, String username) {
+    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, List<Address> address, String lastName, String firstName, String password, String email, String username) {
         this.cart = cart;
         this.roles = roles;
         this.phoneNumber = phoneNumber;
