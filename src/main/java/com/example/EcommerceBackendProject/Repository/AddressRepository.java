@@ -23,6 +23,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
     Optional<Address> findByUserUsernameAndIsDefaultTrue(String username);
 
     //@Modifying: tell JPA that this query modifies data
+    //TODO: remember to set transaction in service layer
     @Modifying
     @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.username = :username")
     int resetDefaultForUser(@Param("username") String username);
