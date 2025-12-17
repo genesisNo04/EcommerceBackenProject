@@ -18,13 +18,13 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     List<Address> findByUserId(Long userId);
 
-    boolean existsByUserUsernameAndIsDefaultTrue(String username);
+    boolean existsByUserIdAndIsDefaultTrue(Long userId);
 
-    Optional<Address> findByUserUsernameAndIsDefaultTrue(String username);
+    Optional<Address> findByUserIdAndIsDefaultTrue(Long userId);
 
     //@Modifying: tell JPA that this query modifies data
     //TODO: remember to set transaction in service layer
     @Modifying
-    @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.username = :username")
-    int resetDefaultForUser(@Param("username") String username);
+    @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.id = :id")
+    int resetDefaultForUser(@Param("id") Long id);
 }

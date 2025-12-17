@@ -1,6 +1,8 @@
 package com.example.EcommerceBackendProject.Repository;
 
 import com.example.EcommerceBackendProject.Entity.OrderItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,12 +13,13 @@ import java.util.Optional;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
-    List<OrderItem> findByProductId(Long productId);
+    Page<OrderItem> findByProductIdAndProductUserId(Long productId, Long userId, Pageable pageable);
 
-    List<OrderItem> findByOrderId(Long id);
+    Page<OrderItem> findByOrderIdAndProductUserId(Long orderId, Long userId, Pageable pageable);
 
-    List<OrderItem> findByOrderIdIn(List<Long> orderIds);
+    Page<OrderItem> findByOrderIdInAndProductUserId(List<Long> orderIds, Long userId, Pageable pageable);
 
-    @Query("SELECT oi FROM OrderItem oi JOIN oi.order o WHERE o.user.id = :userId")
-    List<OrderItem> findByUserId(Long orderId);
+    Page<OrderItem> findByOrderUserId(Long userId, Pageable pageable);
+//    @Query("SELECT oi FROM OrderItem oi JOIN oi.order o WHERE o.user.id = :userId")
+//    List<OrderItem> findByUserId(Long userId);
 }

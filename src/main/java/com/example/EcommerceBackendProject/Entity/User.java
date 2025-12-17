@@ -53,7 +53,7 @@ public class User {
     private ShoppingCart cart;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Order> orderList;
+    private List<Order> orders;
 
     public User(ShoppingCart cart, List<Role> roles, String phoneNumber, List<Address> address, String lastName, String firstName, String password, String email, String username) {
         this.cart = cart;
