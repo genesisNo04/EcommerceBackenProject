@@ -27,6 +27,7 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column(nullable = false)
     private Integer stockQuantity;
 
     @ManyToMany

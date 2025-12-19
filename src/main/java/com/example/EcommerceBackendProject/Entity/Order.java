@@ -26,6 +26,7 @@ public class Order {
 
     private BigDecimal totalAmount;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

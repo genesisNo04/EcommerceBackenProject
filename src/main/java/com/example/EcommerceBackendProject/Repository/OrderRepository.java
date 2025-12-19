@@ -22,5 +22,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     //@Query("SELECT o FROM Order o JOIN User u WHERE createdAt BETWEEN :start AND :end AND u.id == :userId")
     Page<Order> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<Order> findByStatus(Long userId, Status status, Pageable pageable);
+    Page<Order> findByUserIdAndStatus(Long userId, Status status, Pageable pageable);
 }
