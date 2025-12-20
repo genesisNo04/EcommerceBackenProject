@@ -1,4 +1,24 @@
 package com.example.EcommerceBackendProject.Service;
 
-public class UserService {
+import com.example.EcommerceBackendProject.Entity.User;
+
+import java.util.Optional;
+
+public interface UserService {
+
+    Optional<User> findById(Long userId);
+
+    Optional<User> findByUsername(String username);
+
+    Optional<User> findByEmail(String email);
+
+    User createUser(User user);
+
+    User updateUser(Long userId, User user);
+
+    void deleteUser(Long userId);
+
+    void changePassword(Long userId, String newPassword);
+
+
 }

@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"})
+)
 public class Review {
 
     @Id
@@ -23,6 +26,7 @@ public class Review {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(nullable = false)
     private int rating;
 
     private String comment;

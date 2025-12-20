@@ -12,6 +12,9 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = "user_id")
+)
 public class ShoppingCart {
 
     @Id
