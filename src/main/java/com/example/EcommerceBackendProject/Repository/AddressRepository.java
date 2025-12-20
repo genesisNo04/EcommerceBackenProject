@@ -13,21 +13,22 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    List<Address> findByUserUsername(String username);
-
     List<Address> findByUserId(Long userId);
 
     boolean existsByUserIdAndIsDefaultTrue(Long userId);
 
     Optional<Address> findByUserIdAndIsDefaultTrue(Long userId);
 
-    //@Modifying: tell JPA that this query modifies data
-    //TODO: remember to set transaction in service layer
+    Optional<Address> findByUserIdAndId(Long userId, Long addressId);
+
     @Modifying
-    @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.id = :id")
-    int resetDefaultForUser(@Param("id") Long id);
+    @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.id = :userId")
+    void resetDefaultForUser(@Param("userId") Long userId);
 
     @Modifying
     @Query("UPDATE Address a SET a.isDefault = true WHERE a.user.id = :userId and a.id = :addressId")
-    int updateDefaultForUser(@Param("userId") Long userId, @Param("addressId") Long addressId);
+    void updateDefaultForUser(@Param("userId") Long userId, @Param("addressId") Long addressId);
+
+    Optional<Address> findFirstByUserIdOrderByCreatedAtAsc(Long userId);
+
 }
