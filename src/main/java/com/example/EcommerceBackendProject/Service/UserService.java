@@ -6,11 +6,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> findById(Long userId);
+    User findById(Long userId);
 
-    Optional<User> findByUsername(String username);
+    User findByUsername(String username);
 
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 
     User createUser(User user);
 

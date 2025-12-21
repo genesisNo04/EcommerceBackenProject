@@ -25,9 +25,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<Address> getUserAddresses(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NoUserFoundException("No user found with id: " + userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
         return addressRepository.findByUserId(userId);
     }
 
@@ -51,9 +50,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address getDefaultAddress(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NoUserFoundException("No user found with id: " + userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
         return addressRepository.findByUserIdAndIsDefaultTrue(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User does not have a default address"));
@@ -62,11 +60,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public Address updateAddress(Long addressId, Address address, Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NoUserFoundException("No user found with id: " + userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
-        Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId).orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+        Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
+                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
         if (address.isDefault()) {
             addressRepository.resetDefaultForUser(userId);
@@ -85,9 +83,8 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public void deleteAddress(Long addressId, Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new NoUserFoundException("No user found with id: " + userId);
-        }
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
         Address addressToDelete = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
@@ -108,8 +105,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Transactional
     public void setDefaultAddress(Long addressId, Long userId) {
-
-        Address address = addressRepository.findByUserIdAndId(userId, addressId)
+        addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
         addressRepository.resetDefaultForUser(userId);
