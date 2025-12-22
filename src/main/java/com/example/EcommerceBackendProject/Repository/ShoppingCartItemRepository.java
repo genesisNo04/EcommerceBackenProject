@@ -14,7 +14,7 @@ public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartIt
 
     Page<ShoppingCartItem> findByShoppingCartId(Long shoppingCartId, Pageable pageable);
 
-    Optional<ShoppingCartItem> findByShoppingCartIdAndProductId(Long cartId, Long productId);
+    Optional<ShoppingCartItem> findByShoppingCartIdAndProductIdAndShoppingCartUserId(Long cartId, Long productId, Long userId);
 
     void deleteByShoppingCartId(Long cartId);
 

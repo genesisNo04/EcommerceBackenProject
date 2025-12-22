@@ -2,6 +2,8 @@ package com.example.EcommerceBackendProject.Repository;
 
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -10,4 +12,5 @@ import java.util.Optional;
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
 
     Optional<ShoppingCart> findByUserId(Long userId);
+
 }

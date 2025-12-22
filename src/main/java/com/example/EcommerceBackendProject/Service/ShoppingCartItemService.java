@@ -10,7 +10,7 @@ public interface ShoppingCartItemService {
 
     ShoppingCartItem addItemToCart(Long cartId, Long productId, int quantity, Long userId);
 
-    ShoppingCartItem updateItemQuantity(Long cartItemId, int quantity, Long userId);
+    ShoppingCartItem updateItemQuantity(Long cartId, Long productId, int quantity, Long userId);
 
     void removeItemFromCart(Long cartItemId, Long userId);
 
