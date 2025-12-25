@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public interface ReviewService {
 
-    Review createReview(Review review, Long userId);
+    Review createReview(Review review, Long userId, Long productId);
 
     Page<Review> findByUserId(Long userId, Pageable pageable);
 
@@ -28,7 +28,7 @@ public interface ReviewService {
 
     Page<Review> findByRatingBetween(int startRating, int endRating, Pageable pageable);
 
-    Review updateReview(Review review, Long userId);
+    Review updateReview(Review review, Long reviewId, Long userId);
 
     void deleteReview(Long reviewId, Long userId);
 }

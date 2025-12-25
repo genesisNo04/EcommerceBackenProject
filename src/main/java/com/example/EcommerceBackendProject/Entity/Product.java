@@ -30,7 +30,7 @@ public class Product {
     @Column(nullable = false)
     private Integer stockQuantity;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_category",
             joinColumns = @JoinColumn(name = "product_id"),
