@@ -21,11 +21,11 @@ public interface PaymentService {
 
     Page<Payment> findPaymentByCreatedAtBetween(LocalDateTime start, LocalDateTime end, Long userId, Pageable pageable);
 
-    Payment createPayment(Payment payment, Long userId);
+    Payment createPayment(Payment payment, Long orderId, Long userId);
 
-    Payment deletePayment(Long paymentId, Long userId);
+    void deletePayment(Long paymentId, Long userId);
 
-    Payment updatePayment(Payment payment, Long userId);
+    Payment updatePayment(Long paymentId, Payment updatedPayment, Long userId);
 
     Page<Payment> findPaymentByUserId(Long userId, Pageable pageable);
 }

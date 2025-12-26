@@ -3,6 +3,7 @@ package com.example.EcommerceBackendProject.Repository;
 import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.Status;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -23,4 +25,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Page<Order> findByUserIdAndStatus(Long userId, Status status, Pageable pageable);
+
+    Optional<Order> findByIdAndUserId(Long orderId, Long userId);
 }
