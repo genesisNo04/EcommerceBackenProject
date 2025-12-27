@@ -3,6 +3,7 @@ package com.example.EcommerceBackendProject.Entity;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Enum.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,7 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
@@ -42,6 +44,7 @@ public class Payment {
     private Status status;
 
     @Column(nullable = false, precision = 15, scale = 2)
+    @NotNull
     private BigDecimal amount;
 
     @Column(nullable = false)

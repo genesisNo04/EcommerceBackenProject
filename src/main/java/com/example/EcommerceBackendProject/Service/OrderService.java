@@ -17,11 +17,11 @@ public interface OrderService {
 
     Order createOrder(Order order, Long userId);
 
-    Order updateOrder(Order order, Long userId);
+    Order updateOrder(Order orderUpdated, Long orderId, Long userId);
 
     Order getOrderById(Long orderId, Long userId);
 
-    Order deleteOrder(Long orderId, Long userId);
+    void deleteOrder(Long orderId, Long userId);
 
     Page<Order> findAllOrders(Pageable pageable);
 }

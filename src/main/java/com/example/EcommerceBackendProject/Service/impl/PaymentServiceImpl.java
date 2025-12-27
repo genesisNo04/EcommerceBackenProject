@@ -64,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
         if(paymentRepository.findByOrderIdAndOrderUserId(orderId, userId).isPresent()) {
             throw new ResourceAlreadyExistsException("Payment already exists for this order");
         }
-        
+
         userRepository.findById(userId).orElseThrow(() -> new NoUserFoundException("No user found"));
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
