@@ -33,13 +33,17 @@ public class User {
     private String lastName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> address;
+    private List<Address> addresses;
 
     private String phoneNumber;
 
     //ElementCollection: tell spring this is a collection of basic or embeddable types, not an entity
     //JPA will create a separate join table to store the list of roles per user
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
     //This tell spring how to store the enum, there are 2 type, first is string and ordinal (index of ENUM): 0,1,2
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -55,11 +59,11 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, List<Address> address, String lastName, String firstName, String password, String email, String username) {
+    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, List<Address> addresses, String lastName, String firstName, String password, String email, String username) {
         this.cart = cart;
         this.roles = roles;
         this.phoneNumber = phoneNumber;
-        this.address = address;
+        this.addresses = addresses;
         this.lastName = lastName;
         this.firstName = firstName;
         this.password = password;

@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("SELECT c FROM category c JOIN c.products p WHERE p.id = :productId")
+    @Query("SELECT c FROM Category c JOIN c.products p WHERE p.id = :productId")
     List<Category> findByProductId(Long productId);
+
+    boolean existsByName(String name);
 }

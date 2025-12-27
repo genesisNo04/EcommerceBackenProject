@@ -13,12 +13,6 @@ import java.util.Optional;
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
-    Page<OrderItem> findByProductIdAndProductUserId(Long productId, Long userId, Pageable pageable);
-
-    Page<OrderItem> findByOrderIdAndProductUserId(Long orderId, Long userId, Pageable pageable);
-
-    Page<OrderItem> findByOrderIdInAndProductUserId(List<Long> orderIds, Long userId, Pageable pageable);
-
     Page<OrderItem> findByOrderUserId(Long userId, Pageable pageable);
 //    @Query("SELECT oi FROM OrderItem oi JOIN oi.order o WHERE o.user.id = :userId")
 //    List<OrderItem> findByUserId(Long userId);

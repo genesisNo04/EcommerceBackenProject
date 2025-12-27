@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"cart_id", "product_id"})
+)
 public class ShoppingCartItem {
 
     @Id
@@ -21,8 +24,10 @@ public class ShoppingCartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
     private BigDecimal priceSnapshot;
 
     @ManyToOne(optional = false)
