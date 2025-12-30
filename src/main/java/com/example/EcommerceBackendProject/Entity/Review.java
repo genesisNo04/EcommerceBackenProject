@@ -1,10 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +16,8 @@ import java.time.LocalDateTime;
         indexes = {
             @Index(name = "idx_review_user", columnList = "user_id"),
             @Index(name = "idx_review_product", columnList = "product_id"),
-            @Index(name = "idx_review_rating", columnList = "rating")
+            @Index(name = "idx_review_rating", columnList = "rating"),
+            @Index(name = "idx_review_product_rating", columnList = "product_id, rating")
         }
 )
 @NoArgsConstructor
@@ -38,13 +35,9 @@ public class Review {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @NotNull
     @Column(nullable = false)
-    @Min(1)
-    @Max(5)
     private int rating;
 
-    @Size(max = 1000)
     private String comment;
 
     private LocalDateTime createdAt;

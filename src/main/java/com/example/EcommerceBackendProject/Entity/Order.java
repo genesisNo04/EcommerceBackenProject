@@ -31,9 +31,11 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

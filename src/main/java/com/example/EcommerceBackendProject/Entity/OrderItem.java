@@ -27,6 +27,7 @@ public class OrderItem {
 
     private int quantity;
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal priceAtPurchase;
 
     public OrderItem(Order order, Product product, int quantity, BigDecimal priceAtPurchase) {

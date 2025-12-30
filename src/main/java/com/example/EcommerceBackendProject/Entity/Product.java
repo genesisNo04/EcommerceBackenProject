@@ -7,12 +7,18 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(
+        indexes = {
+                @Index(name = "idx_product_name", columnList = "productName")
+        }
+)
 public class Product {
 
     @Id
@@ -22,6 +28,7 @@ public class Product {
     @Column(nullable = false)
     private String productName;
 
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -36,7 +43,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns  = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    private Set<Category> categories = new HashSet<>();
 
     private String imageUrl;
 
