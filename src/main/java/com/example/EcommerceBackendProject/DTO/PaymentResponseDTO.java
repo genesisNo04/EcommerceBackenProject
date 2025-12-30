@@ -23,5 +23,5 @@ public class PaymentResponseDTO {
 
     private BigDecimal amount;
 
-    private LocalDateTime paymentDate;
+    private LocalDateTime createdAt;
 }
