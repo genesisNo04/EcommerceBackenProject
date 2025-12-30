@@ -55,7 +55,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Page<Payment> findPaymentByCreatedAtBetween(LocalDateTime start, LocalDateTime end, Long userId, Pageable pageable) {
-        return paymentRepository.findByPaymentDateBetweenAndOrderUserId(start, end, userId, pageable);
+        return paymentRepository.findByCreatedAtBetweenAndOrderUserId(start, end, userId, pageable);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
+import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Enum.Status;
 import jakarta.persistence.*;
@@ -36,22 +37,20 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private PaymentStatus status;
 
     @Column(nullable = false, precision = 15, scale = 2)
-    @NotNull
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private LocalDateTime paymentDate;
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreated() {
-        this.paymentDate = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 }

@@ -16,6 +16,4 @@ public class CategoryResponseDTO {
     private String name;
 
     private String description;
-
-    private Set<Long> productIds = new HashSet<>();
 }
