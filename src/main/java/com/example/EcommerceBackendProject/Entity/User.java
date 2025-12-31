@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class User {
     private String lastName;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     private String phoneNumber;
 
@@ -59,11 +60,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, List<Address> addresses, String lastName, String firstName, String password, String email, String username) {
+    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, String lastName, String firstName, String password, String email, String username) {
         this.cart = cart;
         this.roles = roles;
         this.phoneNumber = phoneNumber;
-        this.addresses = addresses;
         this.lastName = lastName;
         this.firstName = firstName;
         this.password = password;
