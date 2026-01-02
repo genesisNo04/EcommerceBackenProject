@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Mapper;
 
+import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressResponseDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 
@@ -20,5 +21,18 @@ public class AddressMapper {
         addressResponseDTO.setUserId(address.getUser() != null ? address.getUser().getId() : null);
 
         return addressResponseDTO;
+    }
+
+    public static Address toEntity(AddressRequestDTO requestDTO) {
+        Address newAddress = new Address();
+
+        newAddress.setStreet(requestDTO.getStreet());
+        newAddress.setCity(requestDTO.getCity());
+        newAddress.setState(requestDTO.getState());
+        newAddress.setCountry(requestDTO.getCountry());
+        newAddress.setZipCode(requestDTO.getZipCode());
+        newAddress.setDefault(requestDTO.isDefault());
+
+        return newAddress;
     }
 }

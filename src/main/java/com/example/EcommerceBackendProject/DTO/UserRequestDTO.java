@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserRequestDTO {
@@ -26,7 +28,7 @@ public class UserRequestDTO {
     private String lastName;
 
     @NotNull
-    private AddressRequestDTO address;
+    private List<AddressRequestDTO> address;
 
     @NotNull
     private String phoneNumber;
