@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Enum.Status;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,9 @@ public interface OrderService {
 
     Page<Order> findByStatus(Long userId, Status status, Pageable pageable);
 
-    Order createOrder(Order order, Long userId);
+    Order createOrder(OrderRequestDTO orderRequestDTO, Long userId);
 
-    Order updateOrder(Order orderUpdated, Long orderId, Long userId);
+    Order updateOrder(OrderRequestDTO orderRequestDTO, Long orderId, Long userId);
 
     Order getOrderById(Long orderId, Long userId);
 

@@ -1,9 +1,11 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
+import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
@@ -32,10 +34,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address createAddress(Address address, Long userId) {
+    public Address createAddress(AddressRequestDTO addressRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
-
+        Address address = AddressMapper.toEntity(addressRequestDTO);
         address.setUser(user);
 
         if (address.isDefault()) {
@@ -59,24 +61,24 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address updateAddress(Long addressId, Address address, Long userId) {
+    public Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        if (address.isDefault()) {
+        updatedAddress.setStreet(addressRequestDTO.getStreet());
+        updatedAddress.setState(addressRequestDTO.getState());
+        updatedAddress.setCity(addressRequestDTO.getCity());
+        updatedAddress.setCountry(addressRequestDTO.getCountry());
+        updatedAddress.setZipCode(addressRequestDTO.getZipCode());
+        updatedAddress.setDefault(addressRequestDTO.isDefault());
+
+        if (updatedAddress.isDefault()) {
             addressRepository.resetDefaultForUser(userId);
         }
 
-        updatedAddress.setStreet(address.getStreet());
-        updatedAddress.setState(address.getState());
-        updatedAddress.setCity(address.getCity());
-        updatedAddress.setCountry(address.getCountry());
-        updatedAddress.setZipCode(address.getZipCode());
-        updatedAddress.setDefault(address.isDefault());
-        addressRepository.save(updatedAddress);
         return updatedAddress;
     }
 

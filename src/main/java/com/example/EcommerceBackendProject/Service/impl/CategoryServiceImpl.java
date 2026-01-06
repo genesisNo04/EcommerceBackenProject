@@ -1,8 +1,10 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
+import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Service.CategoryService;
@@ -22,11 +24,12 @@ public class CategoryServiceImpl implements CategoryService {
     private ProductRepository productRepository;
 
     @Override
-    public Category createCategory(Category category) {
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new ResourceAlreadyExistsException("Category is already existed with this name: " + category.getName());
+    public Category createCategory(CategoryRequestDTO categoryRequestDTO) {
+        if (categoryRepository.existsByName(categoryRequestDTO.getName())) {
+            throw new ResourceAlreadyExistsException("Category is already existed with this name: " + categoryRequestDTO.getName());
         }
-        return categoryRepository.save(category);
+
+        return categoryRepository.save(CategoryMapper.toEntity(categoryRequestDTO));
     }
 
     @Override

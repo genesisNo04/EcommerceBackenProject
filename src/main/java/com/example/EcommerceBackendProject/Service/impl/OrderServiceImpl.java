@@ -1,12 +1,18 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
+import com.example.EcommerceBackendProject.Entity.OrderItem;
+import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.Status;
+import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
+import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
+import com.example.EcommerceBackendProject.Service.OrderItemService;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -24,6 +32,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserRepository userRepository;
+
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public Page<Order> findOrdersByUserId(Long userId, Pageable pageable) {
@@ -42,22 +54,98 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order createOrder(Order order, Long userId) {
+    public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
                         .orElseThrow(() -> new NoUserFoundException("No user found!"));
+        Order order = new Order();
+        order.setStatus(Status.IN_PROCESS);
         order.setUser(user);
-        return orderRepository.save(order);
+
+        order = orderRepository.save(order);
+
+        for (var itemDto : orderRequestDTO.getOrderItems()) {
+            Product product = productRepository.findById(itemDto.getProductId())
+                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+
+            if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
+                throw new InvalidOrderItemQuantityException("Invalid quantity");
+            }
+
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(product);
+            item.setQuantity(itemDto.getQuantity());
+            item.setPriceAtPurchase(product.getPrice());
+
+            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            order.getOrderItems().add(item);
+        }
+
+        BigDecimal total = order.getOrderItems().stream()
+                        .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
+                                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotalAmount(total);
+        return order;
     }
 
     @Override
     @Transactional
-    public Order updateOrder(Order orderUpdated, Long orderId, Long userId) {
+    public Order updateOrder(OrderRequestDTO orderRequestDTO, Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
-        order.setOrderItems(orderUpdated.getOrderItems());
-        order.setTotalAmount(orderUpdated.getTotalAmount());
-        order.setStatus(orderUpdated.getStatus());
-        return orderRepository.save(order);
+
+        if (order.getStatus() != Status.IN_PROCESS) {
+            throw new IllegalStateException("Only IN_PROCESS orders can be updated");
+        }
+
+        if (order.getPayment() != null) {
+            throw new IllegalStateException("Cannot modify a paid order");
+        }
+
+        for (var itemDto : orderRequestDTO.getOrderItems()) {
+            Product product = productRepository.findById(itemDto.getProductId())
+                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+
+            if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
+                throw new InvalidOrderItemQuantityException("Invalid quantity");
+            }
+
+            Optional<OrderItem> existingItem = order.getOrderItems()
+                    .stream()
+                    .filter(i -> i.getProduct().getId().equals(product.getId()))
+                    .findFirst();
+            OrderItem item;
+
+            if (existingItem.isPresent()) {
+                item = existingItem.get();
+                int newQuantity = item.getQuantity() + itemDto.getQuantity();
+                if (newQuantity > product.getStockQuantity()) {
+                    throw new InvalidOrderItemQuantityException("Invalid quantity");
+                }
+
+                item.setQuantity(newQuantity);
+            } else {
+                item = new OrderItem();
+                item.setOrder(order);
+                item.setProduct(product);
+                item.setQuantity(itemDto.getQuantity());
+                item.setPriceAtPurchase(product.getPrice());
+            }
+
+            int oldQuantity = item.getQuantity();
+            item.setQuantity(itemDto.getQuantity());
+            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            order.getOrderItems().add(item);
+        }
+
+        BigDecimal total = order.getOrderItems().stream()
+                .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotalAmount(total);
+
+        return order;
     }
 
     @Override

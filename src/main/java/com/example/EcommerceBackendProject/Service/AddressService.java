@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 
 import java.util.List;
@@ -9,11 +10,11 @@ public interface AddressService {
 
     List<Address> getUserAddresses(Long userId);
 
-    Address createAddress(Address address, Long userId);
+    Address createAddress(AddressRequestDTO addressRequestDTO, Long userId);
 
     Address getDefaultAddress(Long userId);
 
-    Address updateAddress(Long addressId, Address address, Long userId);
+    Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId);
 
     void deleteAddress(Long addressId, Long userId);
 
