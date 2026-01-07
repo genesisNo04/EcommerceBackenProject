@@ -9,23 +9,26 @@ import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsExcept
 import com.example.EcommerceBackendProject.Mapper.UserMapper;
 import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
+import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final AddressService addressService;
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
+    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, AddressService addressService) {
+        this.userRepository = userRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.addressService = addressService;
+    }
 
     @Override
     public User findById(Long userId) {
@@ -53,14 +56,12 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = UserMapper.toEntity(userRequestDTO);
-        List<Role> roles = new ArrayList<>();
-        roles.add(Role.USER);
-        user.setRoles(roles);
+        user.setRoles(new ArrayList<>(List.of(Role.USER)));
+        user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
 
         ShoppingCart shoppingCart = new ShoppingCart();
         user.setCart(shoppingCart);
         shoppingCart.setUser(user);
-        shoppingCartRepository.save(shoppingCart);
 
         return userRepository.save(user);
     }
@@ -72,7 +73,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         oldUser.setFirstName(userRequestDTO.getFirstName());
         oldUser.setLastName(userRequestDTO.getLastName());
-//        oldUser.setAddresses(userRequestDTO.getAddress());
+        oldUser.getAddresses().clear();
+        oldUser.getAddresses().addAll(addressService.resolveAddresses(userRequestDTO.getAddress(), oldUser));
         oldUser.setPhoneNumber(userRequestDTO.getPhoneNumber());
         return userRepository.save(oldUser);
     }

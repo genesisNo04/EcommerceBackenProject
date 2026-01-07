@@ -118,13 +118,25 @@ public class AddressServiceImpl implements AddressService {
         addressRepository.updateDefaultForUser(userId, addressId);
     }
 
+    @Override
     @Transactional
-    public List<Category> resolveAddresses(List<AddressRequestDTO> dtos) {
-        if (dtos == null || dtos.isEmpty()) {
+    public List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user) {
+        if (dto == null || dto.isEmpty()) {
             return new ArrayList<>();
         }
 
+        long defaultCount = dto.stream().filter(AddressRequestDTO::isDefault).count();
+        if (defaultCount > 1) {
+            throw new IllegalArgumentException("Only one default address allowed");
+        }
 
-        return null;
+        List<Address> addresses = new ArrayList<>();
+        for (AddressRequestDTO request : dto) {
+            Address newAddress = AddressMapper.toEntity(request);
+            newAddress.setUser(user);
+            addresses.add(newAddress);
+        }
+
+        return addresses;
     }
 }

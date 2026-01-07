@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Service;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
+import com.example.EcommerceBackendProject.Entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,6 @@ public interface AddressService {
     void deleteAddress(Long addressId, Long userId);
 
     void setDefaultAddress(Long addressId, Long userId);
+
+    List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user);
 }
