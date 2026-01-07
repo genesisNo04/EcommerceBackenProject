@@ -2,9 +2,11 @@ package com.example.EcommerceBackendProject.Repository;
 
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -26,10 +28,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByProductNameContainingIgnoreCase(String keyword, Pageable pageable);
 
     @Query("SELECT p.price FROM Product p WHERE p.id = :productId")
-    BigDecimal findPriceById(Long productId);
+    Optional<BigDecimal> findPriceById(Long productId);
 
     @Query("SELECT p.categories FROM Product p WHERE p.id = :productId")
     List<Category> findCategoryById(Long productId);
 
     Page<Product> findByCategories(Category category, Pageable pageable);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Product> findById(Long id);
 }

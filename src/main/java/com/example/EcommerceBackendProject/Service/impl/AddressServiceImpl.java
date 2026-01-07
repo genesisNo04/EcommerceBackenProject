@@ -1,9 +1,14 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
+import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
+import com.example.EcommerceBackendProject.Mapper.AddressMapper;
+import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
@@ -12,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -32,10 +38,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address createAddress(Address address, Long userId) {
+    public Address createAddress(AddressRequestDTO addressRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
-
+        Address address = AddressMapper.toEntity(addressRequestDTO);
         address.setUser(user);
 
         if (address.isDefault()) {
@@ -59,24 +65,24 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address updateAddress(Long addressId, Address address, Long userId) {
+    public Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        if (address.isDefault()) {
+        updatedAddress.setStreet(addressRequestDTO.getStreet());
+        updatedAddress.setState(addressRequestDTO.getState());
+        updatedAddress.setCity(addressRequestDTO.getCity());
+        updatedAddress.setCountry(addressRequestDTO.getCountry());
+        updatedAddress.setZipCode(addressRequestDTO.getZipCode());
+        updatedAddress.setDefault(addressRequestDTO.isDefault());
+
+        if (updatedAddress.isDefault()) {
             addressRepository.resetDefaultForUser(userId);
         }
 
-        updatedAddress.setStreet(address.getStreet());
-        updatedAddress.setState(address.getState());
-        updatedAddress.setCity(address.getCity());
-        updatedAddress.setCountry(address.getCountry());
-        updatedAddress.setZipCode(address.getZipCode());
-        updatedAddress.setDefault(address.isDefault());
-        addressRepository.save(updatedAddress);
         return updatedAddress;
     }
 
@@ -110,5 +116,27 @@ public class AddressServiceImpl implements AddressService {
 
         addressRepository.resetDefaultForUser(userId);
         addressRepository.updateDefaultForUser(userId, addressId);
+    }
+
+    @Override
+    @Transactional
+    public List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user) {
+        if (dto == null || dto.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        long defaultCount = dto.stream().filter(AddressRequestDTO::isDefault).count();
+        if (defaultCount > 1) {
+            throw new IllegalArgumentException("Only one default address allowed");
+        }
+
+        List<Address> addresses = new ArrayList<>();
+        for (AddressRequestDTO request : dto) {
+            Address newAddress = AddressMapper.toEntity(request);
+            newAddress.setUser(user);
+            addresses.add(newAddress);
+        }
+
+        return addresses;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.EcommerceBackendProject.Mapper;
 
-import com.example.EcommerceBackendProject.DTO.OrderItemRequestDTO;
 import com.example.EcommerceBackendProject.DTO.OrderItemResponseDTO;
 import com.example.EcommerceBackendProject.Entity.OrderItem;
 

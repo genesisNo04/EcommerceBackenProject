@@ -53,4 +53,13 @@ public class Payment {
     protected void onCreated() {
         this.createdAt = LocalDateTime.now();
     }
+
+    public static Payment createPayment(Order order, PaymentType type) {
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setPaymentType(type);
+        payment.setAmount(order.getTotalAmount());
+        payment.setStatus(PaymentStatus.PENDING);
+        return payment;
+    }
 }

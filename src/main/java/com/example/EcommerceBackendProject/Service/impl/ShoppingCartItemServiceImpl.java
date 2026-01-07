@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.ShoppingCartItemRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import com.example.EcommerceBackendProject.Entity.ShoppingCartItem;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
-import com.example.EcommerceBackendProject.Exception.AccessDeniedException;
 
 @Service
 public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
@@ -31,64 +30,76 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Override
     @Transactional
-    public ShoppingCartItem addItemToCart(Long productId, int quantity, Long userId) {
-        if (quantity <= 0) {
+    public ShoppingCartItem addItemToCart(ShoppingCartItemRequestDTO shoppingCartItemRequestDTO, Long userId) {
+        if (shoppingCartItemRequestDTO.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
 
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoResourceFoundException("No cart found"));
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findById(shoppingCartItemRequestDTO.getProductId())
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
+        if (shoppingCartItemRequestDTO.getQuantity() > product.getStockQuantity()) {
+            throw new IllegalArgumentException("Insufficient stock");
+        }
+
         Optional<ShoppingCartItem> existingItem = shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(
-                cart.getId(), productId, userId
+                cart.getId(), shoppingCartItemRequestDTO.getProductId(), userId
         );
 
         if (existingItem.isPresent()) {
-            existingItem.get().setQuantity(existingItem.get().getQuantity() + quantity);
+            int newQuantity = existingItem.get().getQuantity() + shoppingCartItemRequestDTO.getQuantity();
+            if (newQuantity > product.getStockQuantity()) {
+                throw new IllegalArgumentException("Insufficient stock");
+            }
+            existingItem.get().setQuantity(newQuantity);
             return existingItem.get();
         }
 
-        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(product, quantity, product.getPrice(), cart);
+        ShoppingCartItem shoppingCartItem = new ShoppingCartItem(product, shoppingCartItemRequestDTO.getQuantity(), product.getPrice(), cart);
         cart.addItem(shoppingCartItem);
         return shoppingCartItem;
     }
 
     @Override
     @Transactional
-    public ShoppingCartItem updateItemQuantity(Long cartId, Long productId, int quantity, Long userId) {
-        if (quantity <= 0) {
+    public ShoppingCartItem updateItemQuantity(ShoppingCartItemRequestDTO shoppingCartItemRequestDTO, Long userId) {
+        if (shoppingCartItemRequestDTO.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
 
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoResourceFoundException("No cart found"));
 
-        ShoppingCartItem item = shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cartId, productId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("No item found"));
+        Product product = productRepository.findById(shoppingCartItemRequestDTO.getProductId())
+                .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
-        if (!item.getShoppingCart().getId().equals(cart.getId())) {
-            throw new AccessDeniedException("Item does not belong to this cart");
+        if (shoppingCartItemRequestDTO.getQuantity() > product.getStockQuantity()) {
+            throw new IllegalArgumentException("Insufficient stock");
         }
 
-        item.setQuantity(quantity);
+        ShoppingCartItem item = shoppingCartItemRepository
+                .findByShoppingCartIdAndProductIdAndShoppingCartUserId(
+                        cart.getId(), shoppingCartItemRequestDTO.getProductId(), userId
+                ).orElseThrow(() -> new NoResourceFoundException("No resource found"));
+
+
+        item.setQuantity(shoppingCartItemRequestDTO.getQuantity());
         return item;
     }
 
     @Override
     @Transactional
-    public void removeItemFromCart(Long cartId, Long productId, Long userId) {
+    public void removeItemFromCart(Long productId, Long userId) {
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoResourceFoundException("No cart found"));
 
-        ShoppingCartItem item = shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cartId, productId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("No item found"));
-
-        if (!item.getShoppingCart().getId().equals(cart.getId())) {
-            throw new AccessDeniedException("Item does not belong to this cart");
-        }
+        ShoppingCartItem item = shoppingCartItemRepository
+                .findByShoppingCartIdAndProductIdAndShoppingCartUserId(
+                        cart.getId(), productId, userId
+                ).orElseThrow(() -> new NoResourceFoundException("No resource found"));
 
         cart.removeItem(item);
     }
@@ -105,7 +116,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Override
     @Transactional
-    public void clearShoppingCart(Long shoppingCartId, Long userId) {
+    public void clearShoppingCart(Long userId) {
         ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new NoResourceFoundException("No cart found"));
 
