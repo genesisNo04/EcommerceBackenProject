@@ -12,7 +12,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -47,5 +51,29 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.getProducts().forEach(product -> product.getCategories().remove(category));
         categoryRepository.delete(category);
+    }
+
+    @Override
+    @Transactional
+    public Set<Category> resolveCategories(Set<CategoryRequestDTO> categoryRequestDTOs) {
+        if (categoryRequestDTOs == null || categoryRequestDTOs.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Set<String> categoryNames = categoryRequestDTOs
+                .stream()
+                .map(CategoryRequestDTO::getName)
+                .collect(Collectors.toSet());
+
+        List<Category> existingCategoryList = categoryRepository.findAllByNameIn(categoryNames);
+        Map<String, Category> existingCategories = existingCategoryList.stream()
+                .collect(Collectors.toMap(Category::getName, c -> c));
+
+        Set<Category> categories = categoryRequestDTOs.stream()
+                .map(category -> existingCategories.getOrDefault(category.getName(),
+                        categoryRepository.save(CategoryMapper.toEntity(category))))
+                .collect(Collectors.toSet());
+
+        return categories;
     }
 }

@@ -26,6 +26,7 @@ public class ProductRequestDTO {
     private Integer stockQuantity;
 
     @NotEmpty
+    @NotNull
     private Set<CategoryRequestDTO> categories;
 
     @NotNull

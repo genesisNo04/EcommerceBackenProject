@@ -1,14 +1,21 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
+import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Enum.Role;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
+import com.example.EcommerceBackendProject.Mapper.UserMapper;
+import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public User findById(Long userId) {
@@ -36,23 +46,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUsername(user.getUsername())) {
+    @Transactional
+    public User createUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByEmail(userRequestDTO.getEmail()) || userRepository.existsByUsername(userRequestDTO.getUsername())) {
             throw new ResourceAlreadyExistsException("username or email is already exists.");
         }
+
+        User user = UserMapper.toEntity(userRequestDTO);
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.USER);
+        user.setRoles(roles);
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        user.setCart(shoppingCart);
+        shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
 
         return userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public User updateUser(Long userId, User updatedUser) {
+    public User updateUser(Long userId, UserRequestDTO userRequestDTO) {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
-        oldUser.setFirstName(updatedUser.getFirstName());
-        oldUser.setLastName(updatedUser.getLastName());
-        oldUser.setAddresses(updatedUser.getAddresses());
-        oldUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        oldUser.setFirstName(userRequestDTO.getFirstName());
+        oldUser.setLastName(userRequestDTO.getLastName());
+//        oldUser.setAddresses(userRequestDTO.getAddress());
+        oldUser.setPhoneNumber(userRequestDTO.getPhoneNumber());
         return userRepository.save(oldUser);
     }
 

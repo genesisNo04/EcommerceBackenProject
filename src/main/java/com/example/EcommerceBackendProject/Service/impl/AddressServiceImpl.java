@@ -1,11 +1,14 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
+import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
+import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
@@ -14,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -112,5 +116,15 @@ public class AddressServiceImpl implements AddressService {
 
         addressRepository.resetDefaultForUser(userId);
         addressRepository.updateDefaultForUser(userId, addressId);
+    }
+
+    @Transactional
+    public List<Category> resolveAddresses(List<AddressRequestDTO> dtos) {
+        if (dtos == null || dtos.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+
+        return null;
     }
 }

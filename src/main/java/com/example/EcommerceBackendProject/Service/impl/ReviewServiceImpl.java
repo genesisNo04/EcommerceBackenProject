@@ -1,11 +1,13 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.ReviewRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
+import com.example.EcommerceBackendProject.Mapper.ReviewMapper;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ReviewRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
@@ -33,23 +35,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review createReview(Review review, Long userId, Long productId) {
-        if (reviewRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new ResourceAlreadyExistsException("Review is already existed for this product");
-        }
-
+    public Review createReview(ReviewRequestDTO reviewRequestDTO, Long userId, Long productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("User not found."));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found."));
 
+        Review review = ReviewMapper.toEntity(reviewRequestDTO);
         review.setUser(user);
         review.setProduct(product);
 
         try {
             return reviewRepository.save(review);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException ex) {
             throw new ResourceAlreadyExistsException("Review already exists for this product");
         }
     }
@@ -101,13 +100,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public Review updateReview(Review review, Long reviewId, Long userId) {
+    public Review updateReview(ReviewRequestDTO reviewRequestDTO, Long reviewId, Long userId) {
         Review currentReview = reviewRepository.findByIdAndUserId(reviewId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Review not found! or access denied"));
 
-        currentReview.setRating(review.getRating());
-        currentReview.setComment(review.getComment());
-        return reviewRepository.save(currentReview);
+        currentReview.setRating(reviewRequestDTO.getRating());
+        currentReview.setComment(reviewRequestDTO.getComment());
+        return currentReview;
     }
 
     @Override

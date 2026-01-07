@@ -103,42 +103,35 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Cannot modify a paid order");
         }
 
+        // 1. Restore stock for existing items
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = item.getProduct();
+            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+        }
+
+        // 2. Clear existing items (orphanRemoval deletes them)
+        order.getOrderItems().clear();
+
+        // 3. Re-add items from request
         for (var itemDto : orderRequestDTO.getOrderItems()) {
             Product product = productRepository.findById(itemDto.getProductId())
-                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+                    .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
             if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
                 throw new InvalidOrderItemQuantityException("Invalid quantity");
             }
 
-            Optional<OrderItem> existingItem = order.getOrderItems()
-                    .stream()
-                    .filter(i -> i.getProduct().getId().equals(product.getId()))
-                    .findFirst();
-            OrderItem item;
-
-            if (existingItem.isPresent()) {
-                item = existingItem.get();
-                int newQuantity = item.getQuantity() + itemDto.getQuantity();
-                if (newQuantity > product.getStockQuantity()) {
-                    throw new InvalidOrderItemQuantityException("Invalid quantity");
-                }
-
-                item.setQuantity(newQuantity);
-            } else {
-                item = new OrderItem();
-                item.setOrder(order);
-                item.setProduct(product);
-                item.setQuantity(itemDto.getQuantity());
-                item.setPriceAtPurchase(product.getPrice());
-            }
-
-            int oldQuantity = item.getQuantity();
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(product);
             item.setQuantity(itemDto.getQuantity());
-            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            item.setPriceAtPurchase(product.getPrice());
+
+            product.setStockQuantity(product.getStockQuantity() - itemDto.getQuantity());
             order.getOrderItems().add(item);
         }
 
+        // 4. Recalculate total
         BigDecimal total = order.getOrderItems().stream()
                 .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

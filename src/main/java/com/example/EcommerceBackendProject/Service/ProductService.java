@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import org.springframework.data.domain.Page;
@@ -11,9 +12,9 @@ public interface ProductService {
 
     Integer findProductQuantityWithProductId(Long productId);
 
-    Product createProduct(Product product);
+    Product createProduct(ProductRequestDTO productRequestDTO);
 
-    Product updateProduct(Product product, Long productId);
+    Product updateProduct(ProductRequestDTO productRequestDTO, Long productId);
 
     void deleteProduct(Long productId);
 

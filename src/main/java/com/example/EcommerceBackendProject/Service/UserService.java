@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
 
 import java.util.Optional;
@@ -12,9 +13,9 @@ public interface UserService {
 
     User findByEmail(String email);
 
-    User createUser(User user);
+    User createUser(UserRequestDTO userRequestDTO);
 
-    User updateUser(Long userId, User user);
+    User updateUser(Long userId, UserRequestDTO userRequestDTO);
 
     void deleteUser(Long userId);
 

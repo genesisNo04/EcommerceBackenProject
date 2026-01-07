@@ -1,8 +1,10 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.PaymentRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Entity.Payment;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Enum.Status;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -39,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<Payment> findPaymentByStatusAndUserId(Status status, Long userId, Pageable pageable) {
+    public Page<Payment> findPaymentByStatusAndUserId(PaymentStatus status, Long userId, Pageable pageable) {
         return paymentRepository.findByStatusAndOrderUserId(status, userId, pageable);
     }
 
@@ -49,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page<Payment> findPaymentByPaymentTypeAndStatusAndUserId(PaymentType paymentType, Status status, Long userId, Pageable pageable) {
+    public Page<Payment> findPaymentByPaymentTypeAndStatusAndUserId(PaymentType paymentType, PaymentStatus status, Long userId, Pageable pageable) {
         return paymentRepository.findByStatusAndPaymentTypeAndOrderUserId(status, paymentType, userId, pageable);
     }
 
@@ -60,15 +63,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment createPayment(Payment payment, Long orderId, Long userId) {
-        if(paymentRepository.findByOrderIdAndOrderUserId(orderId, userId).isPresent()) {
+    public Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserFoundException("No user found"));
+
+        if(paymentRepository.findByOrderIdAndOrderUserId(paymentRequestDTO.getOrderId(), userId).isPresent()) {
             throw new ResourceAlreadyExistsException("Payment already exists for this order");
         }
 
-        userRepository.findById(userId).orElseThrow(() -> new NoUserFoundException("No user found"));
-        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+        Order order = orderRepository.findByIdAndUserId(paymentRequestDTO.getOrderId(), userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
-        payment.setOrder(order);
+        Payment payment = Payment.createPayment(order, paymentRequestDTO.getPaymentType());
+        order.setPayment(payment);
+
         return paymentRepository.save(payment);
     }
 
@@ -82,11 +88,18 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment updatePayment(Long paymentId, Payment updatedPayment, Long userId) {
+    public Payment updatePayment(Long paymentId, PaymentRequestDTO paymentRequestDTO, Long userId) {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
-        payment.setPaymentType(updatedPayment.getPaymentType());
-        payment.setAmount(updatedPayment.getAmount());
+
+        if (payment.getStatus() != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Only PENDING payments can be updated");
+        }
+
+        Order order = payment.getOrder();
+        payment.setPaymentType(paymentRequestDTO.getPaymentType());
+        payment.setAmount(order.getTotalAmount());
+
         return paymentRepository.save(payment);
     }
 
