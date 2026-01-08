@@ -19,7 +19,7 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    void changePassword(Long userId, String newPassword);
+    User changePassword(Long userId, String newPassword);
 
 
 }

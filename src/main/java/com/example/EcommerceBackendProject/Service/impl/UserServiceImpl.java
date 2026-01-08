@@ -90,10 +90,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(Long userId, String newPassword) {
+    public User changePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         user.setPassword(newPassword);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
