@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/category")
+@RequestMapping("/v1/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -28,11 +28,16 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toDTO(category));
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<List<CategoryResponseDTO>> findCategoryByProductId(@PathVariable Long productId) {
         List<Category> category = categoryService.findCategoriesByProductId(productId);
         List<CategoryResponseDTO> responseDTOS = category.stream().map(CategoryMapper::toDTO).toList();
         return ResponseEntity.ok(responseDTOS);
     }
 
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build();
+    }
 }

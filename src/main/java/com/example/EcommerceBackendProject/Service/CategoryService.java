@@ -2,7 +2,6 @@ package com.example.EcommerceBackendProject.Service;
 
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
