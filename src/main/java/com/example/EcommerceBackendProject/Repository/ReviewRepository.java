@@ -25,7 +25,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByRatingBetween(int minRating, int maxRating, Pageable pageable);
 
-    Page<Review> findByUserIdAndProductId(Long userId, Long productId, Pageable pageable);
+    Optional<Review> findByUserIdAndProductId(Long userId, Long productId);
 
     Page<Review> findByProductIdAndCreatedAtBetween(Long productId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 

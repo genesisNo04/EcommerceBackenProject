@@ -12,10 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,5 +72,10 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toSet());
 
         return categories;
+    }
+
+    @Override
+    public Category findByName(String name) {
+        return categoryRepository.findByName(name).orElseThrow(() -> new NoResourceFoundException("No category found!"));
     }
 }

@@ -15,7 +15,7 @@ public interface ReviewService {
 
     Page<Review> findByProductId(Long productId, Pageable pageable);
 
-    Page<Review> findByUserIdAndProductId(Long userId, Long productId, Pageable pageable);
+    Review findByUserIdAndProductId(Long userId, Long productId);
 
     Page<Review> findByRatingAndProductId(int rating, Long productId, Pageable pageable);
 

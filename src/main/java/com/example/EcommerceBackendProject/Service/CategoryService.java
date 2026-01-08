@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface CategoryService {
@@ -15,4 +16,6 @@ public interface CategoryService {
     void deleteCategory(Long categoryId);
 
     Set<Category> resolveCategories(Set<CategoryRequestDTO> categoryRequestDTOs);
+
+    Category findByName(String name);
 }

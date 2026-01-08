@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -64,8 +65,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<Review> findByUserIdAndProductId(Long userId, Long productId, Pageable pageable) {
-        return reviewRepository.findByUserIdAndProductId(userId, productId, pageable);
+    public Review findByUserIdAndProductId(Long userId, Long productId) {
+        return reviewRepository.findByUserIdAndProductId(userId, productId).orElseThrow(() -> new NoResourceFoundException("No review found for this user on this product!"));
     }
 
     @Override
