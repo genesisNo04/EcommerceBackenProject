@@ -11,7 +11,9 @@ public interface OrderItemService {
 
     OrderItem updateOrderItemQuantity(Long orderItemId, Long orderId, int quantity, Long userId);
 
-    Page<OrderItem> getOrderItems(Long orderId, Pageable pageable);
+    Page<OrderItem> findOrderItems(Long orderId, Pageable pageable);
 
-    Page<OrderItem> getAllOrderItemsForUser(Long userId, Pageable pageable);
+    Page<OrderItem> findAllOrderItemsForUser(Long userId, Pageable pageable);
+
+    Page<OrderItem> findOrderItemsForUserInOrder(Long userId, Long orderId, Pageable pageable);
 }

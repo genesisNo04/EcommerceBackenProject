@@ -38,21 +38,6 @@ public class OrderServiceImpl implements OrderService {
     private ProductRepository productRepository;
 
     @Override
-    public Page<Order> findOrdersByUserId(Long userId, Pageable pageable) {
-        return orderRepository.findByUserId(userId, pageable);
-    }
-
-    @Override
-    public Page<Order> findOrdersBetween(Long userId, Pageable pageable, LocalDateTime start, LocalDateTime end) {
-        return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
-    }
-
-    @Override
-    public Page<Order> findByStatus(Long userId, Status status, Pageable pageable) {
-        return orderRepository.findByUserIdAndStatus(userId, status, pageable);
-    }
-
-    @Override
     @Transactional
     public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
         User user = userRepository.findById(userId)

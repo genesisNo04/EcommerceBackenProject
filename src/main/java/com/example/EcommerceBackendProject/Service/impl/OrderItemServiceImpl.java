@@ -69,12 +69,17 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Page<OrderItem> getOrderItems(Long orderId, Pageable pageable) {
+    public Page<OrderItem> findOrderItems(Long orderId, Pageable pageable) {
         return orderItemRepository.findByOrderId(orderId, pageable);
     }
 
     @Override
-    public Page<OrderItem> getAllOrderItemsForUser(Long userId, Pageable pageable) {
+    public Page<OrderItem> findAllOrderItemsForUser(Long userId, Pageable pageable) {
         return orderItemRepository.findByOrderUserId(userId, pageable);
+    }
+
+    @Override
+    public Page<OrderItem> findOrderItemsForUserInOrder(Long userId, Long orderId, Pageable pageable) {
+        return orderItemRepository.findByOrderIdAndOrderUserId(orderId, userId, pageable);
     }
 }

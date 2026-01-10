@@ -10,12 +10,6 @@ import java.time.LocalDateTime;
 
 public interface OrderService {
 
-    Page<Order> findOrdersByUserId(Long userId, Pageable pageable);
-
-    Page<Order> findOrdersBetween(Long userId, Pageable pageable, LocalDateTime start, LocalDateTime end);
-
-    Page<Order> findByStatus(Long userId, Status status, Pageable pageable);
-
     Order createOrder(OrderRequestDTO orderRequestDTO, Long userId);
 
     Order updateOrder(OrderRequestDTO orderRequestDTO, Long orderId, Long userId);

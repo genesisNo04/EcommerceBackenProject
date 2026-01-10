@@ -40,7 +40,7 @@ public class UserOrderController {
                                                                      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDER.getFields());
-        LocalDateTime startTime = (start == null) ? LocalDateTime.MIN :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
+        LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
         LocalDateTime endTime = (end == null) ? LocalDateTime.now() : LocalDateTime.of(end, LocalTime.MIDNIGHT.minusSeconds(1));
 
         Page<Order> orders = orderService.findUserOrders(userId, status, startTime, endTime, pageable);
