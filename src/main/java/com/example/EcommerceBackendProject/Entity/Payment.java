@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
                 @Index(name = "id_payment_order", columnList = "order_id"),
                 @Index(name = "id_payment_status", columnList = "status"),
                 @Index(name = "id_payment_type", columnList = "paymentType"),
-                @Index(name = "id_payment_date", columnList = "paymentDate")
+                @Index(name = "id_payment_date", columnList = "createdAt")
         }
 )
 public class Payment {

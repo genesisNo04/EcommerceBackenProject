@@ -40,10 +40,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public Optional<ShoppingCart> findByUserId(Long userId) {
+    public ShoppingCart findByUserId(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found"));
-        return shoppingCartRepository.findByUserId(userId);
+        return shoppingCartRepository.findByUserId(userId).orElseThrow(() -> new NoResourceFoundException("Shopping cart not found!"));
     }
 
     @Override
@@ -52,8 +52,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found"));
 
-        ShoppingCart cart = findByUserId(userId)
-                .orElseThrow(() -> new NoResourceFoundException("Shopping cart not found"));
+        ShoppingCart cart = findByUserId(userId);
         cart.getItems().clear();
     }
 }

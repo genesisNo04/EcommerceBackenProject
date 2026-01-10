@@ -47,7 +47,7 @@ public class ReviewController {
                                                                                        @RequestParam(required = false) LocalDate end,
                                                                                   @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
-        LocalDateTime startTime = (start == null) ? LocalDateTime.MIN :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
+        LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
         LocalDateTime endTime = (end == null) ? LocalDateTime.now() : LocalDateTime.of(end, LocalTime.MIDNIGHT.minusSeconds(1));
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.REVIEW.getFields());
