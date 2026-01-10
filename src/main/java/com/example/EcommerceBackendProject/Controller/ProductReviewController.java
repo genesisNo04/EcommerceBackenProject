@@ -4,7 +4,6 @@ import com.example.EcommerceBackendProject.DTO.ReviewRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ReviewResponseDTO;
 import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
-import com.example.EcommerceBackendProject.Exception.BadRequestException;
 import com.example.EcommerceBackendProject.Mapper.ReviewMapper;
 import com.example.EcommerceBackendProject.Service.ReviewService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
@@ -21,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @RestController
-@RequestMapping("/products/{productId}/review")
+@RequestMapping("/products/{productId}/reviews")
 public class ProductReviewController {
 
     private final ReviewService reviewService;

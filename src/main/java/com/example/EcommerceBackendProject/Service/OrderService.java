@@ -20,9 +20,11 @@ public interface OrderService {
 
     Order updateOrder(OrderRequestDTO orderRequestDTO, Long orderId, Long userId);
 
-    Order getOrderById(Long orderId, Long userId);
+    Order findOrderById(Long orderId, Long userId);
 
     void deleteOrder(Long orderId, Long userId);
 
     Page<Order> findAllOrders(Pageable pageable);
+
+    Page<Order> findUserOrders(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

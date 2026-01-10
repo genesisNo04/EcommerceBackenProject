@@ -142,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(Long orderId, Long userId) {
+    public Order findOrderById(Long orderId, Long userId) {
         return orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
     }
@@ -158,5 +158,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAllOrders(Pageable pageable) {
         return orderRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Order> findUserOrders(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+
+        if (status != null && (start != null || end != null)) {
+            return orderRepository.findByUserIdAndStatusAndCreatedAtBetween(userId, status, start, end, pageable);
+        }
+
+        if (start != null || end != null) {
+            return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
+        }
+
+        if (status != null) {
+            return orderRepository.findByUserIdAndStatus(userId, status, pageable);
+        }
+
+        return orderRepository.findByUserId(userId, pageable);
     }
 }
