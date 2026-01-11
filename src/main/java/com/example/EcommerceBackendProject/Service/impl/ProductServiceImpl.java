@@ -9,6 +9,7 @@ import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Mapper.ProductMapper;
 import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
+import com.example.EcommerceBackendProject.Repository.ShoppingCartItemRepository;
 import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.ProductService;
 import com.example.EcommerceBackendProject.Service.ShoppingCartItemService;
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ShoppingCartItemService shoppingCartItemService;
+    private ShoppingCartItemRepository shoppingCartItemRepository;
 
     @Autowired
     private CategoryService categoryService;
@@ -68,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
-        shoppingCartItemService.deleteItemsByProduct(productId);
+        shoppingCartItemRepository.deleteByProductId(productId);
         productRepository.delete(product);
     }
 

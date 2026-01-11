@@ -23,21 +23,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public ShoppingCart createShoppingCart(Long userId) {
-        Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUserId(userId);
-        if (existingCart.isPresent()) {
-            return existingCart.get();
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found"));
-
-        ShoppingCart newCart = new ShoppingCart(user);
-
-        return shoppingCartRepository.save(newCart);
-    }
+//    @Override
+//    @Transactional
+//    public ShoppingCart createShoppingCart(Long userId) {
+//        Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUserId(userId);
+//        if (existingCart.isPresent()) {
+//            return existingCart.get();
+//        }
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NoUserFoundException("No user found"));
+//
+//        ShoppingCart newCart = new ShoppingCart(user);
+//
+//        return shoppingCartRepository.save(newCart);
+//    }
 
     @Override
     public ShoppingCart findByUserId(Long userId) {
