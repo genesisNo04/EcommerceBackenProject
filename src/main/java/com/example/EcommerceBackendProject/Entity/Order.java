@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(
+@Table( name = "user_order",
         indexes = {
                 @Index(name = "idx_order_user", columnList = "user_id"),
                 @Index(name = "idx_order_status", columnList = "status"),

@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.Service;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 
@@ -15,7 +16,9 @@ public interface AddressService {
 
     Address getDefaultAddress(Long userId);
 
-    Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId);
+    Address updateAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId);
+
+    Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId);
 
     void deleteAddress(Long addressId, Long userId);
 

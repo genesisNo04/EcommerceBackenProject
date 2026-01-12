@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.Category;
@@ -65,24 +66,61 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId) {
+    public Address updateAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        updatedAddress.setStreet(addressRequestDTO.getStreet());
-        updatedAddress.setState(addressRequestDTO.getState());
-        updatedAddress.setCity(addressRequestDTO.getCity());
-        updatedAddress.setCountry(addressRequestDTO.getCountry());
-        updatedAddress.setZipCode(addressRequestDTO.getZipCode());
-        updatedAddress.setDefault(addressRequestDTO.isDefault());
+        updatedAddress.setStreet(addressUpdateRequestDTO.getStreet());
+        updatedAddress.setState(addressUpdateRequestDTO.getState());
+        updatedAddress.setCity(addressUpdateRequestDTO.getCity());
+        updatedAddress.setCountry(addressUpdateRequestDTO.getCountry());
+        updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
+
+        if (addressUpdateRequestDTO.isDefault()) {
+            addressRepository.resetDefaultForUser(userId);
+        }
+
+        updatedAddress.setDefault(addressUpdateRequestDTO.isDefault());
+        return updatedAddress;
+    }
+
+    @Override
+    @Transactional
+    public Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+
+        Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
+                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+
+        if (addressUpdateRequestDTO.getStreet() != null) {
+            updatedAddress.setStreet(addressUpdateRequestDTO.getStreet());
+        }
+
+        if (addressUpdateRequestDTO.getState() != null) {
+            updatedAddress.setState(addressUpdateRequestDTO.getState());
+        }
+
+        if (addressUpdateRequestDTO.getCity() != null) {
+            updatedAddress.setCity(addressUpdateRequestDTO.getCity());
+        }
+
+        if (addressUpdateRequestDTO.getCountry() != null) {
+            updatedAddress.setCountry(addressUpdateRequestDTO.getCountry());
+        }
+
+        if (addressUpdateRequestDTO.getZipCode() != null) {
+            updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
+        }
 
         if (updatedAddress.isDefault()) {
             addressRepository.resetDefaultForUser(userId);
         }
 
+        updatedAddress.setDefault(addressUpdateRequestDTO.isDefault());
         return updatedAddress;
     }
 

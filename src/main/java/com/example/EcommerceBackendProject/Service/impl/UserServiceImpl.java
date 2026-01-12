@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
+import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.Role;
@@ -28,6 +29,15 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.addressService = addressService;
+    }
+
+    private void validateAndSetEmail(User oldUser, String newEmail) {
+        if (newEmail != null && !oldUser.getEmail().equals(newEmail)) {
+            if (userRepository.existsByEmail(newEmail)) {
+                throw new ResourceAlreadyExistsException("Email is already in used");
+            }
+        }
+        oldUser.setEmail(newEmail);
     }
 
     @Override
@@ -68,14 +78,44 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUser(Long userId, UserRequestDTO userRequestDTO) {
+    public User updateUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
-        oldUser.setFirstName(userRequestDTO.getFirstName());
-        oldUser.setLastName(userRequestDTO.getLastName());
+        oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
+        oldUser.setLastName(userUpdateRequestDTO.getLastName());
         oldUser.getAddresses().clear();
-        oldUser.getAddresses().addAll(addressService.resolveAddresses(userRequestDTO.getAddress(), oldUser));
-        oldUser.setPhoneNumber(userRequestDTO.getPhoneNumber());
+        oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
+        oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
+        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
+        return userRepository.save(oldUser);
+    }
+
+    @Override
+    @Transactional
+    public User patchUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
+        User oldUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResourceFoundException("User not found"));
+
+        if (userUpdateRequestDTO.getFirstName() != null) {
+            oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
+        }
+
+        if (userUpdateRequestDTO.getLastName() != null) {
+            oldUser.setLastName(userUpdateRequestDTO.getLastName());
+        }
+
+        if (userUpdateRequestDTO.getAddress() != null) {
+            oldUser.getAddresses().clear();
+            oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
+        }
+
+        if (userUpdateRequestDTO.getPhoneNumber() != null) {
+            oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
+        }
+
+        if (userUpdateRequestDTO.getEmail() != null) {
+            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
+        }
         return userRepository.save(oldUser);
     }
 
@@ -90,10 +130,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User changePassword(Long userId, String newPassword) {
+    public void changePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         user.setPassword(newPassword);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }

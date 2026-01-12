@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressResponseDTO;
+import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Service.AddressService;
@@ -30,8 +31,15 @@ public class AddressController {
     }
 
     @PutMapping("/{addressId}")
-    public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressRequestDTO addressRequestDTO) {
-        Address address = addressService.updateAddress(addressId, addressRequestDTO, userId);
+    public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
+        Address address = addressService.updateAddress(addressId, addressUpdateRequestDTO, userId);
+        AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
+        return ResponseEntity.ok(addressResponseDTO);
+    }
+
+    @PatchMapping("/{addressId}")
+    public ResponseEntity<AddressResponseDTO> partiallyUpdateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
+        Address address = addressService.updateAddress(addressId, addressUpdateRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
     }
