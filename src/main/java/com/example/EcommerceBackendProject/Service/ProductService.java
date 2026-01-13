@@ -1,6 +1,8 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
+import com.example.EcommerceBackendProject.DTO.ProductUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ public interface ProductService {
     Product createProduct(ProductRequestDTO productRequestDTO);
 
     Product updateProduct(ProductRequestDTO productRequestDTO, Long productId);
+
+    Product patchProduct(ProductUpdateRequestDTO productUpdateRequestDTO, Long productId);
 
     void deleteProduct(Long productId);
 

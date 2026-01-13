@@ -16,7 +16,7 @@ public interface AddressService {
 
     Address getDefaultAddress(Long userId);
 
-    Address updateAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId);
+    Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId);
 
     Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId);
 

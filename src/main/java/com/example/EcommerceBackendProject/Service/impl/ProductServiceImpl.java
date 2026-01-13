@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
+import com.example.EcommerceBackendProject.DTO.ProductUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
@@ -41,16 +42,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public Product createProduct(ProductRequestDTO productRequestDTO) {
         Product product = ProductMapper.toEntity(productRequestDTO);
-        product.setCategories(categoryService.resolveCategories(productRequestDTO.getCategories()));
+        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
+        categories.forEach(c -> c.addProduct(product));
+        product.setCategories(categories);
         return productRepository.save(product);
     }
 
     @Override
+    @Transactional
     public Product updateProduct(ProductRequestDTO productRequestDTO, Long productId) {
         Product productUpdate = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+
+        productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
+        productUpdate.getCategories().clear();
 
         productUpdate.setProductName(productRequestDTO.getProductName());
         productUpdate.setPrice(productRequestDTO.getPrice());
@@ -58,9 +66,37 @@ public class ProductServiceImpl implements ProductService {
         productUpdate.setDescription(productRequestDTO.getDescription());
         productUpdate.setStockQuantity(productRequestDTO.getStockQuantity());
 
-        productUpdate.setCategories(categoryService.resolveCategories(productRequestDTO.getCategories()));
+        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
 
-        return productRepository.save(productUpdate);
+        categories.forEach(c -> c.addProduct(productUpdate));
+        productUpdate.setCategories(categories);
+
+        return productUpdate;
+    }
+
+    @Override
+    @Transactional
+    public Product patchProduct(ProductUpdateRequestDTO productUpdateRequestDTO, Long productId) {
+        Product productUpdate = productRepository.findById(productId)
+                .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+
+        if (productUpdateRequestDTO.getCategories() != null) {
+            productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
+            productUpdate.getCategories().clear();
+
+            Set<Category> categories = categoryService.resolveCategories(productUpdateRequestDTO.getCategories());
+
+            categories.forEach(c -> c.addProduct(productUpdate));
+            productUpdate.setCategories(categories);
+        }
+
+        productUpdate.setProductName(productUpdateRequestDTO.getProductName());
+        productUpdate.setPrice(productUpdateRequestDTO.getPrice());
+        productUpdate.setImageUrl(productUpdateRequestDTO.getImageUrl());
+        productUpdate.setDescription(productUpdateRequestDTO.getDescription());
+        productUpdate.setStockQuantity(productUpdateRequestDTO.getStockQuantity());
+        
+        return productUpdate;
     }
 
     @Override
@@ -92,4 +128,6 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+
+
 }

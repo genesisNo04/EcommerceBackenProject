@@ -71,4 +71,14 @@ public class Product {
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getProducts().add(this);
+    }
+
+    public void removeCategory(Category category) {
+        this.categories.remove(category);
+        category.getProducts().remove(this);
+    }
 }

@@ -66,24 +66,24 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public Address updateAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
+    public Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+
+        if (addressRequestDTO.getIsDefault()) {
+            addressRepository.resetDefaultForUser(userId);
+        }
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        updatedAddress.setStreet(addressUpdateRequestDTO.getStreet());
-        updatedAddress.setState(addressUpdateRequestDTO.getState());
-        updatedAddress.setCity(addressUpdateRequestDTO.getCity());
-        updatedAddress.setCountry(addressUpdateRequestDTO.getCountry());
-        updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
+        updatedAddress.setStreet(addressRequestDTO.getStreet());
+        updatedAddress.setState(addressRequestDTO.getState());
+        updatedAddress.setCity(addressRequestDTO.getCity());
+        updatedAddress.setCountry(addressRequestDTO.getCountry());
+        updatedAddress.setZipCode(addressRequestDTO.getZipCode());
 
-        if (addressUpdateRequestDTO.isDefault()) {
-            addressRepository.resetDefaultForUser(userId);
-        }
-
-        updatedAddress.setDefault(addressUpdateRequestDTO.isDefault());
+        updatedAddress.setDefault(addressRequestDTO.getIsDefault());
         return updatedAddress;
     }
 
@@ -92,6 +92,10 @@ public class AddressServiceImpl implements AddressService {
     public Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+
+        if (addressUpdateRequestDTO.getIsDefault() != null && addressUpdateRequestDTO.getIsDefault()) {
+            addressRepository.resetDefaultForUser(userId);
+        }
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
@@ -116,11 +120,10 @@ public class AddressServiceImpl implements AddressService {
             updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
         }
 
-        if (updatedAddress.isDefault()) {
-            addressRepository.resetDefaultForUser(userId);
+        if (addressUpdateRequestDTO.getIsDefault() != null) {
+            updatedAddress.setDefault(addressUpdateRequestDTO.getIsDefault());
         }
 
-        updatedAddress.setDefault(addressUpdateRequestDTO.isDefault());
         return updatedAddress;
     }
 
@@ -163,7 +166,7 @@ public class AddressServiceImpl implements AddressService {
             return new ArrayList<>();
         }
 
-        long defaultCount = dto.stream().filter(AddressRequestDTO::isDefault).count();
+        long defaultCount = dto.stream().filter(AddressRequestDTO::getIsDefault).count();
         if (defaultCount > 1) {
             throw new IllegalArgumentException("Only one default address allowed");
         }

@@ -31,15 +31,15 @@ public class AddressController {
     }
 
     @PutMapping("/{addressId}")
-    public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
-        Address address = addressService.updateAddress(addressId, addressUpdateRequestDTO, userId);
+    public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressRequestDTO addressRequestDTO) {
+        Address address = addressService.updateAddress(addressId, addressRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
     }
 
     @PatchMapping("/{addressId}")
     public ResponseEntity<AddressResponseDTO> partiallyUpdateAddress(@PathVariable Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
-        Address address = addressService.updateAddress(addressId, addressUpdateRequestDTO, userId);
+        Address address = addressService.patchAddress(addressId, addressUpdateRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
     }

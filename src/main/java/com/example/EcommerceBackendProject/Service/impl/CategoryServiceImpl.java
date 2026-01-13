@@ -1,7 +1,9 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
+import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
 import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
@@ -25,12 +27,16 @@ public class CategoryServiceImpl implements CategoryService {
     private ProductRepository productRepository;
 
     @Override
+    @Transactional
     public Category createCategory(CategoryRequestDTO categoryRequestDTO) {
         if (categoryRepository.existsByName(categoryRequestDTO.getName())) {
             throw new ResourceAlreadyExistsException("Category is already existed with this name: " + categoryRequestDTO.getName());
         }
-
-        return categoryRepository.save(CategoryMapper.toEntity(categoryRequestDTO));
+        Category category = CategoryMapper.toEntity(categoryRequestDTO);
+        Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
+                .orElseThrow(() -> new NoResourceFoundException("Product not found!"))).collect(Collectors.toSet());
+        products.forEach(product -> product.addCategory(category));
+        return categoryRepository.save(category);
     }
 
     @Override
@@ -46,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoResourceFoundException("No category with id: " + categoryId));
 
-        category.getProducts().forEach(product -> product.getCategories().remove(category));
+        category.getProducts().forEach(product -> product.removeCategory(category));
         categoryRepository.delete(category);
     }
 
@@ -77,5 +83,48 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findByName(String name) {
         return categoryRepository.findByName(name).orElseThrow(() -> new NoResourceFoundException("No category found!"));
+    }
+
+    @Override
+    @Transactional
+    public Category updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NoResourceFoundException("Category not found"));
+
+        category.getProducts().forEach(product -> product.removeCategory(category));
+        category.getProducts().clear();
+
+        category.setName(categoryRequestDTO.getName());
+        category.setDescription(categoryRequestDTO.getDescription());
+        Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
+                .orElseThrow(() -> new NoResourceFoundException("Product not found!"))).collect(Collectors.toSet());
+
+        products.forEach(p -> p.addCategory(category));
+        return category;
+    }
+
+    @Override
+    @Transactional
+    public Category patchCategory(Long categoryId, CategoryUpdateRequestDTO categoryUpdateRequestDTO) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NoResourceFoundException("Category not found"));
+        if (categoryUpdateRequestDTO.getName() != null) {
+            category.setName(categoryUpdateRequestDTO.getName());
+        }
+
+        if (categoryUpdateRequestDTO.getDescription() != null) {
+            category.setDescription(categoryUpdateRequestDTO.getDescription());
+        }
+
+        if (categoryUpdateRequestDTO.getProductIds() != null) {
+            category.getProducts().forEach(product -> product.removeCategory(category));
+            category.getProducts().clear();
+
+            Set<Product> products = categoryUpdateRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
+                    .orElseThrow(() -> new NoResourceFoundException("Product not found!"))).collect(Collectors.toSet());
+            products.forEach(p -> p.addCategory(category));
+        }
+
+        return category;
     }
 }

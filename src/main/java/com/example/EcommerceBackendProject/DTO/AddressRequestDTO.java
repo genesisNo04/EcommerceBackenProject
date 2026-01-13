@@ -29,5 +29,6 @@ public class AddressRequestDTO {
     private String zipCode;
 
     @JsonProperty("isDefault")
-    private boolean isDefault;
+    private Boolean isDefault;
+
 }
