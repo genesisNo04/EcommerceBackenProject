@@ -32,4 +32,6 @@ public interface ReviewService {
     Review updateReview(ReviewRequestDTO reviewRequestDTO, Long reviewId, Long userId);
 
     void deleteReview(Long reviewId, Long userId);
+
+    Page<Review> findReviews(Long userId, Long productId, int rating, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

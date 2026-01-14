@@ -72,12 +72,19 @@ public class CategoryServiceImpl implements CategoryService {
         Map<String, Category> existingCategories = existingCategoryList.stream()
                 .collect(Collectors.toMap(Category::getName, c -> c));
 
-        Set<Category> categories = categoryRequestDTOs.stream()
-                .map(category -> existingCategories.getOrDefault(category.getName(),
-                        categoryRepository.save(CategoryMapper.toEntity(category))))
-                .collect(Collectors.toSet());
+        Set<Category> result = new HashSet<>();
 
-        return categories;
+        for (CategoryRequestDTO dto: categoryRequestDTOs) {
+            Category category = existingCategories.get(dto.getName());
+
+            if (category == null) {
+                category = categoryRepository.save(CategoryMapper.toEntity(dto));
+            }
+
+            result.add(category);
+        }
+
+        return result;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductResponseDTO;
+import com.example.EcommerceBackendProject.DTO.ProductUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
@@ -44,6 +45,12 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequestDTO productRequestDTO) {
         Product product = productService.updateProduct(productRequestDTO, productId);
+        return ResponseEntity.ok(ProductMapper.toDTO(product));
+    }
+
+    @PatchMapping("/{productId}")
+    public ResponseEntity<ProductResponseDTO> partiallyUpdateProduct(@PathVariable Long productId, @Valid @RequestBody ProductUpdateRequestDTO productUpdateRequestDTO) {
+        Product product = productService.patchProduct(productUpdateRequestDTO, productId);
         return ResponseEntity.ok(ProductMapper.toDTO(product));
     }
 

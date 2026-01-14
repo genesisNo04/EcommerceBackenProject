@@ -5,6 +5,7 @@ import com.example.EcommerceBackendProject.Entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -29,17 +30,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByProductIdAndCreatedAtBetween(Long productId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<Review> findByProductIdAndModifiedAtBetween(Long productId, LocalDateTime start, LocalDateTime end, Pageable pageable);
-
     Page<Review> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Page<Review> findByUserIdAndModifiedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     Page<Review> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<Review> findByModifiedAtBetween(LocalDateTime start, LocalDateTime end, Pageable pageable);
-
     boolean existsByUserIdAndProductId(Long userId, Long productId);
-
-
 }

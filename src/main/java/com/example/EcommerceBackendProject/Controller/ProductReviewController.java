@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @RestController
-@RequestMapping("/products/{productId}/reviews")
+@RequestMapping("/v1/products/{productId}/reviews")
 public class ProductReviewController {
 
     private final ReviewService reviewService;

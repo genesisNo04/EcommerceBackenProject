@@ -35,6 +35,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public Integer findProductQuantityWithProductId(Long productId) {
         return productRepository.findStockQuantityByProductId(productId)
@@ -47,7 +50,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = ProductMapper.toEntity(productRequestDTO);
         Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
         categories.forEach(c -> c.addProduct(product));
-        product.setCategories(categories);
         return productRepository.save(product);
     }
 
@@ -58,7 +60,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NoResourceFoundException("No product found!"));
 
         productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
-        productUpdate.getCategories().clear();
 
         productUpdate.setProductName(productRequestDTO.getProductName());
         productUpdate.setPrice(productRequestDTO.getPrice());
@@ -69,7 +70,6 @@ public class ProductServiceImpl implements ProductService {
         Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
 
         categories.forEach(c -> c.addProduct(productUpdate));
-        productUpdate.setCategories(categories);
 
         return productUpdate;
     }
@@ -82,20 +82,32 @@ public class ProductServiceImpl implements ProductService {
 
         if (productUpdateRequestDTO.getCategories() != null) {
             productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
-            productUpdate.getCategories().clear();
 
             Set<Category> categories = categoryService.resolveCategories(productUpdateRequestDTO.getCategories());
 
             categories.forEach(c -> c.addProduct(productUpdate));
-            productUpdate.setCategories(categories);
         }
 
-        productUpdate.setProductName(productUpdateRequestDTO.getProductName());
-        productUpdate.setPrice(productUpdateRequestDTO.getPrice());
-        productUpdate.setImageUrl(productUpdateRequestDTO.getImageUrl());
-        productUpdate.setDescription(productUpdateRequestDTO.getDescription());
-        productUpdate.setStockQuantity(productUpdateRequestDTO.getStockQuantity());
-        
+        if (productUpdateRequestDTO.getProductName() != null) {
+            productUpdate.setProductName(productUpdateRequestDTO.getProductName());
+        }
+
+        if (productUpdateRequestDTO.getPrice() != null) {
+            productUpdate.setPrice(productUpdateRequestDTO.getPrice());
+        }
+
+        if (productUpdateRequestDTO.getImageUrl() != null) {
+            productUpdate.setImageUrl(productUpdateRequestDTO.getImageUrl());
+        }
+
+        if (productUpdateRequestDTO.getDescription() != null) {
+            productUpdate.setDescription(productUpdateRequestDTO.getDescription());
+        }
+
+        if (productUpdateRequestDTO.getStockQuantity() != null) {
+            productUpdate.setStockQuantity(productUpdateRequestDTO.getStockQuantity());
+        }
+
         return productUpdate;
     }
 
@@ -129,5 +141,23 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable);
     }
 
+    @Override
+    @Transactional
+    public void addCategory(Long productId, Long categoryId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
 
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
+
+        product.addCategory(category);
+    }
+
+    @Override
+    @Transactional
+    public void removeCategory(Long productId, Long categoryId) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
+
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
+
+        product.removeCategory(category);
+    }
 }

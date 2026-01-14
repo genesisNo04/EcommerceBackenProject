@@ -32,7 +32,7 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<Page<ReviewResponseDTO>> findReviewByUserId(@PathVariable Long userId,
                                                                                   @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         pageable = pageableSortValidator.validate(pageable, SortableFields.REVIEW.getFields());
@@ -77,7 +77,7 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{rating}")
+    @GetMapping("/rating/{rating}")
     public ResponseEntity<Page<ReviewResponseDTO>> findReviewByRating(@PathVariable int rating,
                                                                       @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
         if (rating < 0 || rating > 5) {
@@ -111,5 +111,23 @@ public class ReviewController {
     public ResponseEntity<ReviewResponseDTO> deleteReview(@PathVariable Long reviewId, @PathVariable Long userId) {
         reviewService.deleteReview(reviewId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ReviewResponseDTO>> findReviews(@RequestParam Long userId,
+                                                               @RequestParam Long productId,
+                                                               @RequestParam int rating,
+                                                               @RequestParam LocalDate start,
+                                                               @RequestParam LocalDate end,
+                                                               @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
+
+        pageable = pageableSortValidator.validate(pageable, SortableFields.REVIEW.getFields());
+
+        LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
+        LocalDateTime endTime = (end == null) ? LocalDateTime.now() : LocalDateTime.of(end, LocalTime.MIDNIGHT.minusSeconds(1));
+        
+        Page<Review> review = reviewService.findReviews(userId, productId, rating, startTime, endTime, pageable);
+        Page<ReviewResponseDTO> response = review.map(ReviewMapper::toDTO);
+        return ResponseEntity.ok(response);
     }
 }

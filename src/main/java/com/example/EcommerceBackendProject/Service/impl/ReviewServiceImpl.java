@@ -117,4 +117,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
         reviewRepository.delete(currentReview);
     }
+
+    @Override
+    public Page<Review> findReviews(Long userId, Long productId, int rating, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+
+        return null;
+    }
 }

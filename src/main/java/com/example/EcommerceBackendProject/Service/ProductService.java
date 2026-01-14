@@ -29,4 +29,8 @@ public interface ProductService {
     Page<Product> findProductByCategory(Category category, Pageable pageable);
 
     Page<Product> findAll(Pageable pageable);
+
+    void addCategory(Long productId, Long categoryId);
+
+    void removeCategory(Long productId, Long categoryId);
 }
