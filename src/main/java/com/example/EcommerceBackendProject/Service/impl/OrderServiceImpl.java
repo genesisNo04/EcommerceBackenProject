@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Status.IN_PROCESS);
         order.setUser(user);
 
-        order = orderRepository.save(order);
+        BigDecimal total = BigDecimal.ZERO;
 
         for (var itemDto : orderRequestDTO.getOrderItems()) {
             Product product = productRepository.findById(itemDto.getProductId())
@@ -66,12 +66,12 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderItems().add(item);
         }
 
-        BigDecimal total = order.getOrderItems().stream()
+        total = order.getOrderItems().stream()
                         .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         order.setTotalAmount(total);
-        return order;
+        return orderRepository.save(order);
     }
 
     @Override

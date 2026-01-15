@@ -8,6 +8,7 @@ import com.example.EcommerceBackendProject.Enum.Status;
 import com.example.EcommerceBackendProject.Mapper.OrderMapper;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -66,13 +67,13 @@ public class UserOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponseDTO> createOrder(@PathVariable Long userId, @RequestBody OrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderResponseDTO> createOrder(@PathVariable Long userId, @Valid @RequestBody OrderRequestDTO orderRequestDTO) {
         Order order = orderService.createOrder(orderRequestDTO, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toDTO(order));
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long userId, @PathVariable Long orderId, @RequestBody OrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long userId, @PathVariable Long orderId, @Valid @RequestBody OrderRequestDTO orderRequestDTO) {
         Order order = orderService.updateOrder(orderRequestDTO, orderId, userId);
         return ResponseEntity.ok(OrderMapper.toDTO(order));
     }

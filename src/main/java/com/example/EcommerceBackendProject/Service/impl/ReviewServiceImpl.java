@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.ReviewRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Exception.BadRequestException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
@@ -12,7 +13,9 @@ import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ReviewRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.ReviewService;
-import jakarta.transaction.Transactional;
+import com.example.EcommerceBackendProject.Specification.ReviewSpecification;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -20,7 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -37,6 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public Review createReview(ReviewRequestDTO reviewRequestDTO, Long userId, Long productId) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("User not found."));
 
@@ -55,55 +58,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<Review> findByUserId(Long userId, Pageable pageable) {
-        return reviewRepository.findByUserId(userId, pageable);
-    }
-
-    @Override
-    public Page<Review> findByProductId(Long productId, Pageable pageable) {
-        return reviewRepository.findByProductId(productId, pageable);
-    }
-
-    @Override
-    public Review findByUserIdAndProductId(Long userId, Long productId) {
-        return reviewRepository.findByUserIdAndProductId(userId, productId).orElseThrow(() -> new NoResourceFoundException("No review found for this user on this product!"));
-    }
-
-    @Override
-    public Page<Review> findByRatingAndProductId(int rating, Long productId, Pageable pageable) {
-        return reviewRepository.findByRatingAndProductId(rating, productId, pageable);
-    }
-
-    @Override
-    public Page<Review> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable) {
-        return reviewRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
-    }
-
-    @Override
-    public Page<Review> findByUserIdAndModifiedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable) {
-        return reviewRepository.findByUserIdAndModifiedAtBetween(userId, start, end, pageable);
-    }
-
-    @Override
-    public Page<Review> findByProductIdAndCreatedAtBetween(Long productId, LocalDateTime start, LocalDateTime end, Pageable pageable) {
-        return reviewRepository.findByProductIdAndCreatedAtBetween(productId, start, end, pageable);
-    }
-
-    @Override
-    public Page<Review> findByRating(int rating, Pageable pageable) {
-        return reviewRepository.findByRating(rating, pageable);
-    }
-
-    @Override
-    public Page<Review> findByRatingBetween(int startRating, int endRating, Pageable pageable) {
-        return reviewRepository.findByRatingBetween(startRating, endRating, pageable);
-    }
-
-    @Override
     @Transactional
     public Review updateReview(ReviewRequestDTO reviewRequestDTO, Long reviewId, Long userId) {
-        Review currentReview = reviewRepository.findByIdAndUserId(reviewId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Review not found! or access denied"));
+        Review currentReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+
+        if (!currentReview.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("Not authorized to update this review");
+        }
 
         currentReview.setRating(reviewRequestDTO.getRating());
         currentReview.setComment(reviewRequestDTO.getComment());
@@ -113,14 +75,51 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void deleteReview(Long reviewId, Long userId) {
-        Review currentReview = reviewRepository.findByIdAndUserId(reviewId, userId)
+        Review currentReview = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+
+        if (!currentReview.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("Not authorized to delete this review");
+        }
+
         reviewRepository.delete(currentReview);
     }
 
     @Override
-    public Page<Review> findReviews(Long userId, Long productId, int rating, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<Review> findReviews(Long userId, Long productId, Integer startRating, Integer endRating, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
-        return null;
+        Specification<Review> spec = (root, query, cb) -> cb.conjunction();
+
+        if (userId != null) {
+            spec = spec.and(ReviewSpecification.hasUserId(userId));
+        }
+
+        if (productId != null) {
+            spec = spec.and(ReviewSpecification.hasProductId(productId));
+        }
+
+        if (startRating != null || endRating != null) {
+
+            if (startRating != null && (startRating < 0 || startRating > 5)) {
+                throw new BadRequestException("startRating must be between 0 and 5");
+            }
+
+            if (endRating != null && (endRating < 0 || endRating > 5)) {
+                throw new BadRequestException("endRating must be between 0 and 5");
+            }
+
+            if (startRating != null && endRating != null && startRating > endRating) {
+                throw new BadRequestException("startRating cannot be larger than endRating");
+            }
+
+            int min = startRating != null ? startRating : 0;
+            int max = endRating != null ? endRating : 5;
+            spec = spec.and(ReviewSpecification.ratingBetween(min, max));
+        }
+
+        spec = spec.and(ReviewSpecification.createdBetween(start, end));
+
+        return reviewRepository.findAll(spec, pageable);
     }
 }

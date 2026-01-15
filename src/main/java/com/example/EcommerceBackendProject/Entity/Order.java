@@ -8,7 +8,10 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,7 +42,7 @@ public class Order {
     private Status status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems;
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     @OneToOne(mappedBy = "order")
     private Payment payment;

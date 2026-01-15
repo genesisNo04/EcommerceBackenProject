@@ -60,12 +60,12 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
                 throw new IllegalArgumentException("Insufficient stock");
             }
             existingItem.get().setQuantity(newQuantity);
-            return existingItem.get();
+            return shoppingCartItemRepository.save(existingItem.get());
         }
 
         ShoppingCartItem shoppingCartItem = new ShoppingCartItem(product, shoppingCartItemRequestDTO.getQuantity(), product.getPrice(), cart);
         cart.addItem(shoppingCartItem);
-        return shoppingCartItem;
+        return shoppingCartItemRepository.save(shoppingCartItem);
     }
 
     @Override

@@ -16,6 +16,8 @@ public class ShoppingCartItemMapper {
         shoppingCartItemResponseDTO.setProductId(shoppingCartItem.getProduct().getId());
         shoppingCartItemResponseDTO.setProductName(shoppingCartItem.getProduct().getProductName());
         shoppingCartItemResponseDTO.setQuantity(shoppingCartItem.getQuantity());
+        shoppingCartItemResponseDTO.setPriceSnapshot(shoppingCartItem.getPriceSnapshot());
+        shoppingCartItemResponseDTO.setLineTotal(shoppingCartItem.getPriceSnapshot().multiply(BigDecimal.valueOf(shoppingCartItem.getQuantity())));
 
         return shoppingCartItemResponseDTO;
     }
