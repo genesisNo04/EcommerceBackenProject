@@ -8,10 +8,9 @@ import com.example.EcommerceBackendProject.Entity.ShoppingCartItem;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ShoppingCartItemRepository;
-import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Service.ShoppingCartItemService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,18 +19,14 @@ import java.util.Optional;
 @Service
 public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
-    @Autowired
-    private ShoppingCartItemRepository shoppingCartItemRepository;
+    private final ShoppingCartItemRepository shoppingCartItemRepository;
+    private final ShoppingCartService shoppingCartService;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    private ShoppingCart getCartOrThrow(Long userId) {
-        return shoppingCartRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoResourceFoundException("No cart found"));
+    public ShoppingCartItemServiceImpl(ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartService shoppingCartService, ProductRepository productRepository) {
+        this.shoppingCartItemRepository = shoppingCartItemRepository;
+        this.shoppingCartService = shoppingCartService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -41,7 +36,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
 
-        ShoppingCart cart = getCartOrThrow(userId);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
 
         Product product = productRepository.findById(shoppingCartItemRequestDTO.getProductId())
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
@@ -75,7 +70,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
 
-        ShoppingCart cart = getCartOrThrow(userId);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
@@ -97,7 +92,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Override
     @Transactional
     public void removeItemFromCart(Long productId, Long userId) {
-        ShoppingCart cart = getCartOrThrow(userId);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
 
         ShoppingCartItem item = shoppingCartItemRepository
                 .findByShoppingCartIdAndProductIdAndShoppingCartUserId(
@@ -109,13 +104,13 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Override
     public Page<ShoppingCartItem> findItemsByUser(Long userId, Pageable pageable) {
-        ShoppingCart cart = getCartOrThrow(userId);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
         return shoppingCartItemRepository.findByShoppingCartId(cart.getId(), pageable);
     }
 
     @Override
     public ShoppingCartItem findItemByUserAndProduct(Long productId, Long userId) {
-        ShoppingCart cart = getCartOrThrow(userId);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
         return shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cart.getId(), productId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No item founds"));
     }

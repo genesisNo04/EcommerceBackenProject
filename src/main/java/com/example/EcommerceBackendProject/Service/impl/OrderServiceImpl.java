@@ -1,10 +1,7 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
-import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.OrderItem;
-import com.example.EcommerceBackendProject.Entity.Product;
-import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Entity.*;
 import com.example.EcommerceBackendProject.Enum.Status;
 import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
@@ -12,10 +9,9 @@ import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
-import com.example.EcommerceBackendProject.Service.OrderItemService;
 import com.example.EcommerceBackendProject.Service.OrderService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,15 +23,17 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final ShoppingCartService shoppingCartService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
-    private ProductRepository productRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, ShoppingCartService shoppingCartService) {
+        this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.shoppingCartService = shoppingCartService;
+    }
 
     @Override
     @Transactional
@@ -69,6 +67,11 @@ public class OrderServiceImpl implements OrderService {
         total = order.getOrderItems().stream()
                         .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            cart.removeItemByProductId(orderItem.getProduct().getId());
+        }
 
         order.setTotalAmount(total);
         return orderRepository.save(order);

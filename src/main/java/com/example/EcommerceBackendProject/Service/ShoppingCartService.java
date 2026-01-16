@@ -7,4 +7,6 @@ public interface ShoppingCartService {
     ShoppingCart findByUserId(Long userId);
 
     void clearShoppingCart(Long userId);
+
+    ShoppingCart getCartOrThrow(Long userId);
 }

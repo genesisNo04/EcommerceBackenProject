@@ -12,7 +12,7 @@ import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

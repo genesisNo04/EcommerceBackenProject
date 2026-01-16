@@ -9,11 +9,13 @@ import com.example.EcommerceBackendProject.Repository.OrderItemRepository;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Service.OrderItemService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
@@ -26,47 +28,6 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Override
-    @Transactional
-    public OrderItem addItemToOrder(Long orderId, Long productId, int quantity, Long userId) {
-        Order order = orderRepository.findByIdAndUserId(userId, orderId)
-                .orElseThrow(() -> new NoResourceFoundException("No order found!"));
-
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResourceFoundException("No product found!"));
-
-        if (quantity <= 0 || quantity > product.getStockQuantity()) {
-            throw new InvalidOrderItemQuantityException("Invalid quantity");
-        }
-
-        OrderItem orderItem = new OrderItem();
-        orderItem.setQuantity(quantity);
-        orderItem.setOrder(order);
-        orderItem.setPriceAtPurchase(product.getPrice());
-        orderItem.setProduct(product);
-        order.getOrderItems().add(orderItem);
-        orderItemRepository.save(orderItem);
-        return orderItem;
-    }
-
-    @Override
-    @Transactional
-    public OrderItem updateOrderItemQuantity(Long orderItemId, Long orderId, int quantity, Long userId) {
-        OrderItem orderItem = orderItemRepository.findByIdAndOrderIdAndOrderUserId(orderItemId, orderId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Item not found!"));
-
-        Product product = orderItem.getProduct();
-
-        if (quantity <= 0 || quantity > product.getStockQuantity()) {
-            throw new InvalidOrderItemQuantityException("Invalid quantity");
-        }
-
-        orderItem.setQuantity(quantity);
-
-        return orderItem;
-    }
 
     @Override
     public Page<OrderItem> findOrderItems(Long orderId, Pageable pageable) {

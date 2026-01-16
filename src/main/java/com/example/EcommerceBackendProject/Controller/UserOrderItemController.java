@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users/{userId}/orders/{orderId}/items")
+@RequestMapping("/v1/users/{userId}")
 public class UserOrderItemController {
 
     private final OrderItemService orderItemService;
@@ -24,7 +24,7 @@ public class UserOrderItemController {
         this.pageableSortValidator = pageableSortValidator;
     }
 
-    @GetMapping
+    @GetMapping("/orders/{orderId}/items")
     public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long userId, @PathVariable Long orderId,
                                                                    @PageableDefault(size = 10) Pageable pageable) {
 
@@ -34,23 +34,13 @@ public class UserOrderItemController {
         return ResponseEntity.ok(responseDTOS);
     }
 
-    @PostMapping("/{productId}/{quantity}")
-    public ResponseEntity<OrderItemResponseDTO> addOrderItemToOrder(@PathVariable Long userId,
-                                                                    @PathVariable Long orderId,
-                                                                    @PathVariable Long productId,
-                                                                    @PathVariable int quantity) {
+    @GetMapping
+    public ResponseEntity<Page<OrderItemResponseDTO>> getAllOrderItems(@PathVariable Long userId,
+                                                                    @PageableDefault(size = 10) Pageable pageable) {
 
-        OrderItem orderItem = orderItemService.addItemToOrder(orderId, productId, quantity, userId);
-        return ResponseEntity.ok(OrderItemMapper.toDTO(orderItem));
-    }
-
-    @PatchMapping("/{itemId}/{quantity}")
-    public ResponseEntity<OrderItemResponseDTO> updateOrderItemQuantity(@PathVariable Long userId,
-                                                                    @PathVariable Long orderId,
-                                                                    @PathVariable Long itemId,
-                                                                    @PathVariable int quantity) {
-
-        OrderItem orderItem = orderItemService.updateOrderItemQuantity(itemId, orderId, quantity, userId);
-        return ResponseEntity.ok(OrderItemMapper.toDTO(orderItem));
+        pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
+        Page<OrderItem> orderItems = orderItemService.findAllOrderItemsForUser(userId, pageable);
+        Page<OrderItemResponseDTO> responseDTOS = orderItems.map(OrderItemMapper::toDTO);
+        return ResponseEntity.ok(responseDTOS);
     }
 }

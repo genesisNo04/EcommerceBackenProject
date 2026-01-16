@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/v1/users/{userId}/payments")
@@ -48,8 +47,8 @@ public class PaymentController {
                                                                        @PageableDefault(size = 10) Pageable pageable) {
 
 
-        LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
-        LocalDateTime endTime = (end == null) ? LocalDateTime.now() : LocalDateTime.of(end, LocalTime.MIDNIGHT.minusSeconds(1));
+        LocalDateTime startTime = (start == null) ? null : start.atStartOfDay();
+        LocalDateTime endTime = (end == null) ? null : end.plusDays(1).atStartOfDay();
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.PAYMENT.getFields());
         Page<Payment> payment = paymentService.findPayments(userId, status, type, startTime, endTime, pageable);
@@ -69,7 +68,7 @@ public class PaymentController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{paymentId}")
+    @PutMapping("/{paymentId}")
     public ResponseEntity<PaymentResponseDTO> updatePayment(@PathVariable Long userId, @PathVariable Long paymentId, @Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
         Payment payment = paymentService.updatePayment(paymentId, paymentRequestDTO, userId);
         return ResponseEntity.ok(PaymentMapper.toDTO(payment));

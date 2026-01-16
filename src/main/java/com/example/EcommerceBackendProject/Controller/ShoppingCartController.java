@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users/{userId}/v1/carts")
+@RequestMapping("/v1/users/{userId}/carts")
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;

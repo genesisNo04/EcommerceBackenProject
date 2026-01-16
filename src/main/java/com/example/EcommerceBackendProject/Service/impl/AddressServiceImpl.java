@@ -2,20 +2,16 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
-import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
-import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
-import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

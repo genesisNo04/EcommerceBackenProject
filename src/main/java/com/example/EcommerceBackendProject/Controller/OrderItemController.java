@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/orders/{orderId}/items")
+@RequestMapping("/v1/orders/{orderId}/items")
 
 public class OrderItemController {
     private final OrderItemService orderItemService;
@@ -29,7 +29,7 @@ public class OrderItemController {
 
     @GetMapping
     public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long orderId,
-                                                                          @PageableDefault(size = 10) Pageable pageable) {
+                                                                    @PageableDefault(size = 10) Pageable pageable) {
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<OrderItem> orderItems = orderItemService.findOrderItems(orderId, pageable);

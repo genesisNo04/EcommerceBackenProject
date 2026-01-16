@@ -10,7 +10,7 @@ import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Service.CategoryService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
