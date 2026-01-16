@@ -1,10 +1,7 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
-import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.OrderItem;
-import com.example.EcommerceBackendProject.Entity.Product;
-import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Entity.*;
 import com.example.EcommerceBackendProject.Enum.Status;
 import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
@@ -12,10 +9,9 @@ import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
-import com.example.EcommerceBackendProject.Service.OrderItemService;
 import com.example.EcommerceBackendProject.Service.OrderService;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,29 +23,16 @@ import java.util.Optional;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final ShoppingCartService shoppingCartService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Override
-    public Page<Order> findOrdersByUserId(Long userId, Pageable pageable) {
-        return orderRepository.findByUserId(userId, pageable);
-    }
-
-    @Override
-    public Page<Order> findOrdersBetween(Long userId, Pageable pageable, LocalDateTime start, LocalDateTime end) {
-        return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
-    }
-
-    @Override
-    public Page<Order> findByStatus(Long userId, Status status, Pageable pageable) {
-        return orderRepository.findByUserIdAndStatus(userId, status, pageable);
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, ShoppingCartService shoppingCartService) {
+        this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.shoppingCartService = shoppingCartService;
     }
 
     @Override
@@ -61,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Status.IN_PROCESS);
         order.setUser(user);
 
-        order = orderRepository.save(order);
+        BigDecimal total = BigDecimal.ZERO;
 
         for (var itemDto : orderRequestDTO.getOrderItems()) {
             Product product = productRepository.findById(itemDto.getProductId())
@@ -81,12 +64,17 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderItems().add(item);
         }
 
-        BigDecimal total = order.getOrderItems().stream()
+        total = order.getOrderItems().stream()
                         .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            cart.removeItemByProductId(orderItem.getProduct().getId());
+        }
 
         order.setTotalAmount(total);
-        return order;
+        return orderRepository.save(order);
     }
 
     @Override
@@ -142,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(Long orderId, Long userId) {
+    public Order findOrderById(Long orderId, Long userId) {
         return orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
     }
@@ -158,5 +146,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAllOrders(Pageable pageable) {
         return orderRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Order> findUserOrders(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+
+        if (status != null && (start != null || end != null)) {
+            return orderRepository.findByUserIdAndStatusAndCreatedAtBetween(userId, status, start, end, pageable);
+        }
+
+        if (start != null || end != null) {
+            return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
+        }
+
+        if (status != null) {
+            return orderRepository.findByUserIdAndStatus(userId, status, pageable);
+        }
+
+        return orderRepository.findByUserId(userId, pageable);
     }
 }

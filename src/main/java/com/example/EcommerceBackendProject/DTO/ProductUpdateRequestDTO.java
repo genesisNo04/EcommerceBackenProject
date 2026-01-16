@@ -1,0 +1,27 @@
+package com.example.EcommerceBackendProject.DTO;
+
+import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.util.Set;
+
+@Getter
+@Setter
+public class ProductUpdateRequestDTO {
+
+    private String productName;
+
+    private String description;
+
+    @Min(1)
+    private Integer stockQuantity;
+
+    private Set<CategoryRequestDTO> categories;
+
+    @Min(0)
+    private BigDecimal price;
+
+    private String imageUrl;
+}

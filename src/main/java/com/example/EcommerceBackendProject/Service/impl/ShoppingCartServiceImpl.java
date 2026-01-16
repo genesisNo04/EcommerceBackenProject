@@ -7,7 +7,7 @@ import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.ShoppingCartService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,26 +24,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private UserRepository userRepository;
 
     @Override
-    @Transactional
-    public ShoppingCart createShoppingCart(Long userId) {
-        Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUserId(userId);
-        if (existingCart.isPresent()) {
-            return existingCart.get();
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found"));
-
-        ShoppingCart newCart = new ShoppingCart(user);
-
-        return shoppingCartRepository.save(newCart);
-    }
-
-    @Override
-    public Optional<ShoppingCart> findByUserId(Long userId) {
+    public ShoppingCart findByUserId(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found"));
-        return shoppingCartRepository.findByUserId(userId);
+        return shoppingCartRepository.findByUserId(userId).orElseThrow(() -> new NoResourceFoundException("Shopping cart not found!"));
     }
 
     @Override
@@ -52,8 +36,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found"));
 
-        ShoppingCart cart = findByUserId(userId)
-                .orElseThrow(() -> new NoResourceFoundException("Shopping cart not found"));
+        ShoppingCart cart = findByUserId(userId);
         cart.getItems().clear();
+    }
+
+    @Override
+    public ShoppingCart getCartOrThrow(Long userId) {
+        return shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoResourceFoundException("No cart found"));
     }
 }

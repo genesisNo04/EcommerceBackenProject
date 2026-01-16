@@ -65,4 +65,8 @@ public class ShoppingCart {
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void removeItemByProductId(Long productId) {
+        items.removeIf(item -> item.getProduct().getId().equals(productId));
+    }
 }

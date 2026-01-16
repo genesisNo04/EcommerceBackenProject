@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -27,5 +28,7 @@ public class AddressRequestDTO {
     @Pattern(regexp = "\\d{5}(-\\d{4})?", message = "Zipcode must be 5 digits")
     private String zipCode;
 
-    private boolean isDefault;
+    @JsonProperty("isDefault")
+    private Boolean isDefault;
+
 }

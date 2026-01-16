@@ -16,19 +16,11 @@ public interface PaymentService {
 
     Payment findPaymentByOrderIdAndUserId(Long orderId, Long userId);
 
-    Page<Payment> findPaymentByStatusAndUserId(PaymentStatus status, Long userId, Pageable pageable);
-
-    Page<Payment> findPaymentByPaymentTypeAndUserId(PaymentType paymentType, Long userId, Pageable pageable);
-
-    Page<Payment> findPaymentByPaymentTypeAndStatusAndUserId(PaymentType paymentType, PaymentStatus status, Long userId, Pageable pageable);
-
-    Page<Payment> findPaymentByCreatedAtBetween(LocalDateTime start, LocalDateTime end, Long userId, Pageable pageable);
-
     Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId);
 
     void deletePayment(Long paymentId, Long userId);
 
     Payment updatePayment(Long paymentId, PaymentRequestDTO paymentRequestDTO, Long userId);
 
-    Page<Payment> findPaymentByUserId(Long userId, Pageable pageable);
+    Page<Payment> findPayments(Long userId, PaymentStatus status, PaymentType paymentType,LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

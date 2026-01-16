@@ -1,20 +1,17 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
-import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
+import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
-import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
-import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -69,6 +66,10 @@ public class AddressServiceImpl implements AddressService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
+        if (addressRequestDTO.getIsDefault()) {
+            addressRepository.resetDefaultForUser(userId);
+        }
+
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
@@ -77,10 +78,46 @@ public class AddressServiceImpl implements AddressService {
         updatedAddress.setCity(addressRequestDTO.getCity());
         updatedAddress.setCountry(addressRequestDTO.getCountry());
         updatedAddress.setZipCode(addressRequestDTO.getZipCode());
-        updatedAddress.setDefault(addressRequestDTO.isDefault());
 
-        if (updatedAddress.isDefault()) {
+        updatedAddress.setDefault(addressRequestDTO.getIsDefault());
+        return updatedAddress;
+    }
+
+    @Override
+    @Transactional
+    public Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+
+        if (addressUpdateRequestDTO.getIsDefault() != null && addressUpdateRequestDTO.getIsDefault()) {
             addressRepository.resetDefaultForUser(userId);
+        }
+
+        Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
+                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+
+        if (addressUpdateRequestDTO.getStreet() != null) {
+            updatedAddress.setStreet(addressUpdateRequestDTO.getStreet());
+        }
+
+        if (addressUpdateRequestDTO.getState() != null) {
+            updatedAddress.setState(addressUpdateRequestDTO.getState());
+        }
+
+        if (addressUpdateRequestDTO.getCity() != null) {
+            updatedAddress.setCity(addressUpdateRequestDTO.getCity());
+        }
+
+        if (addressUpdateRequestDTO.getCountry() != null) {
+            updatedAddress.setCountry(addressUpdateRequestDTO.getCountry());
+        }
+
+        if (addressUpdateRequestDTO.getZipCode() != null) {
+            updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
+        }
+
+        if (addressUpdateRequestDTO.getIsDefault() != null) {
+            updatedAddress.setDefault(addressUpdateRequestDTO.getIsDefault());
         }
 
         return updatedAddress;
@@ -125,7 +162,7 @@ public class AddressServiceImpl implements AddressService {
             return new ArrayList<>();
         }
 
-        long defaultCount = dto.stream().filter(AddressRequestDTO::isDefault).count();
+        long defaultCount = dto.stream().filter(AddressRequestDTO::getIsDefault).count();
         if (defaultCount > 1) {
             throw new IllegalArgumentException("Only one default address allowed");
         }

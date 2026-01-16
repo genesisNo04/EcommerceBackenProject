@@ -20,7 +20,7 @@ public class ShoppingCartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -30,7 +30,7 @@ public class ShoppingCartItem {
     @Column(nullable = false)
     private BigDecimal priceSnapshot;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "cart_id")
     private ShoppingCart shoppingCart;
 

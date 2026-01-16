@@ -11,25 +11,9 @@ public interface ReviewService {
 
     Review createReview(ReviewRequestDTO reviewRequestDTO, Long userId, Long productId);
 
-    Page<Review> findByUserId(Long userId, Pageable pageable);
-
-    Page<Review> findByProductId(Long productId, Pageable pageable);
-
-    Page<Review> findByUserIdAndProductId(Long userId, Long productId, Pageable pageable);
-
-    Page<Review> findByRatingAndProductId(int rating, Long productId, Pageable pageable);
-
-    Page<Review> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
-
-    Page<Review> findByUserIdAndModifiedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
-
-    Page<Review> findByProductIdAndCreatedAtBetween(Long productId, LocalDateTime start, LocalDateTime end, Pageable pageable);
-
-    Page<Review> findByRating(int rating, Pageable pageable);
-
-    Page<Review> findByRatingBetween(int startRating, int endRating, Pageable pageable);
-
     Review updateReview(ReviewRequestDTO reviewRequestDTO, Long reviewId, Long userId);
 
     void deleteReview(Long reviewId, Long userId);
+
+    Page<Review> findReviews(Long userId, Long productId, Integer startRating, Integer endRating, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

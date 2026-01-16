@@ -1,8 +1,8 @@
 package com.example.EcommerceBackendProject.Service;
 
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -16,4 +16,10 @@ public interface CategoryService {
     void deleteCategory(Long categoryId);
 
     Set<Category> resolveCategories(Set<CategoryRequestDTO> categoryRequestDTOs);
+
+    Category findByName(String name);
+
+    Category updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO);
+
+    Category patchCategory(Long categoryId, CategoryUpdateRequestDTO categoryUpdateRequestDTO);
 }

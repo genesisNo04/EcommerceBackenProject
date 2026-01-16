@@ -1,9 +1,12 @@
 package com.example.EcommerceBackendProject.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,7 +32,12 @@ public class Address {
 
     private String zipCode;
 
+    @JsonProperty("isDefault")
     private boolean isDefault;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
 
     public Address(User user, String street, String city, String state, String country, String zipCode, boolean isDefault) {
         this.user = user;
@@ -39,5 +47,16 @@ public class Address {
         this.country = country;
         this.zipCode = zipCode;
         this.isDefault = isDefault;
+    }
+
+    @PrePersist
+    public void createAt() {
+        this.createdAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void modifiedAt() {
+        this.modifiedAt = LocalDateTime.now();
     }
 }

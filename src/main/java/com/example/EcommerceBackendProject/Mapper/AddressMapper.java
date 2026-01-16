@@ -31,7 +31,7 @@ public class AddressMapper {
         newAddress.setState(requestDTO.getState());
         newAddress.setCountry(requestDTO.getCountry());
         newAddress.setZipCode(requestDTO.getZipCode());
-        newAddress.setDefault(requestDTO.isDefault());
+        newAddress.setDefault(requestDTO.getIsDefault());
 
         return newAddress;
     }

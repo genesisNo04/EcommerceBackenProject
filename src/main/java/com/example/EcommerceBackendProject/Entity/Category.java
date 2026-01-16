@@ -26,4 +26,14 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products = new HashSet<>();
+
+    public void addProduct(Product product) {
+        this.products.add(product);
+        product.getCategories().add(this);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+        product.getCategories().remove(this);
+    }
 }

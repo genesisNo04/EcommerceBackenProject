@@ -1,6 +1,8 @@
 package com.example.EcommerceBackendProject.Service;
 
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
+import com.example.EcommerceBackendProject.DTO.ProductUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,8 @@ public interface ProductService {
 
     Product updateProduct(ProductRequestDTO productRequestDTO, Long productId);
 
+    Product patchProduct(ProductUpdateRequestDTO productUpdateRequestDTO, Long productId);
+
     void deleteProduct(Long productId);
 
     BigDecimal findProductPrice(Long productId);
@@ -23,4 +27,10 @@ public interface ProductService {
     Page<Product> findProductByKeyword(String keyword, Pageable pageable);
 
     Page<Product> findProductByCategory(Category category, Pageable pageable);
+
+    Page<Product> findAll(Pageable pageable);
+
+    void addCategory(Long productId, Long categoryId);
+
+    void removeCategory(Long productId, Long categoryId);
 }

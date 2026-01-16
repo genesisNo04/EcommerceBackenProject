@@ -1,6 +1,6 @@
 package com.example.EcommerceBackendProject.DTO;
 
-import com.example.EcommerceBackendProject.Entity.Address;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,5 +22,6 @@ public class AddressResponseDTO {
 
     private String zipCode;
 
+    @JsonProperty("isDefault")
     private boolean isDefault;
 }
