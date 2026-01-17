@@ -3,7 +3,6 @@ package com.example.EcommerceBackendProject.Controller;
 import com.example.EcommerceBackendProject.DTO.OrderResponseDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
-import com.example.EcommerceBackendProject.Enum.Status;
 import com.example.EcommerceBackendProject.Mapper.OrderMapper;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
@@ -14,10 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/v1/orders")

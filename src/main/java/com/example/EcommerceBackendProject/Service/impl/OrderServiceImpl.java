@@ -2,7 +2,7 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.*;
-import com.example.EcommerceBackendProject.Enum.Status;
+import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -41,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepository.findById(userId)
                         .orElseThrow(() -> new NoUserFoundException("No user found!"));
         Order order = new Order();
-        order.setStatus(Status.IN_PROCESS);
+        order.setOrderStatus(OrderStatus.IN_PROCESS);
         order.setUser(user);
 
         BigDecimal total = BigDecimal.ZERO;
@@ -83,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
-        if (order.getStatus() != Status.IN_PROCESS) {
+        if (order.getOrderStatus() != OrderStatus.IN_PROCESS) {
             throw new IllegalStateException("Only IN_PROCESS orders can be updated");
         }
 
@@ -149,18 +148,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> findUserOrders(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+    public Page<Order> findUserOrders(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
-        if (status != null && (start != null || end != null)) {
-            return orderRepository.findByUserIdAndStatusAndCreatedAtBetween(userId, status, start, end, pageable);
+        if (orderStatus != null && (start != null || end != null)) {
+            return orderRepository.findByUserIdAndStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
         }
 
         if (start != null || end != null) {
             return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
         }
 
-        if (status != null) {
-            return orderRepository.findByUserIdAndStatus(userId, status, pageable);
+        if (orderStatus != null) {
+            return orderRepository.findByUserIdAndStatus(userId, orderStatus, pageable);
         }
 
         return orderRepository.findByUserId(userId, pageable);

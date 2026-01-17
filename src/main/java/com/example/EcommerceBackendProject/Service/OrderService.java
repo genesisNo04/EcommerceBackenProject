@@ -2,7 +2,7 @@ package com.example.EcommerceBackendProject.Service;
 
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Enum.Status;
+import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,5 +20,5 @@ public interface OrderService {
 
     Page<Order> findAllOrders(Pageable pageable);
 
-    Page<Order> findUserOrders(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<Order> findUserOrders(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

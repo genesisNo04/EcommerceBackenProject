@@ -1,17 +1,13 @@
 package com.example.EcommerceBackendProject.Repository;
 
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Enum.Status;
-import org.aspectj.weaver.ast.Or;
+import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,9 +20,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     //@Query("SELECT o FROM Order o JOIN User u WHERE createdAt BETWEEN :start AND :end AND u.id == :userId")
     Page<Order> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<Order> findByUserIdAndStatus(Long userId, Status status, Pageable pageable);
+    Page<Order> findByUserIdAndStatus(Long userId, OrderStatus orderStatus, Pageable pageable);
 
     Optional<Order> findByIdAndUserId(Long orderId, Long userId);
 
-    Page<Order> findByUserIdAndStatusAndCreatedAtBetween(Long userId, Status status, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<Order> findByUserIdAndStatusAndCreatedAtBetween(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }

@@ -1,7 +1,6 @@
 package com.example.EcommerceBackendProject.DTO;
 
-import com.example.EcommerceBackendProject.Entity.OrderItem;
-import com.example.EcommerceBackendProject.Enum.Status;
+import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,7 @@ public class OrderResponseDTO {
 
     private BigDecimal totalAmount;
 
-    private Status status;
+    private OrderStatus orderStatus;
 
     private List<OrderItemResponseDTO> orderItems;
 
