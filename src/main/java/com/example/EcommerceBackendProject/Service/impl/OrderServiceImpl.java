@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> findUserOrders(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
         if (orderStatus != null && (start != null || end != null)) {
-            return orderRepository.findByUserIdAndStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
+            return orderRepository.findByUserIdAndOrderStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
         }
 
         if (start != null || end != null) {
@@ -159,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (orderStatus != null) {
-            return orderRepository.findByUserIdAndStatus(userId, orderStatus, pageable);
+            return orderRepository.findByUserIdAndOrderStatus(userId, orderStatus, pageable);
         }
 
         return orderRepository.findByUserId(userId, pageable);

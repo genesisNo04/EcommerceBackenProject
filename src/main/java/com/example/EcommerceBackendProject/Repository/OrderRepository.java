@@ -20,9 +20,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     //@Query("SELECT o FROM Order o JOIN User u WHERE createdAt BETWEEN :start AND :end AND u.id == :userId")
     Page<Order> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Page<Order> findByUserIdAndStatus(Long userId, OrderStatus orderStatus, Pageable pageable);
+    Page<Order> findByUserIdAndOrderStatus(Long userId, OrderStatus orderStatus, Pageable pageable);
 
     Optional<Order> findByIdAndUserId(Long orderId, Long userId);
 
-    Page<Order> findByUserIdAndStatusAndCreatedAtBetween(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<Order> findByUserIdAndOrderStatusAndCreatedAtBetween(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable);
 }
