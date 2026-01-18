@@ -2,9 +2,7 @@ package com.example.EcommerceBackendProject.Entity;
 
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
-import com.example.EcommerceBackendProject.Enum.Status;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

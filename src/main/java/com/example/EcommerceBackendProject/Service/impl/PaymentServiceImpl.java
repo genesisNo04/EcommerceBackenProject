@@ -5,7 +5,7 @@ import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Entity.Payment;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
-import com.example.EcommerceBackendProject.Exception.InvalidPaymentStateException;
+import com.example.EcommerceBackendProject.Exception.InvalidPaymentStatusException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
@@ -68,7 +68,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
 
         if (payment.getStatus() != PaymentStatus.PENDING) {
-            throw new InvalidPaymentStateException("Only PENDING payments can be updated");
+            throw new InvalidPaymentStatusException("Only PENDING payments can be updated");
         }
 
         Order order = payment.getOrder();

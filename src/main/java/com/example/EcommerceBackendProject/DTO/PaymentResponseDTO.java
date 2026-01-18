@@ -2,7 +2,6 @@ package com.example.EcommerceBackendProject.DTO;
 
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
-import com.example.EcommerceBackendProject.Enum.Status;
 import lombok.Getter;
 import lombok.Setter;
 
