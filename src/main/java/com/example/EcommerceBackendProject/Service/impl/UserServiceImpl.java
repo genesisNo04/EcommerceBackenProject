@@ -12,6 +12,7 @@ import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final AddressService addressService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, AddressService addressService) {
+    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, AddressService addressService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.addressService = addressService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private void validateAndSetEmail(User oldUser, String newEmail) {
@@ -66,7 +69,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = UserMapper.toEntity(userRequestDTO);
-        user.setRoles(new ArrayList<>(List.of(Role.USER)));
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.getRoles().add(Role.USER);
         user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
 
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -133,7 +137,7 @@ public class UserServiceImpl implements UserService {
     public void changePassword(Long userId, String newPassword) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }

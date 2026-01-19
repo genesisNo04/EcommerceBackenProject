@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -47,7 +49,7 @@ public class User {
     )
     //This tell spring how to store the enum, there are 2 type, first is string and ordinal (index of ENUM): 0,1,2
     @Enumerated(EnumType.STRING)
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -60,9 +62,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    public User(ShoppingCart cart, List<Role> roles, String phoneNumber, String lastName, String firstName, String password, String email, String username) {
+    public User(ShoppingCart cart, String phoneNumber, String lastName, String firstName, String password, String email, String username) {
         this.cart = cart;
-        this.roles = roles;
         this.phoneNumber = phoneNumber;
         this.lastName = lastName;
         this.firstName = firstName;
