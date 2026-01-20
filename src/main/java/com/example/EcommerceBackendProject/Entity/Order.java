@@ -18,7 +18,7 @@ import java.util.Set;
 @Table( name = "user_order",
         indexes = {
                 @Index(name = "idx_order_user", columnList = "user_id"),
-                @Index(name = "idx_order_status", columnList = "status"),
+                @Index(name = "idx_order_status", columnList = "orderStatus"),
                 @Index(name = "idx_order_created", columnList = "createdAt"),
         }
 )

@@ -9,6 +9,7 @@ import com.example.EcommerceBackendProject.Service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         Category category = categoryService.createCategory(categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toDTO(category));
@@ -37,18 +39,21 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         Category category = categoryService.updateCategory(categoryId, categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toDTO(category));
     }
 
     @PatchMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<CategoryResponseDTO> partiallyUpdateCategory(@PathVariable Long categoryId, @Valid @RequestBody CategoryUpdateRequestDTO categoryUpdateRequestDTO) {
         Category category = categoryService.patchCategory(categoryId, categoryUpdateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toDTO(category));

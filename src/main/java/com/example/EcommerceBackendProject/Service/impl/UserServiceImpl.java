@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -41,6 +38,15 @@ public class UserServiceImpl implements UserService {
             }
         }
         oldUser.setEmail(newEmail);
+    }
+
+    private void validateAndSetUsername(User user, String username) {
+        if (username != null && !user.getUsername().equals(username)) {
+            if (userRepository.existsByUsername(username)) {
+                throw new ResourceAlreadyExistsException("Email is already in used");
+            }
+        }
+        user.setUsername(username);
     }
 
     @Override
@@ -85,6 +91,8 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+
+        validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
         oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
         oldUser.setLastName(userUpdateRequestDTO.getLastName());
         oldUser.getAddresses().clear();
@@ -99,6 +107,10 @@ public class UserServiceImpl implements UserService {
     public User patchUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+
+        if (userUpdateRequestDTO.getUsername() != null) {
+            validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+        }
 
         if (userUpdateRequestDTO.getFirstName() != null) {
             oldUser.setFirstName(userUpdateRequestDTO.getFirstName());

@@ -10,6 +10,8 @@ import java.util.List;
 @Setter
 public class UserUpdateRequestDTO {
 
+    private String username;
+
     private String firstName;
 
     private String lastName;

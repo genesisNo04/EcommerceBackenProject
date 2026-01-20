@@ -2,10 +2,13 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.LoginRequestDTO;
 import com.example.EcommerceBackendProject.DTO.LoginResponseDTO;
+import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.CustomUserDetails;
-import com.example.EcommerceBackendProject.Repository.UserRepository;
+import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Security.JwtService;
+import com.example.EcommerceBackendProject.Security.UserDetailsServiceImpl;
 import com.example.EcommerceBackendProject.Service.AuthService;
+import com.example.EcommerceBackendProject.Service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,9 +21,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthServiceImpl(JwtService jwtService, AuthenticationManager authenticationManager) {
+    private final UserService userService;
+
+    public AuthServiceImpl(JwtService jwtService, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -41,5 +47,14 @@ public class AuthServiceImpl implements AuthService {
                 token,
                 "Bearer"
         );
+    }
+
+    @Override
+    public LoginResponseDTO register(UserRequestDTO userRequestDTO) {
+        userService.createUser(userRequestDTO);
+
+        return login(new LoginRequestDTO(
+                userRequestDTO.getUsername(),
+                userRequestDTO.getPassword()));
     }
 }
