@@ -22,7 +22,7 @@ public class ProductResponseDTO {
 
     private Integer stockQuantity;
 
-    private Set<CategoryResponseDTO> categories;
+    private Set<Long> categoriesId;
 
     private String imageUrl;
 

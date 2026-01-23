@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -44,9 +45,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product createProduct(ProductRequestDTO productRequestDTO) {
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productRequestDTO.getCategoriesId()));
+
+        if (categories.size() != productRequestDTO.getCategoriesId().size()) {
+            throw new NoResourceFoundException("One or more categories is not found");
+        }
+
         Product product = ProductMapper.toEntity(productRequestDTO);
-        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
-        categories.forEach(c -> c.addProduct(product));
+        product.getCategories().addAll(categories);
+
         return productRepository.save(product);
     }
 
@@ -56,17 +63,18 @@ public class ProductServiceImpl implements ProductService {
         Product productUpdate = productRepository.findByIdForUpdate(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found!"));
 
-        productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
-
         productUpdate.setProductName(productRequestDTO.getProductName());
         productUpdate.setPrice(productRequestDTO.getPrice());
         productUpdate.setImageUrl(productRequestDTO.getImageUrl());
         productUpdate.setDescription(productRequestDTO.getDescription());
         productUpdate.setStockQuantity(productRequestDTO.getStockQuantity());
 
-        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategories());
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productRequestDTO.getCategoriesId()));
 
-        categories.forEach(c -> c.addProduct(productUpdate));
+        if (!productUpdate.getCategories().equals(categories)) {
+            productUpdate.getCategories().clear();
+            productUpdate.getCategories().addAll(categories);
+        }
 
         return productUpdate;
     }
@@ -77,12 +85,18 @@ public class ProductServiceImpl implements ProductService {
         Product productUpdate = productRepository.findByIdForUpdate(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found!"));
 
-        if (productUpdateRequestDTO.getCategories() != null) {
-            productUpdate.getCategories().forEach(c -> c.removeProduct(productUpdate));
+        if (productUpdateRequestDTO.getCategoriesId() != null) {
 
-            Set<Category> categories = categoryService.resolveCategories(productUpdateRequestDTO.getCategories());
+            Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productUpdateRequestDTO.getCategoriesId()));
 
-            categories.forEach(c -> c.addProduct(productUpdate));
+            if (categories.size() != productUpdateRequestDTO.getCategoriesId().size()) {
+                throw new NoResourceFoundException("One or more categories is not found");
+            }
+
+            if (!productUpdate.getCategories().equals(categories)) {
+                productUpdate.getCategories().clear();
+                productUpdate.getCategories().addAll(categories);
+            }
         }
 
         if (productUpdateRequestDTO.getProductName() != null) {

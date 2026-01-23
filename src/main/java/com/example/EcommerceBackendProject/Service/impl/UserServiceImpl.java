@@ -152,4 +152,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    @Override
+    @Transactional
+    public User createAdmin(UserRequestDTO userRequestDTO) {
+        User user = createUser(userRequestDTO);
+        user.getRoles().add(Role.ADMIN);
+        return user;
+    }
 }

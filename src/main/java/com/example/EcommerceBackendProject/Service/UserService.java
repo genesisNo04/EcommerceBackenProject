@@ -24,5 +24,5 @@ public interface UserService {
 
     void changePassword(Long userId, String newPassword);
 
-
+    User createAdmin(UserRequestDTO userRequestDTO);
 }

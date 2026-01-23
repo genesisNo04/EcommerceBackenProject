@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Exception;
 
 import com.example.EcommerceBackendProject.DTO.ApiErrorResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -199,6 +200,18 @@ public class GlobalExceptionHandler {
                 status.value(),
                 status.name(),
                 "Unexpected error occurred.",
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleDbError(DataIntegrityViolationException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                "Invalid data or duplicate resource",
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
