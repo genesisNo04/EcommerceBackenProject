@@ -4,10 +4,7 @@ import com.example.EcommerceBackendProject.DTO.ReviewRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Exception.BadRequestException;
-import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
-import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
+import com.example.EcommerceBackendProject.Exception.*;
 import com.example.EcommerceBackendProject.Mapper.ReviewMapper;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ReviewRepository;
@@ -64,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
 
         if (!currentReview.getUser().getId().equals(userId)) {
-            throw new IllegalStateException("Not authorized to update this review");
+            throw new AccessDeniedException("Not authorized to update this review");
         }
 
         currentReview.setRating(reviewRequestDTO.getRating());

@@ -21,6 +21,7 @@ public class ProductMapper {
         productResponseDTO.setStockQuantity(product.getStockQuantity());
         productResponseDTO.setImageUrl(product.getImageUrl());
         productResponseDTO.setCreatedAt(product.getCreatedAt());
+        productResponseDTO.setPrice(product.getPrice());
 
         if (product.getCategories() != null) {
             Set<Long> categoriesId = product.getCategories()
