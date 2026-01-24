@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,18 @@ public class GlobalExceptionHandler {
                         ex.getMessage(),
                         request.getRequestURI(),
                         LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(UserAccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleUserAccessDeniedException(UserAccessDeniedException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

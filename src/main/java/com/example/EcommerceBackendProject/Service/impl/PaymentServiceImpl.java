@@ -58,6 +58,13 @@ public class PaymentServiceImpl implements PaymentService {
     public void deletePayment(Long paymentId, Long userId) {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
+
+        Order order = payment.getOrder();
+
+        if (order != null) {
+            order.setPayment(null);
+            payment.setOrder(null);
+        }
         paymentRepository.delete(payment);
     }
 

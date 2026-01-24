@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.OrderItemResponseDTO;
 import com.example.EcommerceBackendProject.Entity.OrderItem;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
 import com.example.EcommerceBackendProject.Mapper.OrderItemMapper;
+import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.OrderItemService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/users/{userId}")
+@RequestMapping("/v1/users")
 public class UserOrderItemController {
 
     private final OrderItemService orderItemService;
@@ -25,9 +26,9 @@ public class UserOrderItemController {
     }
 
     @GetMapping("/orders/{orderId}/items")
-    public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long userId, @PathVariable Long orderId,
+    public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long orderId,
                                                                    @PageableDefault(size = 10) Pageable pageable) {
-
+        Long userId = SecurityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<OrderItem> orderItems = orderItemService.findOrderItemsForUserInOrder(userId, orderId, pageable);
         Page<OrderItemResponseDTO> responseDTOS = orderItems.map(OrderItemMapper::toDTO);
@@ -35,9 +36,9 @@ public class UserOrderItemController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<OrderItemResponseDTO>> getAllOrderItems(@PathVariable Long userId,
-                                                                    @PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<Page<OrderItemResponseDTO>> getAllOrderItems(@PageableDefault(size = 10) Pageable pageable) {
 
+        Long userId = SecurityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<OrderItem> orderItems = orderItemService.findAllOrderItemsForUser(userId, pageable);
         Page<OrderItemResponseDTO> responseDTOS = orderItems.map(OrderItemMapper::toDTO);

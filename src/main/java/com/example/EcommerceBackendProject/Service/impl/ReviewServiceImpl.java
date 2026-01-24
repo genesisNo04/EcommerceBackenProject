@@ -61,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
 
         if (!currentReview.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("Not authorized to update this review");
+            throw new UserAccessDeniedException("Not authorized to update this review");
         }
 
         currentReview.setRating(reviewRequestDTO.getRating());

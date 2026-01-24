@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
+import com.example.EcommerceBackendProject.Controller.PaymentController;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -58,5 +59,12 @@ public class Order {
     @PreUpdate
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+        if (payment != null && payment.getOrder() != this) {
+            payment.setOrder(this);
+        }
     }
 }
