@@ -13,14 +13,14 @@ public class CategoryMapper {
 
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
         categoryResponseDTO.setId(category.getId());
-        categoryResponseDTO.setName(category.getName());
+        categoryResponseDTO.setName(category.getName().toUpperCase());
         categoryResponseDTO.setDescription(category.getDescription());
         return categoryResponseDTO;
     }
 
     public static Category toEntity(CategoryRequestDTO categoryRequestDTO) {
         Category category = new Category();
-        category.setName(categoryRequestDTO.getName());
+        category.setName(categoryRequestDTO.getName().toUpperCase());
         category.setDescription(categoryRequestDTO.getDescription());
 
         return category;

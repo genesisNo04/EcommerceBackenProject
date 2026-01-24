@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductResponseDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProductMapper {
@@ -20,12 +21,14 @@ public class ProductMapper {
         productResponseDTO.setStockQuantity(product.getStockQuantity());
         productResponseDTO.setImageUrl(product.getImageUrl());
         productResponseDTO.setCreatedAt(product.getCreatedAt());
+        productResponseDTO.setPrice(product.getPrice());
 
         if (product.getCategories() != null) {
-            productResponseDTO.setCategories(product.getCategories()
+            Set<Long> categoriesId = product.getCategories()
                     .stream()
-                    .map(CategoryMapper::toDTO)
-                    .collect(Collectors.toSet()));
+                    .map(category -> category.getId())
+                    .collect(Collectors.toUnmodifiableSet());
+            productResponseDTO.setCategoriesId(categoriesId);
         }
 
         return productResponseDTO;

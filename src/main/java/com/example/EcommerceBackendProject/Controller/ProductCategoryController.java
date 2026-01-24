@@ -3,6 +3,7 @@ package com.example.EcommerceBackendProject.Controller;
 import com.example.EcommerceBackendProject.Service.ProductService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,12 +17,14 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> addCategory(@PathVariable Long productId, @PathVariable Long categoryId) {
         productService.addCategory(productId, categoryId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{categoryId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> removeCategory(@PathVariable Long productId, @PathVariable Long categoryId) {
         productService.removeCategory(productId, categoryId);
         return ResponseEntity.noContent().build();

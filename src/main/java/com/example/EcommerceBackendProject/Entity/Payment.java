@@ -60,4 +60,11 @@ public class Payment {
         payment.setStatus(PaymentStatus.PENDING);
         return payment;
     }
+
+    public void setOrder(Order order) {
+        this.order = order;
+        if (order != null && order.getPayment() != this) {
+            order.setPayment(this);
+        }
+    }
 }

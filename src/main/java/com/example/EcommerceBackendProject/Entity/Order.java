@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
+import com.example.EcommerceBackendProject.Controller.PaymentController;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.Set;
 @Table( name = "user_order",
         indexes = {
                 @Index(name = "idx_order_user", columnList = "user_id"),
-                @Index(name = "idx_order_status", columnList = "status"),
+                @Index(name = "idx_order_status", columnList = "orderStatus"),
                 @Index(name = "idx_order_created", columnList = "createdAt"),
         }
 )
@@ -58,5 +59,12 @@ public class Order {
     @PreUpdate
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+        if (payment != null && payment.getOrder() != this) {
+            payment.setOrder(this);
+        }
     }
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -22,7 +23,9 @@ public class ProductResponseDTO {
 
     private Integer stockQuantity;
 
-    private Set<CategoryResponseDTO> categories;
+    private BigDecimal price;
+
+    private Set<Long> categoriesId;
 
     private String imageUrl;
 

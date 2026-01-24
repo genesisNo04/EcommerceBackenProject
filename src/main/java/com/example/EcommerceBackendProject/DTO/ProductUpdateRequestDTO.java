@@ -18,7 +18,7 @@ public class ProductUpdateRequestDTO {
     @Min(1)
     private Integer stockQuantity;
 
-    private Set<CategoryRequestDTO> categories;
+    private Set<Long> categoriesId;
 
     @Min(0)
     private BigDecimal price;

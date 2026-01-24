@@ -27,7 +27,7 @@ public class ProductRequestDTO {
 
     @NotEmpty
     @NotNull
-    private Set<CategoryRequestDTO> categories;
+    private Set<Long> categoriesId;
 
     @NotNull
     @Min(0)

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -37,24 +38,28 @@ public class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO) {
         Product product = productService.createProduct(productRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductMapper.toDTO(product));
     }
 
     @PutMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable Long productId, @Valid @RequestBody ProductRequestDTO productRequestDTO) {
         Product product = productService.updateProduct(productRequestDTO, productId);
         return ResponseEntity.ok(ProductMapper.toDTO(product));
     }
 
     @PatchMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> partiallyUpdateProduct(@PathVariable Long productId, @Valid @RequestBody ProductUpdateRequestDTO productUpdateRequestDTO) {
         Product product = productService.patchProduct(productUpdateRequestDTO, productId);
         return ResponseEntity.ok(ProductMapper.toDTO(product));
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
