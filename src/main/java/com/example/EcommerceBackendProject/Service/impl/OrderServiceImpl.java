@@ -39,9 +39,8 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
                         .orElseThrow(() -> new NoUserFoundException("No user found!"));
-        Order order = new Order();
-        order.setOrderStatus(OrderStatus.IN_PROCESS);
-        order.setUser(user);
+
+        Order order = new Order(user);
 
         BigDecimal total = BigDecimal.ZERO;
 
@@ -82,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
-        if (order.getOrderStatus() != OrderStatus.IN_PROCESS) {
+        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
             throw new IllegalStateException("Only IN_PROCESS orders can be updated");
         }
 

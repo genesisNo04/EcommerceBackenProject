@@ -1,6 +1,6 @@
 package com.example.EcommerceBackendProject.Repository;
 
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import org.springframework.data.domain.Page;

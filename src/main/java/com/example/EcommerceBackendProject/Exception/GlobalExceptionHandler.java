@@ -228,4 +228,16 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleIllegalStateException(IllegalStateException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                "Incorrect state",
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
 }

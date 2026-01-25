@@ -1,6 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
-import com.example.EcommerceBackendProject.Controller.PaymentController;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false, precision = 15, scale = 2)
@@ -50,6 +50,11 @@ public class Order {
 
     private LocalDateTime modifiedAt;
 
+    public Order(User user) {
+        this.user = user;
+        this.orderStatus = OrderStatus.CREATED;
+    }
+
     @PrePersist
     private void createdAt() {
         this.createdAt = LocalDateTime.now();
@@ -66,5 +71,29 @@ public class Order {
         if (payment != null && payment.getOrder() != this) {
             payment.setOrder(this);
         }
+    }
+
+    public void markPendingPayment() {
+        if (orderStatus != OrderStatus.CREATED) {
+            throw new IllegalStateException("Order cannot move to PENDING_PAYMENT from " + orderStatus);
+        }
+
+        this.orderStatus = OrderStatus.PENDING_PAYMENT;
+    }
+
+    public void markPaid() {
+        if (orderStatus != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateException("Order cannot move to PAID from " + orderStatus);
+        }
+
+        this.orderStatus = OrderStatus.PAID;
+    }
+
+    public void markFailed() {
+        if (orderStatus != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateException("Order cannot move to FAILED from " + orderStatus);
+        }
+
+        this.orderStatus = OrderStatus.FAILED;
     }
 }

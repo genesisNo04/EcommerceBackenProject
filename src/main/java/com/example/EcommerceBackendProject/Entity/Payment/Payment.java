@@ -1,8 +1,10 @@
-package com.example.EcommerceBackendProject.Entity;
+package com.example.EcommerceBackendProject.Entity.Payment;
 
+import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = "order_id"),
@@ -47,17 +50,20 @@ public class Payment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    private String providerReference;
+
     @PrePersist
     protected void onCreated() {
         this.createdAt = LocalDateTime.now();
     }
+
 
     public static Payment createPayment(Order order, PaymentType type) {
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setPaymentType(type);
         payment.setAmount(order.getTotalAmount());
-        payment.setStatus(PaymentStatus.PENDING);
+        payment.setStatus(PaymentStatus.INITIATED);
         return payment;
     }
 

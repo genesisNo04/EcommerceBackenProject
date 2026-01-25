@@ -2,7 +2,7 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.PaymentRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Exception.InvalidPaymentStatusException;
@@ -74,7 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
 
-        if (payment.getStatus() != PaymentStatus.PENDING) {
+        if (payment.getStatus() != PaymentStatus.INITIATED) {
             throw new InvalidPaymentStatusException("Only PENDING payments can be updated");
         }
 

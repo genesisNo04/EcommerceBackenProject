@@ -2,7 +2,7 @@ package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.DTO.PaymentRequestDTO;
 import com.example.EcommerceBackendProject.DTO.PaymentResponseDTO;
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
