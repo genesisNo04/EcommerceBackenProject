@@ -36,47 +36,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
-        User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new NoUserFoundException("No user found!"));
-
-        Order order = new Order(user);
-
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (var itemDto : orderRequestDTO.getOrderItems()) {
-            Product product = productRepository.findById(itemDto.getProductId())
-                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
-
-            if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
-                throw new InvalidOrderItemQuantityException("Invalid quantity");
-            }
-
-            OrderItem item = new OrderItem();
-            item.setOrder(order);
-            item.setProduct(product);
-            item.setQuantity(itemDto.getQuantity());
-            item.setPriceAtPurchase(product.getPrice());
-
-            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
-            order.getOrderItems().add(item);
-        }
-
-        total = order.getOrderItems().stream()
-                        .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
-                                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
-
-        for (OrderItem orderItem : order.getOrderItems()) {
-            cart.removeItemByProductId(orderItem.getProduct().getId());
-        }
-
-        order.setTotalAmount(total);
-        return orderRepository.save(order);
-    }
-
-    @Override
-    @Transactional
     public Order updateOrder(OrderRequestDTO orderRequestDTO, Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
@@ -162,5 +121,87 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderRepository.findByUserId(userId, pageable);
+    }
+
+    @Override
+    @Transactional
+    public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserFoundException("No user found!"));
+
+        Order order = new Order(user);
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (var itemDto : orderRequestDTO.getOrderItems()) {
+            Product product = productRepository.findById(itemDto.getProductId())
+                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+
+            if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
+                throw new InvalidOrderItemQuantityException("Invalid quantity");
+            }
+
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProduct(product);
+            item.setQuantity(itemDto.getQuantity());
+            item.setPriceAtPurchase(product.getPrice());
+
+            total = total.add(item.getPriceAtPurchase().multiply(BigDecimal.valueOf(item.getQuantity())));
+
+            order.getOrderItems().add(item);
+        }
+
+        order.setTotalAmount(total);
+        order.setOrderStatus(OrderStatus.CREATED);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public Order checkout(Long orderId, Long userId) {
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
+
+        if (order.getOrderStatus() != OrderStatus.CREATED) {
+            throw new IllegalStateException("Order cannot be checked out");
+        }
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = item.getProduct();
+
+            if (item.getQuantity() > product.getStockQuantity()) {
+                throw new InvalidOrderItemQuantityException("Insufficient stock for product " + product.getId());
+            }
+
+            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            total = total.add(item.getPriceAtPurchase().multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+
+        ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            cart.removeItemByProductId(orderItem.getProduct().getId());
+        }
+
+        order.setTotalAmount(total);
+        order.markPendingPayment();
+
+        return order;
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(Long orderId, Long userId) {
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
+
+        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateException("Order cannot be canceled");
+        }
+
+        order.markCanceled();
     }
 }

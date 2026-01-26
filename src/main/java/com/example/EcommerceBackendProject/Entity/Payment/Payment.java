@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = "order_id"),
         indexes = {
@@ -57,20 +57,23 @@ public class Payment {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Payment(Order order, PaymentType paymentType) {
+        this.order = order;
+        this.paymentType = paymentType;
+        this.status = PaymentStatus.INITIATED;
+    }
 
-    public static Payment createPayment(Order order, PaymentType type) {
+    public static Payment createPayment(Order order, PaymentType type, String providerReference, PaymentStatus paymentStatus) {
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setPaymentType(type);
         payment.setAmount(order.getTotalAmount());
-        payment.setStatus(PaymentStatus.INITIATED);
+        payment.setProviderReference(providerReference);
+        payment.setStatus(paymentStatus);
         return payment;
     }
 
-    public void setOrder(Order order) {
+    public void assignTo(Order order) {
         this.order = order;
-        if (order != null && order.getPayment() != this) {
-            order.setPayment(this);
-        }
     }
 }

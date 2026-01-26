@@ -212,7 +212,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
-                "Unexpected error occurred.",
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }

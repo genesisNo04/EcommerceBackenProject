@@ -37,7 +37,7 @@ public class Order {
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private OrderStatus orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -66,11 +66,12 @@ public class Order {
         this.modifiedAt = LocalDateTime.now();
     }
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-        if (payment != null && payment.getOrder() != this) {
-            payment.setOrder(this);
+    public void attachPayment(Payment payment) {
+        if (this.payment != null) {
+            throw new IllegalStateException("Order already have a payment");
         }
+        this.payment = payment;
+        payment.assignTo(this);
     }
 
     public void markPendingPayment() {
@@ -95,5 +96,13 @@ public class Order {
         }
 
         this.orderStatus = OrderStatus.FAILED;
+    }
+
+    public void markCanceled() {
+        if (orderStatus != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateException("Order cannot move to CANCELED from " + orderStatus);
+        }
+
+        this.orderStatus = OrderStatus.CANCELLED;
     }
 }

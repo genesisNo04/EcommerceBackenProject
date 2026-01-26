@@ -14,11 +14,11 @@ public interface PaymentService {
 
     Payment findPaymentByOrderIdAndUserId(Long orderId, Long userId);
 
-    Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId);
-
     void deletePayment(Long paymentId, Long userId);
 
     Payment updatePayment(Long paymentId, PaymentRequestDTO paymentRequestDTO, Long userId);
 
     Page<Payment> findPayments(Long userId, PaymentStatus status, PaymentType paymentType,LocalDateTime start, LocalDateTime end, Pageable pageable);
+
+    Payment processPayment(Long orderId, Long userId, PaymentType paymentType);
 }

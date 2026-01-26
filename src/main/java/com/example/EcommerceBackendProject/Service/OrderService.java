@@ -3,6 +3,7 @@ package com.example.EcommerceBackendProject.Service;
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,8 @@ public interface OrderService {
     Page<Order> findAllOrders(Pageable pageable);
 
     Page<Order> findUserOrders(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable);
+
+    Order checkout(Long orderId, Long userId);
+
+    void cancelOrder(Long orderId, Long userId);
 }

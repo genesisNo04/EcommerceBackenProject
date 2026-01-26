@@ -71,6 +71,13 @@ public class UserOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toDTO(order));
     }
 
+    @PostMapping("/checkout/{orderId}")
+    public ResponseEntity<OrderResponseDTO> checkoutOrder(@PathVariable Long orderId) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        Order order = orderService.checkout(orderId, userId);
+        return ResponseEntity.ok(OrderMapper.toDTO(order));
+    }
+
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long orderId, @Valid @RequestBody OrderRequestDTO orderRequestDTO) {
         Long userId = SecurityUtils.getCurrentUserId();
