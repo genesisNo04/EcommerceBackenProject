@@ -78,6 +78,13 @@ public class UserOrderController {
         return ResponseEntity.ok(OrderMapper.toDTO(order));
     }
 
+    @PostMapping("/cancel/{orderId}")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        orderService.cancelOrder(orderId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long orderId, @Valid @RequestBody OrderRequestDTO orderRequestDTO) {
         Long userId = SecurityUtils.getCurrentUserId();

@@ -224,7 +224,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
-                "Invalid data or duplicate resource",
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
@@ -236,7 +236,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
-                "Incorrect state",
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }

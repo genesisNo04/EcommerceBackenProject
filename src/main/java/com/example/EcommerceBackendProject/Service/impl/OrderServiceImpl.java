@@ -40,29 +40,19 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
-        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
-            throw new IllegalStateException("Only IN_PROCESS orders can be updated");
+        if (order.getOrderStatus() != OrderStatus.CREATED) {
+            throw new IllegalStateException("Only CREATED orders can be updated");
         }
 
-        if (order.getPayment() != null) {
-            throw new IllegalStateException("Cannot modify a paid order");
-        }
-
-        // 1. Restore stock for existing items
-        for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-        }
-
-        // 2. Clear existing items (orphanRemoval deletes them)
         order.getOrderItems().clear();
 
-        // 3. Re-add items from request
+        BigDecimal total = BigDecimal.ZERO;
+
         for (var itemDto : orderRequestDTO.getOrderItems()) {
             Product product = productRepository.findById(itemDto.getProductId())
                     .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
-            if (itemDto.getQuantity() <= 0 || itemDto.getQuantity() > product.getStockQuantity()) {
+            if (itemDto.getQuantity() <= 0) {
                 throw new InvalidOrderItemQuantityException("Invalid quantity");
             }
 
@@ -72,14 +62,10 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPriceAtPurchase(product.getPrice());
 
-            product.setStockQuantity(product.getStockQuantity() - itemDto.getQuantity());
+            total = total.add(item.getPriceAtPurchase().multiply(BigDecimal.valueOf(item.getQuantity())));
             order.getOrderItems().add(item);
-        }
 
-        // 4. Recalculate total
-        BigDecimal total = order.getOrderItems().stream()
-                .map(i -> i.getPriceAtPurchase().multiply(BigDecimal.valueOf(i.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
 
         order.setTotalAmount(total);
 
@@ -198,8 +184,15 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
-        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
+        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT && order.getOrderStatus() != OrderStatus.CREATED) {
             throw new IllegalStateException("Order cannot be canceled");
+        }
+
+        if (order.getOrderStatus() == OrderStatus.PENDING_PAYMENT) {
+            for (OrderItem orderItem : order.getOrderItems()) {
+                Product product = orderItem.getProduct();
+                product.setStockQuantity(product.getStockQuantity() + orderItem.getQuantity());
+            }
         }
 
         order.markCanceled();

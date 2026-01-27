@@ -99,7 +99,7 @@ public class Order {
     }
 
     public void markCanceled() {
-        if (orderStatus != OrderStatus.PENDING_PAYMENT) {
+        if (orderStatus != OrderStatus.PENDING_PAYMENT && orderStatus != OrderStatus.CREATED ) {
             throw new IllegalStateException("Order cannot move to CANCELED from " + orderStatus);
         }
 
