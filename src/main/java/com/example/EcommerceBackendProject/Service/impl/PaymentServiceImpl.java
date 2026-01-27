@@ -2,7 +2,11 @@ package com.example.EcommerceBackendProject.Service.impl;
 
 import com.example.EcommerceBackendProject.DTO.PaymentRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.PaymentGateway;
+import com.example.EcommerceBackendProject.Entity.Payment.PaymentRequest;
+import com.example.EcommerceBackendProject.Entity.Payment.PaymentResult;
+import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Exception.InvalidPaymentStatusException;
@@ -12,6 +16,7 @@ import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.PaymentRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.PaymentService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,14 +28,20 @@ import java.time.LocalDateTime;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    private final PaymentGateway paymentGateway;
+
+    public PaymentServiceImpl(PaymentRepository paymentRepository, UserRepository userRepository, OrderRepository orderRepository, PaymentGateway paymentGateway) {
+        this.paymentRepository = paymentRepository;
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
+        this.paymentGateway = paymentGateway;
+    }
 
     @Override
     public Payment findPaymentByOrderIdAndUserId(Long orderId, Long userId) {
@@ -38,20 +49,20 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new NoResourceFoundException("Payment not found for this order."));
     }
 
-    @Override
-    @Transactional
-    public Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId) {
-        if(paymentRepository.findByOrderIdAndOrderUserId(paymentRequestDTO.getOrderId(), userId).isPresent()) {
-            throw new ResourceAlreadyExistsException("Payment already exists for this order");
-        }
-
-        Order order = orderRepository.findByIdAndUserId(paymentRequestDTO.getOrderId(), userId)
-                .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
-        Payment payment = Payment.createPayment(order, paymentRequestDTO.getPaymentType());
-        order.setPayment(payment);
-
-        return paymentRepository.save(payment);
-    }
+//    @Override
+//    @Transactional
+//    public Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId) {
+//        if(paymentRepository.findByOrderIdAndOrderUserId(paymentRequestDTO.getOrderId(), userId).isPresent()) {
+//            throw new ResourceAlreadyExistsException("Payment already exists for this order");
+//        }
+//
+//        Order order = orderRepository.findByIdAndUserId(paymentRequestDTO.getOrderId(), userId)
+//                .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
+//        Payment payment = Payment.createPayment(order, paymentRequestDTO.getPaymentType(), "Test reference id", PaymentStatus.AUTHORIZED);
+//        order.setPayment(payment);
+//
+//        return paymentRepository.save(payment);
+//    }
 
     @Override
     @Transactional
@@ -74,7 +85,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
 
-        if (payment.getStatus() != PaymentStatus.PENDING) {
+        if (payment.getStatus() != PaymentStatus.INITIATED) {
             throw new InvalidPaymentStatusException("Only PENDING payments can be updated");
         }
 
@@ -102,6 +113,35 @@ public class PaymentServiceImpl implements PaymentService {
             payment = paymentRepository.findByPaymentTypeAndOrderUserId(paymentType, userId, pageable);
         } else {
             payment = paymentRepository.findByOrderUserId(userId, pageable);
+        }
+
+        return payment;
+    }
+
+    @Override
+    @Transactional
+    public Payment processPayment(Long orderId, Long userId, PaymentType paymentType) {
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
+
+        if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
+            throw new IllegalStateException("Order is not payable");
+        }
+
+        PaymentResult result = paymentGateway.charge(new PaymentRequest(order.getId(), order.getTotalAmount()));
+
+        Payment payment;
+
+        if (result.isSuccess()) {
+            order.markPaid();
+            payment = Payment.createPayment(order, paymentType, result.getReferenceId(), PaymentStatus.AUTHORIZED);
+            order.attachPayment(payment);
+            paymentRepository.save(payment);
+        } else {
+            order.markFailed();
+            payment = Payment.createPayment(order, paymentType, result.getReferenceId(), PaymentStatus.FAILED);
+            order.attachPayment(payment);
+            paymentRepository.save(payment);
         }
 
         return payment;

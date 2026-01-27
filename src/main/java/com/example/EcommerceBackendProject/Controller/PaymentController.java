@@ -2,7 +2,7 @@ package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.DTO.PaymentRequestDTO;
 import com.example.EcommerceBackendProject.DTO.PaymentResponseDTO;
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
@@ -57,10 +57,10 @@ public class PaymentController {
         return ResponseEntity.ok(payment.map(PaymentMapper::toDTO));
     }
 
-    @PostMapping
-    public ResponseEntity<PaymentResponseDTO> createPayment(@Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
+    @PostMapping("/{orderId}")
+    public ResponseEntity<PaymentResponseDTO> processPayment(@PathVariable Long orderId, @RequestParam PaymentType paymentType) {
         Long userId = SecurityUtils.getCurrentUserId();
-        Payment payment = paymentService.createPayment(paymentRequestDTO, userId);
+        Payment payment = paymentService.processPayment(orderId, userId, paymentType);
         return ResponseEntity.status(HttpStatus.CREATED).body(PaymentMapper.toDTO(payment));
     }
 

@@ -1,8 +1,10 @@
-package com.example.EcommerceBackendProject.Entity;
+package com.example.EcommerceBackendProject.Entity.Payment;
 
+import com.example.EcommerceBackendProject.Entity.Order;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = "order_id"),
         indexes = {
@@ -47,24 +50,30 @@ public class Payment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    private String providerReference;
+
     @PrePersist
     protected void onCreated() {
         this.createdAt = LocalDateTime.now();
     }
 
-    public static Payment createPayment(Order order, PaymentType type) {
+    public Payment(Order order, PaymentType paymentType) {
+        this.order = order;
+        this.paymentType = paymentType;
+        this.status = PaymentStatus.INITIATED;
+    }
+
+    public static Payment createPayment(Order order, PaymentType type, String providerReference, PaymentStatus paymentStatus) {
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setPaymentType(type);
         payment.setAmount(order.getTotalAmount());
-        payment.setStatus(PaymentStatus.PENDING);
+        payment.setProviderReference(providerReference);
+        payment.setStatus(paymentStatus);
         return payment;
     }
 
-    public void setOrder(Order order) {
+    public void assignTo(Order order) {
         this.order = order;
-        if (order != null && order.getPayment() != this) {
-            order.setPayment(this);
-        }
     }
 }

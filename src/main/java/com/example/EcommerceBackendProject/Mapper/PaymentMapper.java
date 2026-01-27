@@ -1,7 +1,7 @@
 package com.example.EcommerceBackendProject.Mapper;
 
 import com.example.EcommerceBackendProject.DTO.PaymentResponseDTO;
-import com.example.EcommerceBackendProject.Entity.Payment;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 
 public class PaymentMapper {
 

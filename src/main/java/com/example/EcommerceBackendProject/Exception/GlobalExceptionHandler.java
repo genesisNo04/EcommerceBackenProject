@@ -212,7 +212,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
-                "Unexpected error occurred.",
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
@@ -224,7 +224,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
-                "Invalid data or duplicate resource",
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleIllegalStateException(IllegalStateException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
