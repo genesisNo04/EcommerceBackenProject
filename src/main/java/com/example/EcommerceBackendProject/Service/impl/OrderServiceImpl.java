@@ -149,6 +149,10 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
+        if (order.getOrderStatus() == OrderStatus.PENDING_PAYMENT) {
+            return order;
+        }
+
         if (order.getOrderStatus() != OrderStatus.CREATED) {
             throw new IllegalStateException("Order cannot be checked out");
         }

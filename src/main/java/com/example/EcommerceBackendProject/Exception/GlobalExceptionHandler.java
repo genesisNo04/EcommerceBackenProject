@@ -1,8 +1,10 @@
 package com.example.EcommerceBackendProject.Exception;
 
 import com.example.EcommerceBackendProject.DTO.ApiErrorResponseDTO;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -237,6 +239,18 @@ public class GlobalExceptionHandler {
                 status.value(),
                 status.name(),
                 ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler({OptimisticLockingFailureException.class, OptimisticLockException.class})
+    public ResponseEntity<ApiErrorResponseDTO> handleOptimisticLockingException(Exception ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                "CONCURRENT_MODIFICATION",
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
