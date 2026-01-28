@@ -124,6 +124,10 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
 
+        if (order.getOrderStatus() == OrderStatus.PAID) {
+            return order.getPayment();
+        }
+
         if (order.getOrderStatus() != OrderStatus.PENDING_PAYMENT) {
             throw new IllegalStateException("Order is not payable");
         }

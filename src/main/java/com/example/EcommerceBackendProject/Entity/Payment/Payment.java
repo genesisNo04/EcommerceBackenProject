@@ -40,6 +40,9 @@ public class Payment {
     @Column(nullable = false)
     private PaymentType paymentType;
 
+    @Version
+    private Long version;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus status;
