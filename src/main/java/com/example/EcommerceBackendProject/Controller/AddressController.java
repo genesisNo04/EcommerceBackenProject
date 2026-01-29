@@ -8,6 +8,10 @@ import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,10 +68,10 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AddressResponseDTO>> getUserAddresses() {
+    public ResponseEntity<Page<AddressResponseDTO>> getUserAddresses(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Long userId = SecurityUtils.getCurrentUserId();
-        List<Address> address = addressService.getUserAddresses(userId);
-        List<AddressResponseDTO> response = address.stream().map(AddressMapper::toDTO).toList();
+        Page<Address> address = addressService.getUserAddresses(userId, pageable);
+        Page<AddressResponseDTO> response = address.map(AddressMapper::toDTO);
         return ResponseEntity.ok(response);
     }
 

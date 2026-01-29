@@ -4,13 +4,15 @@ import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AddressService {
 
-    List<Address> getUserAddresses(Long userId);
+    Page<Address> getUserAddresses(Long userId, Pageable pageable);
 
     Address createAddress(AddressRequestDTO addressRequestDTO, Long userId);
 
@@ -25,4 +27,6 @@ public interface AddressService {
     void setDefaultAddress(Long addressId, Long userId);
 
     List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user);
+
+    Page<Address> findAll(Pageable pageable);
 }

@@ -10,6 +10,8 @@ import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class AddressServiceImpl implements AddressService {
     private UserRepository userRepository;
 
     @Override
-    public List<Address> getUserAddresses(Long userId) {
+    public Page<Address> getUserAddresses(Long userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
         return addressRepository.findByUserId(userId);
@@ -174,5 +176,10 @@ public class AddressServiceImpl implements AddressService {
         }
 
         return addresses;
+    }
+
+    @Override
+    public Page<Address> findAll(Pageable pageable) {
+        return addressRepository.findAll(pageable);
     }
 }
