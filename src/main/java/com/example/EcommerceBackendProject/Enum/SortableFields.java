@@ -10,7 +10,8 @@ public enum SortableFields {
     REVIEW(Set.of("rating", "createdAt")),
     ORDER(Set.of("totalAmount", "createdAt")),
     ORDERITEM(Set.of("createdAt")),
-    PAYMENT(Set.of("paymentType", "status", "amount", "createdAt"));
+    PAYMENT(Set.of("paymentType", "status", "amount", "createdAt")),
+    ADDRESS(Set.of("street", "city", "state", "country", "zipCode", "createdAt"));
 
     private final Set<String> fields;
 

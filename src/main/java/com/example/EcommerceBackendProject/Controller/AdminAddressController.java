@@ -4,9 +4,11 @@ import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressResponseDTO;
 import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
+import com.example.EcommerceBackendProject.Enum.SortableFields;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.AddressService;
+import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,15 +25,18 @@ import org.springframework.web.bind.annotation.*;
 public class AdminAddressController {
 
     private final AddressService addressService;
+    private final PageableSortValidator pageableSortValidator;
 
-    public AdminAddressController(AddressService addressService) {
+    public AdminAddressController(AddressService addressService, PageableSortValidator pageableSortValidator) {
         this.addressService = addressService;
+        this.pageableSortValidator = pageableSortValidator;
     }
 
     @GetMapping
     public ResponseEntity<Page<AddressResponseDTO>> getAllAddresses(@RequestParam(required = false) Long userId,
                                                                     @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        pageable = pageableSortValidator.validate(pageable, SortableFields.ADDRESS.getFields());
         Page<Address> addresses;
 
         if (userId != null) {
@@ -52,22 +57,28 @@ public class AdminAddressController {
     }
 
     @PutMapping("/{addressId}")
-    public ResponseEntity<AddressResponseDTO> updateAddress(@RequestParam Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressRequestDTO addressRequestDTO) {
-        Address address = addressService.updateAddress(addressId, addressRequestDTO, userId);
+    public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long addressId, @Valid @RequestBody AddressRequestDTO addressRequestDTO) {
+        Address address = addressService.updateAnyAddress(addressId, addressRequestDTO);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
     }
 
     @PatchMapping("/{addressId}")
-    public ResponseEntity<AddressResponseDTO> partiallyUpdateAddress(@RequestParam Long userId, @PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
-        Address address = addressService.patchAddress(addressId, addressUpdateRequestDTO, userId);
+    public ResponseEntity<AddressResponseDTO> partiallyUpdateAddress(@PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
+        Address address = addressService.patchAnyAddress(addressId, addressUpdateRequestDTO);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
     }
 
     @DeleteMapping("/{addressId}")
-    public ResponseEntity<Void> deleteAddress(@RequestParam Long userId, @PathVariable Long addressId) {
-        addressService.deleteAddress(addressId, userId);
+    public ResponseEntity<Void> deleteAddress(@PathVariable Long addressId) {
+        addressService.deleteAnyAddress(addressId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{addressId}/default")
+    public ResponseEntity<Void> setDefaultAddress(@PathVariable Long addressId) {
+        addressService.setDefaultAnyAddress(addressId);
         return ResponseEntity.noContent().build();
     }
 }
