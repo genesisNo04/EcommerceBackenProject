@@ -33,13 +33,13 @@ public class Address {
     private String zipCode;
 
     @JsonProperty("isDefault")
-    private boolean isDefault;
+    private Boolean isDefault;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
 
-    public Address(User user, String street, String city, String state, String country, String zipCode, boolean isDefault) {
+    public Address(User user, String street, String city, String state, String country, String zipCode, Boolean isDefault) {
         this.user = user;
         this.street = street;
         this.city = city;
@@ -59,4 +59,5 @@ public class Address {
     public void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
     }
+
 }

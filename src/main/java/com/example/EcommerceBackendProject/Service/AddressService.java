@@ -28,5 +28,14 @@ public interface AddressService {
 
     List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user);
 
-    Page<Address> findAll(Pageable pageable);
+    //Admin service
+    Page<Address> findAllAddress(Pageable pageable);
+
+    Address updateAnyAddress(Long addressId, AddressRequestDTO addressRequestDTO);
+
+    Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO);
+
+    void deleteAnyAddress(Long addressId);
+
+    void setDefaultAnyAddress(Long addressId);
 }
