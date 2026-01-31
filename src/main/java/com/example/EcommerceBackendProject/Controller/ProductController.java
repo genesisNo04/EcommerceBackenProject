@@ -66,20 +66,23 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}/price")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Map<String, BigDecimal>> getProductPrice(@PathVariable Long productId) {
         BigDecimal productPrice = productService.findProductPrice(productId);
         return ResponseEntity.ok(Map.of("price", productPrice));
     }
 
     @GetMapping("/{productId}/quantity")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Map<String, Integer>> getProductQuantity(@PathVariable Long productId) {
         Integer productQuantity = productService.findProductQuantityWithProductId(productId);
         return ResponseEntity.ok(Map.of("quantity", productQuantity));
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponseDTO>> findProductByKeyword(@RequestParam(required = false) String keyword
-            , @PageableDefault(size = 10, sort = "productName", direction = Sort.Direction.ASC) Pageable pageable) {
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Page<ProductResponseDTO>> findProducts(@RequestParam(required = false) String keyword
+            , @PageableDefault(size = 10, sort = {"productName", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         pageable = pageableSortValidator.validate(pageable, SortableFields.PRODUCT.getFields());
         Page<Product> products = (keyword == null)
                 ? productService.findAll(pageable)
@@ -89,8 +92,9 @@ public class ProductController {
     }
 
     @GetMapping("/category")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Page<ProductResponseDTO>> findProductByCategory(@RequestParam String categoryName,
-                                                                         @PageableDefault(size = 10, sort = "productName", direction = Sort.Direction.ASC) Pageable pageable) {
+                                                                         @PageableDefault(size = 10, sort = {"productName", "id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         Category category = categoryService.findByName(categoryName);
         pageable = pageableSortValidator.validate(pageable, SortableFields.PRODUCT.getFields());
         Page<Product> products = productService.findProductByCategory(category, pageable);

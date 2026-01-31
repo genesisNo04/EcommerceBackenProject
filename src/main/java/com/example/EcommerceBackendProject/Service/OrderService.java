@@ -26,4 +26,8 @@ public interface OrderService {
     Order checkout(Long orderId, Long userId);
 
     void cancelOrder(Long orderId, Long userId);
+
+    Page<Order> findByOrderId(Long orderId, Pageable pageable);
+
+    Order findOrderById(Long orderId);
 }

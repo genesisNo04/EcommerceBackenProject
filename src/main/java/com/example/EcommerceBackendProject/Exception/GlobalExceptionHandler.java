@@ -243,6 +243,18 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
     @ExceptionHandler({OptimisticLockingFailureException.class, OptimisticLockException.class})
     public ResponseEntity<ApiErrorResponseDTO> handleOptimisticLockingException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;

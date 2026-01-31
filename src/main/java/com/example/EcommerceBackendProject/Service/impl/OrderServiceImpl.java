@@ -11,6 +11,7 @@ import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -200,5 +203,18 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.markCanceled();
+    }
+
+    @Override
+    public Page<Order> findByOrderId(Long orderId, Pageable pageable) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoResourceFoundException("No order found"));
+        return new PageImpl<>(List.of(order), pageable, 1);
+    }
+
+    @Override
+    public Order findOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NoResourceFoundException("No order found"));;
     }
 }
