@@ -119,4 +119,12 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewRepository.findAll(spec, pageable);
     }
+
+    @Override
+    public void deleteReview(Long reviewId) {
+        Review currentReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+
+        reviewRepository.delete(currentReview);
+    }
 }

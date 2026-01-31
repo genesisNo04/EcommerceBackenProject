@@ -16,4 +16,6 @@ public interface ReviewService {
     void deleteReview(Long reviewId, Long userId);
 
     Page<Review> findReviews(Long userId, Long productId, Integer startRating, Integer endRating, LocalDateTime start, LocalDateTime end, Pageable pageable);
+
+    void deleteReview(Long reviewId);
 }
