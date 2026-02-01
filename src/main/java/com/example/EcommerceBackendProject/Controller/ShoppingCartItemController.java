@@ -14,10 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/users/items")
+@PreAuthorize("hasRole('USER')")
 public class ShoppingCartItemController {
 
     private final ShoppingCartItemService shoppingCartItemService;
@@ -58,7 +60,7 @@ public class ShoppingCartItemController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ShoppingCartItemResponseDTO> getItemsForUser(@PathVariable Long productId) {
+    public ResponseEntity<ShoppingCartItemResponseDTO> getItemForUser(@PathVariable Long productId) {
         Long userId = SecurityUtils.getCurrentUserId();
         ShoppingCartItem item = shoppingCartItemService.findItemByUserAndProduct(productId, userId);
         return ResponseEntity.ok(ShoppingCartItemMapper.toDTO(item));

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/v1/users/payments")
+@PreAuthorize("hasRole('USER')")
 public class PaymentController {
 
     private final PaymentService paymentService;
