@@ -6,6 +6,7 @@ import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentGateway;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentRequest;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentResult;
+import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
@@ -16,7 +17,9 @@ import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.PaymentRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.PaymentService;
+import com.example.EcommerceBackendProject.Specification.PaymentSpecification;
 import org.aspectj.weaver.ast.Or;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -86,7 +89,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
 
         if (payment.getStatus() != PaymentStatus.INITIATED) {
-            throw new InvalidPaymentStatusException("Only PENDING payments can be updated");
+            throw new InvalidPaymentStatusException("Only INITIATED payments can be updated");
         }
 
         Order order = payment.getOrder();
@@ -98,24 +101,45 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Payment> findPayments(Long userId, PaymentStatus status, PaymentType paymentType, LocalDateTime start, LocalDateTime end, Pageable pageable) {
-        Page<Payment> payment;
+    public Page<Payment> findPayments(Long userId, Long orderId, PaymentStatus status, PaymentType paymentType, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
-        if (status != null && paymentType != null && (start != null || end != null)) {
-            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserIdAndCreatedAtBetween(status, paymentType, userId, start, end, pageable);
-        } else if (start != null || end != null) {
-            payment = paymentRepository.findByCreatedAtBetweenAndOrderUserId(start, end, userId, pageable);
-        } else if (status != null && paymentType != null) {
-            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserId(status, paymentType, userId, pageable);
-        } else if (status != null) {
-            payment = paymentRepository.findByStatusAndOrderUserId(status, userId, pageable);
-        } else if (paymentType != null) {
-            payment = paymentRepository.findByPaymentTypeAndOrderUserId(paymentType, userId, pageable);
-        } else {
-            payment = paymentRepository.findByOrderUserId(userId, pageable);
+        Specification<Payment> spec = (root, query, cb) -> cb.conjunction();
+
+        if (userId != null) {
+            spec = spec.and(PaymentSpecification.hasUserId(userId));
         }
 
-        return payment;
+        if (orderId != null) {
+            spec = spec.and(PaymentSpecification.hasOrderId(orderId));
+        }
+
+        if (status != null) {
+            spec = spec.and(PaymentSpecification.hasStatus(status));
+        }
+
+        if (paymentType != null) {
+            spec = spec.and(PaymentSpecification.hasPaymentType(paymentType));
+        }
+
+        if (start != null || end != null) {
+            spec = spec.and(PaymentSpecification.createdBetween(start, end));
+        }
+
+//        if (status != null && paymentType != null && (start != null || end != null)) {
+//            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserIdAndCreatedAtBetween(status, paymentType, userId, start, end, pageable);
+//        } else if (start != null || end != null) {
+//            payment = paymentRepository.findByCreatedAtBetweenAndOrderUserId(start, end, userId, pageable);
+//        } else if (status != null && paymentType != null) {
+//            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserId(status, paymentType, userId, pageable);
+//        } else if (status != null) {
+//            payment = paymentRepository.findByStatusAndOrderUserId(status, userId, pageable);
+//        } else if (paymentType != null) {
+//            payment = paymentRepository.findByPaymentTypeAndOrderUserId(paymentType, userId, pageable);
+//        } else {
+//            payment = paymentRepository.findByOrderUserId(userId, pageable);
+//        }
+
+        return paymentRepository.findAll(spec, pageable);
     }
 
     @Override

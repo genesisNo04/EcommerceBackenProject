@@ -1,6 +1,5 @@
 package com.example.EcommerceBackendProject.Controller;
 
-import com.example.EcommerceBackendProject.DTO.LoginResponseDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserResponseDTO;
 import com.example.EcommerceBackendProject.Entity.User;

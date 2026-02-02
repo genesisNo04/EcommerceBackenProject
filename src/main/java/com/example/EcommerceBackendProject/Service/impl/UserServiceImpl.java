@@ -74,21 +74,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserRequestDTO userRequestDTO) {
-        if (userRepository.existsByEmail(userRequestDTO.getEmail()) || userRepository.existsByUsername(userRequestDTO.getUsername())) {
-            throw new ResourceAlreadyExistsException("username or email is already exists.");
-        }
-
-        User user = UserMapper.toEntity(userRequestDTO);
-        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        user.getRoles().add(Role.USER);
-        user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
+    public User createCustomerUser(UserRequestDTO userRequestDTO) {
+        User user = createUser(userRequestDTO);
+        user.assignUserRole();
 
         ShoppingCart shoppingCart = new ShoppingCart();
         user.setCart(shoppingCart);
         shoppingCart.setUser(user);
 
         return userRepository.save(user);
+    }
+
+    private User createUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByEmail(userRequestDTO.getEmail())
+                || userRepository.existsByUsername(userRequestDTO.getUsername())) {
+            throw new ResourceAlreadyExistsException("username or email is already exists.");
+        }
+
+        User user = UserMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
+
+        return user;
     }
 
     @Override
@@ -162,8 +169,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createAdmin(UserRequestDTO userRequestDTO) {
         User user = createUser(userRequestDTO);
-        user.getRoles().add(Role.ADMIN);
-        return user;
+        user.assignAdminRole();
+        return userRepository.save(user);
     }
 
     @Override

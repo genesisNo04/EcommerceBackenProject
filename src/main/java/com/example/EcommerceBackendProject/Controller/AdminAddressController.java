@@ -6,7 +6,6 @@ import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Enum.SortableFields;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
-import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
 import jakarta.validation.Valid;
@@ -34,7 +33,7 @@ public class AdminAddressController {
 
     @GetMapping
     public ResponseEntity<Page<AddressResponseDTO>> getAllAddresses(@RequestParam(required = false) Long userId,
-                                                                    @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                    @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.ADDRESS.getFields());
         Page<Address> addresses;

@@ -159,6 +159,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional
     public void setDefaultAnyAddress(Long addressId) {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
@@ -230,7 +231,6 @@ public class AddressServiceImpl implements AddressService {
         }
     }
 
-    @Transactional
     private void setDefaultAddressInternally(Address address) {
         Long userId = address.getUser().getId();
         addressRepository.resetDefaultForUser(userId);

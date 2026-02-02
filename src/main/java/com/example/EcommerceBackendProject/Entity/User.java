@@ -82,4 +82,14 @@ public class User {
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void assignUserRole() {
+        roles.clear();
+        roles.add(Role.USER);
+    }
+
+    public void assignAdminRole() {
+        roles.clear();
+        roles.add(Role.ADMIN);
+    }
 }

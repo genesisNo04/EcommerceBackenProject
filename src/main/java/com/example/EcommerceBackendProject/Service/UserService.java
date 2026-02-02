@@ -22,7 +22,7 @@ public interface UserService {
 
     Page<User> findByEmail(String email, Pageable pageable);
 
-    User createUser(UserRequestDTO userRequestDTO);
+    User createCustomerUser(UserRequestDTO userRequestDTO);
 
     User updateUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO);
 

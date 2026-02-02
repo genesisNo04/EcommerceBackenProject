@@ -10,7 +10,7 @@ public class ReviewSpecification {
     private ReviewSpecification() {}
 
     public static Specification<Review> hasUserId(Long userId) {
-        return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+        return (root, query, cb) -> cb.equal(root.get("order").get("user").get("id"), userId);
     }
 
     public static Specification<Review> hasProductId(Long productId) {

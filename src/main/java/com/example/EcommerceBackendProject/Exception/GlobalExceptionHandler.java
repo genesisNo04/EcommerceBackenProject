@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.Exception;
 
 import com.example.EcommerceBackendProject.DTO.ApiErrorResponseDTO;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -263,6 +264,19 @@ public class GlobalExceptionHandler {
                 status.value(),
                 status.name(),
                 "CONCURRENT_MODIFICATION",
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleMalformedJwtException(Exception ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }

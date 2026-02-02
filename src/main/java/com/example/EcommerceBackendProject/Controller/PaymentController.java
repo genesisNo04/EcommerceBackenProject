@@ -44,17 +44,18 @@ public class PaymentController {
 
     @GetMapping
     public ResponseEntity<Page<PaymentResponseDTO>> getPaymentByStatus(@RequestParam(required = false) PaymentStatus status,
+                                                                       @RequestParam(required = false) Long orderId,
                                                                        @RequestParam(required = false) PaymentType type,
                                                                        @RequestParam(required = false) LocalDate start,
                                                                        @RequestParam(required = false) LocalDate end,
-                                                                       @PageableDefault(size = 10) Pageable pageable) {
+                                                                       @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
         Long userId = SecurityUtils.getCurrentUserId();
         LocalDateTime startTime = (start == null) ? null : start.atStartOfDay();
         LocalDateTime endTime = (end == null) ? null : end.plusDays(1).atStartOfDay();
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.PAYMENT.getFields());
-        Page<Payment> payment = paymentService.findPayments(userId, status, type, startTime, endTime, pageable);
+        Page<Payment> payment = paymentService.findPayments(userId, orderId, status, type, startTime, endTime, pageable);
 
         return ResponseEntity.ok(payment.map(PaymentMapper::toDTO));
     }
