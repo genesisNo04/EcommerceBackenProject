@@ -9,7 +9,11 @@ import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
+import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.AddressService;
+import com.example.EcommerceBackendProject.Utilities.LoggingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +31,17 @@ public class AddressServiceImpl implements AddressService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(AddressServiceImpl.class);
+
+
+
     @Override
     public Page<Address> getUserAddresses(Long userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+        Long callerId = SecurityUtils.getCurrentUserId();
+        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
+        log.info("SEARCH address for [userId={}]", userId);
         return addressRepository.findByUserId(userId, pageable);
     }
 
@@ -42,11 +53,18 @@ public class AddressServiceImpl implements AddressService {
         Address address = AddressMapper.toEntity(addressRequestDTO);
         address.setUser(user);
 
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+
         if (address.getIsDefault()) {
             addressRepository.resetDefaultForUser(userId);
+            log.info("RESET default address for user {} by [callerType={}, userId={}]", userId, callerType, callerId);
         } else if (!addressRepository.existsByUserIdAndIsDefaultTrue(userId)) {
             address.setIsDefault(true);
+            log.info("PROMOTE address as default for user {}", userId);
         }
+
+        log.info("CREATE address [addressId={}] for user [userId={}] default={} by [callerType={}, userId={}]", address.getId(), userId, address.getIsDefault(), callerType, callerId);
 
         return addressRepository.save(address);
     }
@@ -56,7 +74,9 @@ public class AddressServiceImpl implements AddressService {
     public Address getDefaultAddress(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("SEARCH for default address for [userId={}] by [callerType={}, userId={}]", userId, callerType, callerId);
         return addressRepository.findByUserIdAndIsDefaultTrue(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User does not have a default address"));
     }
@@ -69,7 +89,9 @@ public class AddressServiceImpl implements AddressService {
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("UPDATE address for [userId={}] by [callerType={}, userId={}]", userId, callerType, callerId);
         return updateAddressInternally(updatedAddress, addressRequestDTO);
     }
 
@@ -81,7 +103,9 @@ public class AddressServiceImpl implements AddressService {
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("PATCH address for [userId={}] by [callerType={}, userId={}]", userId, callerType, callerId);
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
     }
 
@@ -93,7 +117,9 @@ public class AddressServiceImpl implements AddressService {
 
         Address addressToDelete = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("DELETE address for [userId={}] by [callerType={}, userId={}]", userId, callerType, callerId);
         deleteAddressInternally(addressToDelete);
     }
 
@@ -104,6 +130,9 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
         setDefaultAddressInternally(address);
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("ASSIGN default address for [userId={}] by [callerType={}, userId={}]", userId, callerType, callerId);
     }
 
     @Override
@@ -130,6 +159,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Page<Address> findAllAddress(Pageable pageable) {
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("SEARCH all addresses by [callerType={}, userId={}]", callerType, callerId);
         return addressRepository.findAll(pageable);
     }
 
@@ -138,7 +170,9 @@ public class AddressServiceImpl implements AddressService {
     public Address updateAnyAddress(Long addressId, AddressRequestDTO addressRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("UPDATE address for [addressId={}] by [callerType={}, userId={}]", addressId, callerType, callerId);
         return updateAddressInternally(updatedAddress, addressRequestDTO);
     }
 
@@ -146,7 +180,9 @@ public class AddressServiceImpl implements AddressService {
     public Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("PATCH address for [addressId={}] by [callerType={}, userId={}]", addressId, callerType, callerId);
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
     }
 
@@ -154,7 +190,9 @@ public class AddressServiceImpl implements AddressService {
     public void deleteAnyAddress(Long addressId) {
         Address addressToDelete = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("DELETE address for [addressId={}] by [callerType={}, userId={}]", addressId, callerType, callerId);
         deleteAddressInternally(addressToDelete);
     }
 
@@ -163,7 +201,9 @@ public class AddressServiceImpl implements AddressService {
     public void setDefaultAnyAddress(Long addressId) {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
-
+        Long callerId = SecurityUtils.getCurrentUserId();
+        String callerType = SecurityUtils.isAdmin() ? "ADMIN" : "USER";
+        log.info("SET default address for [addressId={}] by [callerType={}, userId={}]", addressId, callerType, callerId);
         setDefaultAddressInternally(address);
     }
 
