@@ -7,6 +7,7 @@ import com.example.EcommerceBackendProject.Mapper.ShoppingCartItemMapper;
 import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.ShoppingCartService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/v1/users/carts")
+@RequestMapping("/v1/carts")
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
@@ -23,9 +24,19 @@ public class ShoppingCartController {
         this.shoppingCartService = shoppingCartService;
     }
 
+    private Long resolveUserId(Long requestedUserId) {
+        if (requestedUserId != null) {
+            SecurityUtils.requireAdmin();
+            return requestedUserId;
+        }
+
+        return SecurityUtils.getCurrentUserId();
+    }
+
     @GetMapping
-    public ResponseEntity<ShoppingCartResponseDTO> getUserShoppingCart() {
-        Long userId = SecurityUtils.getCurrentUserId();
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ShoppingCartResponseDTO> getUserShoppingCart(@RequestParam(required = false) Long requestedUserId) {
+        Long userId = resolveUserId(requestedUserId);
         ShoppingCart shoppingCart = shoppingCartService.findByUserId(userId);
         Set<ShoppingCartItemResponseDTO> items = shoppingCart.getItems().stream().map(ShoppingCartItemMapper::toDTO).collect(Collectors.toSet());
         ShoppingCartResponseDTO shoppingCartResponseDTO = new ShoppingCartResponseDTO();
@@ -39,8 +50,9 @@ public class ShoppingCartController {
     }
 
     @PatchMapping
-    public ResponseEntity<Void> clearCart() {
-        Long userId = SecurityUtils.getCurrentUserId();
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> clearCart(@RequestParam(required = false) Long requestedUserId) {
+        Long userId = resolveUserId(requestedUserId);
         shoppingCartService.clearShoppingCart(userId);
         return ResponseEntity.noContent().build();
     }

@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,7 +18,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
     private final UserDetailsService userDetailsService;
-    private final String version = "/v1";
+    private static final String version = "/v1";
 
     public SecurityConfig(JwtAuthenticationFilter jwtFilter, UserDetailsService userDetailsService) {
         this.jwtFilter = jwtFilter;
@@ -31,6 +32,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(version + "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, version + "/products/*/review").permitAll()
+                        .requestMatchers(HttpMethod.GET, version + "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, version + "/categories/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)

@@ -10,6 +10,8 @@ import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +28,10 @@ public class AddressServiceImpl implements AddressService {
     private UserRepository userRepository;
 
     @Override
-    public List<Address> getUserAddresses(Long userId) {
+    public Page<Address> getUserAddresses(Long userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
-        return addressRepository.findByUserId(userId);
+        return addressRepository.findByUserId(userId, pageable);
     }
 
     @Override
@@ -40,10 +42,10 @@ public class AddressServiceImpl implements AddressService {
         Address address = AddressMapper.toEntity(addressRequestDTO);
         address.setUser(user);
 
-        if (address.isDefault()) {
+        if (address.getIsDefault()) {
             addressRepository.resetDefaultForUser(userId);
         } else if (!addressRepository.existsByUserIdAndIsDefaultTrue(userId)) {
-            address.setDefault(true);
+            address.setIsDefault(true);
         }
 
         return addressRepository.save(address);
@@ -65,21 +67,10 @@ public class AddressServiceImpl implements AddressService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
-        if (addressRequestDTO.getIsDefault()) {
-            addressRepository.resetDefaultForUser(userId);
-        }
-
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        updatedAddress.setStreet(addressRequestDTO.getStreet());
-        updatedAddress.setState(addressRequestDTO.getState());
-        updatedAddress.setCity(addressRequestDTO.getCity());
-        updatedAddress.setCountry(addressRequestDTO.getCountry());
-        updatedAddress.setZipCode(addressRequestDTO.getZipCode());
-
-        updatedAddress.setDefault(addressRequestDTO.getIsDefault());
-        return updatedAddress;
+        return updateAddressInternally(updatedAddress, addressRequestDTO);
     }
 
     @Override
@@ -88,38 +79,10 @@ public class AddressServiceImpl implements AddressService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
-        if (addressUpdateRequestDTO.getIsDefault() != null && addressUpdateRequestDTO.getIsDefault()) {
-            addressRepository.resetDefaultForUser(userId);
-        }
-
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        if (addressUpdateRequestDTO.getStreet() != null) {
-            updatedAddress.setStreet(addressUpdateRequestDTO.getStreet());
-        }
-
-        if (addressUpdateRequestDTO.getState() != null) {
-            updatedAddress.setState(addressUpdateRequestDTO.getState());
-        }
-
-        if (addressUpdateRequestDTO.getCity() != null) {
-            updatedAddress.setCity(addressUpdateRequestDTO.getCity());
-        }
-
-        if (addressUpdateRequestDTO.getCountry() != null) {
-            updatedAddress.setCountry(addressUpdateRequestDTO.getCountry());
-        }
-
-        if (addressUpdateRequestDTO.getZipCode() != null) {
-            updatedAddress.setZipCode(addressUpdateRequestDTO.getZipCode());
-        }
-
-        if (addressUpdateRequestDTO.getIsDefault() != null) {
-            updatedAddress.setDefault(addressUpdateRequestDTO.getIsDefault());
-        }
-
-        return updatedAddress;
+        return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
     }
 
     @Override
@@ -131,27 +94,16 @@ public class AddressServiceImpl implements AddressService {
         Address addressToDelete = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
-        boolean wasDefault = addressToDelete.isDefault();
-
-        addressRepository.delete(addressToDelete);
-
-        if (wasDefault) {
-            addressRepository.findFirstByUserIdOrderByCreatedAtAsc(userId)
-                    .ifPresent(oldest -> {
-                        oldest.setDefault(true);
-                        addressRepository.save(oldest);
-                    });
-        }
+        deleteAddressInternally(addressToDelete);
     }
 
     @Override
     @Transactional
     public void setDefaultAddress(Long addressId, Long userId) {
-        addressRepository.findByUserIdAndId(userId, addressId)
+        Address address = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
-        addressRepository.resetDefaultForUser(userId);
-        addressRepository.updateDefaultForUser(userId, addressId);
+        setDefaultAddressInternally(address);
     }
 
     @Override
@@ -174,5 +126,122 @@ public class AddressServiceImpl implements AddressService {
         }
 
         return addresses;
+    }
+
+    @Override
+    public Page<Address> findAllAddress(Pageable pageable) {
+        return addressRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional
+    public Address updateAnyAddress(Long addressId, AddressRequestDTO addressRequestDTO) {
+        Address updatedAddress = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+
+        return updateAddressInternally(updatedAddress, addressRequestDTO);
+    }
+
+    @Override
+    public Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO) {
+        Address updatedAddress = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+
+        return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
+    }
+
+    @Override
+    public void deleteAnyAddress(Long addressId) {
+        Address addressToDelete = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NoResourceFoundException("Address not found"));
+
+        deleteAddressInternally(addressToDelete);
+    }
+
+    @Override
+    @Transactional
+    public void setDefaultAnyAddress(Long addressId) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NoResourceFoundException("Address not found"));
+
+        setDefaultAddressInternally(address);
+    }
+
+    @Transactional
+    private Address updateAddressInternally(Address address, AddressRequestDTO addressRequestDTO) {
+        if (addressRequestDTO.getIsDefault()) {
+            addressRepository.resetDefaultForUser(address.getUser().getId());
+        }
+
+        address.setStreet(addressRequestDTO.getStreet());
+        address.setState(addressRequestDTO.getState());
+        address.setCity(addressRequestDTO.getCity());
+        address.setCountry(addressRequestDTO.getCountry());
+        address.setZipCode(addressRequestDTO.getZipCode());
+
+        address.setIsDefault(addressRequestDTO.getIsDefault());
+        return address;
+    }
+
+    @Transactional
+    private Address patchAddressInternally(Address address, AddressUpdateRequestDTO addressUpdateRequestDTO) {
+
+        boolean wasDefault = address.getIsDefault();
+
+        if (addressUpdateRequestDTO.getIsDefault() != null) {
+            address.setIsDefault(addressUpdateRequestDTO.getIsDefault());
+        }
+
+        if (wasDefault && Boolean.FALSE.equals(address.getIsDefault())) {
+            promoteOldestIfNoDefault(address.getUser().getId());
+        }
+
+
+        if (addressUpdateRequestDTO.getStreet() != null) {
+            address.setStreet(addressUpdateRequestDTO.getStreet());
+        }
+
+        if (addressUpdateRequestDTO.getState() != null) {
+            address.setState(addressUpdateRequestDTO.getState());
+        }
+
+        if (addressUpdateRequestDTO.getCity() != null) {
+            address.setCity(addressUpdateRequestDTO.getCity());
+        }
+
+        if (addressUpdateRequestDTO.getCountry() != null) {
+            address.setCountry(addressUpdateRequestDTO.getCountry());
+        }
+
+        if (addressUpdateRequestDTO.getZipCode() != null) {
+            address.setZipCode(addressUpdateRequestDTO.getZipCode());
+        }
+
+        return address;
+    }
+
+    @Transactional
+    private void deleteAddressInternally(Address address) {
+        boolean wasDefault = address.getIsDefault();
+
+        addressRepository.delete(address);
+
+        if (wasDefault) {
+            promoteOldestIfNoDefault(address.getUser().getId());
+        }
+    }
+
+    private void setDefaultAddressInternally(Address address) {
+        Long userId = address.getUser().getId();
+        addressRepository.resetDefaultForUser(userId);
+        addressRepository.updateDefaultForUser(userId, address.getId());
+    }
+
+    private void promoteOldestIfNoDefault(Long userId) {
+        addressRepository.findFirstByUserIdOrderByCreatedAtAsc(userId)
+                .ifPresent(oldest -> {
+                    oldest.setIsDefault(true);
+                    addressRepository.save(oldest);
+                });
     }
 }

@@ -12,9 +12,14 @@ import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private void validateAndSetEmail(User oldUser, String newEmail) {
         if (newEmail != null && !oldUser.getEmail().equals(newEmail)) {
             if (userRepository.existsByEmail(newEmail)) {
-                throw new ResourceAlreadyExistsException("Email is already in used");
+                throw new ResourceAlreadyExistsException("Email is already in use");
             }
         }
         oldUser.setEmail(newEmail);
@@ -43,7 +48,7 @@ public class UserServiceImpl implements UserService {
     private void validateAndSetUsername(User user, String username) {
         if (username != null && !user.getUsername().equals(username)) {
             if (userRepository.existsByUsername(username)) {
-                throw new ResourceAlreadyExistsException("Email is already in used");
+                throw new ResourceAlreadyExistsException("Username is already in use");
             }
         }
         user.setUsername(username);
@@ -69,21 +74,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserRequestDTO userRequestDTO) {
-        if (userRepository.existsByEmail(userRequestDTO.getEmail()) || userRepository.existsByUsername(userRequestDTO.getUsername())) {
-            throw new ResourceAlreadyExistsException("username or email is already exists.");
-        }
-
-        User user = UserMapper.toEntity(userRequestDTO);
-        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
-        user.getRoles().add(Role.USER);
-        user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
+    public User createCustomerUser(UserRequestDTO userRequestDTO) {
+        User user = createUser(userRequestDTO);
+        user.assignUserRole();
 
         ShoppingCart shoppingCart = new ShoppingCart();
         user.setCart(shoppingCart);
         shoppingCart.setUser(user);
 
         return userRepository.save(user);
+    }
+
+    private User createUser(UserRequestDTO userRequestDTO) {
+        if (userRepository.existsByEmail(userRequestDTO.getEmail())
+                || userRepository.existsByUsername(userRequestDTO.getUsername())) {
+            throw new ResourceAlreadyExistsException("username or email is already exists.");
+        }
+
+        User user = UserMapper.toEntity(userRequestDTO);
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setAddresses(addressService.resolveAddresses(userRequestDTO.getAddress(), user));
+
+        return user;
     }
 
     @Override
@@ -99,7 +111,7 @@ public class UserServiceImpl implements UserService {
         oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
         oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
         validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
-        return userRepository.save(oldUser);
+        return oldUser;
     }
 
     @Override
@@ -132,7 +144,7 @@ public class UserServiceImpl implements UserService {
         if (userUpdateRequestDTO.getEmail() != null) {
             validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
-        return userRepository.save(oldUser);
+        return oldUser;
     }
 
     @Override
@@ -157,7 +169,33 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createAdmin(UserRequestDTO userRequestDTO) {
         User user = createUser(userRequestDTO);
-        user.getRoles().add(Role.ADMIN);
-        return user;
+        user.assignAdminRole();
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<User> findById(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        return new PageImpl<>(List.of(user), pageable, 1);
+    }
+
+    @Override
+    public Page<User> findByUsername(String username, Pageable pageable) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        return new PageImpl<>(List.of(user), pageable, 1);
+    }
+
+    @Override
+    public Page<User> findByEmail(String email, Pageable pageable) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        return new PageImpl<>(List.of(user), pageable, 1);
     }
 }

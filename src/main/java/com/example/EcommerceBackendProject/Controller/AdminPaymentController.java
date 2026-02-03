@@ -1,0 +1,54 @@
+package com.example.EcommerceBackendProject.Controller;
+
+import com.example.EcommerceBackendProject.DTO.PaymentResponseDTO;
+import com.example.EcommerceBackendProject.Entity.Payment.Payment;
+import com.example.EcommerceBackendProject.Enum.PaymentStatus;
+import com.example.EcommerceBackendProject.Enum.PaymentType;
+import com.example.EcommerceBackendProject.Enum.SortableFields;
+import com.example.EcommerceBackendProject.Mapper.PaymentMapper;
+import com.example.EcommerceBackendProject.Service.PaymentService;
+import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@RestController
+@RequestMapping("/v1/admin/payments")
+@PreAuthorize("hasRole('ADMIN')")
+public class AdminPaymentController {
+
+    private final PaymentService paymentService;
+    private final PageableSortValidator pageableSortValidator;
+
+    public AdminPaymentController(PaymentService paymentService, PageableSortValidator pageableSortValidator) {
+        this.paymentService = paymentService;
+        this.pageableSortValidator = pageableSortValidator;
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PaymentResponseDTO>> searchPayments(@RequestParam(required = false) Long userId,
+                                                                   @RequestParam(required = false) Long orderId,
+                                                                   @RequestParam(required = false) PaymentStatus status,
+                                                                   @RequestParam(required = false) PaymentType type,
+                                                                   @RequestParam(required = false) LocalDate start,
+                                                                   @RequestParam(required = false) LocalDate end,
+                                                                   @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
+
+        LocalDateTime startTime = (start == null) ? null : start.atStartOfDay();
+        LocalDateTime endTime = (end == null) ? null : end.plusDays(1).atStartOfDay();
+
+        pageable = pageableSortValidator.validate(pageable, SortableFields.PAYMENT.getFields());
+        Page<Payment> payment = paymentService.findPayments(userId, orderId, status, type, startTime, endTime, pageable);
+
+        return ResponseEntity.ok(payment.map(PaymentMapper::toDTO));
+    }
+}

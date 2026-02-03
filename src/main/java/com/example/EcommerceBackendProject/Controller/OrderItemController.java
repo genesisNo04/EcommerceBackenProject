@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
 
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
@@ -30,6 +31,7 @@ public class OrderItemController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long orderId,
                                                                     @PageableDefault(size = 10) Pageable pageable) {
 

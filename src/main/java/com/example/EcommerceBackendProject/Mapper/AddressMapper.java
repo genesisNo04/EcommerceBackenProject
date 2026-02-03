@@ -17,7 +17,7 @@ public class AddressMapper {
         addressResponseDTO.setState(address.getState());
         addressResponseDTO.setCountry(address.getCountry());
         addressResponseDTO.setZipCode(address.getZipCode());
-        addressResponseDTO.setDefault(address.isDefault());
+        addressResponseDTO.setDefault(address.getIsDefault());
         addressResponseDTO.setUserId(address.getUser() != null ? address.getUser().getId() : null);
 
         return addressResponseDTO;
@@ -31,7 +31,7 @@ public class AddressMapper {
         newAddress.setState(requestDTO.getState());
         newAddress.setCountry(requestDTO.getCountry());
         newAddress.setZipCode(requestDTO.getZipCode());
-        newAddress.setDefault(requestDTO.getIsDefault());
+        newAddress.setIsDefault(requestDTO.getIsDefault());
 
         return newAddress;
     }

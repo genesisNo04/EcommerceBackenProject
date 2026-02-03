@@ -12,9 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/v1/users/order-items")
 public class UserOrderItemController {
 
     private final OrderItemService orderItemService;
@@ -26,6 +27,7 @@ public class UserOrderItemController {
     }
 
     @GetMapping("/orders/{orderId}/items")
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long orderId,
                                                                    @PageableDefault(size = 10) Pageable pageable) {
         Long userId = SecurityUtils.getCurrentUserId();
@@ -36,6 +38,7 @@ public class UserOrderItemController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public ResponseEntity<Page<OrderItemResponseDTO>> getAllOrderItems(@PageableDefault(size = 10) Pageable pageable) {
 
         Long userId = SecurityUtils.getCurrentUserId();

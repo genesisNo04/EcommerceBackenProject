@@ -3,6 +3,8 @@ package com.example.EcommerceBackendProject.Service;
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.CategoryUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -22,4 +24,6 @@ public interface CategoryService {
     Category updateCategory(Long categoryId, CategoryRequestDTO categoryRequestDTO);
 
     Category patchCategory(Long categoryId, CategoryUpdateRequestDTO categoryUpdateRequestDTO);
+
+    Page<Category> findCategories(Pageable pageable);
 }

@@ -14,7 +14,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2OTA1MTc3OCwiZXhwIjoxNzY5MTM4MTc4fQ.lHNMNb-LABZ5p7ethuuHkJHpElLm3YWrLGAIX-tRaMk",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjc4ODIsImV4cCI6MTc3MDE1NDI4Mn0.9FjpC4mJPb60H_B4HjpxeW__gvdUZAN34K3RW4ijLA4",
               "type": "string"
             }
           ]
@@ -45,7 +45,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2OTA1MTc3OCwiZXhwIjoxNzY5MTM4MTc4fQ.lHNMNb-LABZ5p7ethuuHkJHpElLm3YWrLGAIX-tRaMk",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjc4ODIsImV4cCI6MTc3MDE1NDI4Mn0.9FjpC4mJPb60H_B4HjpxeW__gvdUZAN34K3RW4ijLA4",
               "type": "string"
             }
           ]
@@ -75,7 +75,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"genesis5\",\r\n    \"password\": \"123456789\",\r\n    \"email\": \"genesis5@gmail.com\",\r\n    \"firstName\": \"genesis5\",\r\n    \"lastName\": \"kaiser5\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"15623 Main st\",\r\n            \"city\": \"Qunicy\",\r\n            \"state\": \"MA\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"12345\",\r\n            \"isDefault\": true\r\n        },\r\n        {\r\n            \"street\": \"15624 Main st\",\r\n            \"city\": \"Tucson\",\r\n            \"state\": \"OK\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"54321\",\r\n            \"isDefault\": false\r\n        }\r\n    ],\r\n    \"phoneNumber\": \"+1234567895\"\r\n}",
+          "raw": "{\r\n    \"username\": \"genesis6\",\r\n    \"password\": \"123456789\",\r\n    \"email\": \"genesis6@gmail.com\",\r\n    \"firstName\": \"genesis6\",\r\n    \"lastName\": \"kaiser6\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"16623 Main st\",\r\n            \"city\": \"Qunicy\",\r\n            \"state\": \"MA\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"12345\",\r\n            \"isDefault\": true\r\n        },\r\n        {\r\n            \"street\": \"16624 Main st\",\r\n            \"city\": \"Tucson\",\r\n            \"state\": \"OK\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"54321\",\r\n            \"isDefault\": false\r\n        }\r\n    ],\r\n    \"phoneNumber\": \"+1234567896\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -99,13 +99,100 @@
       "response": []
     },
     {
+      "name": "Admin User - Create Admin User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjc4NDQsImV4cCI6MTc3MDE1NDI0NH0.3XXoVlXlKgHtU2pkjpTKAkXeOnj7G8banwy2r_lK0ck",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"genesis8\",\r\n    \"password\": \"123456789\",\r\n    \"email\": \"genesis8@gmail.com\",\r\n    \"firstName\": \"genesis8\",\r\n    \"lastName\": \"kaiser8\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"18623 Main st\",\r\n            \"city\": \"Qunicy\",\r\n            \"state\": \"MA\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"12345\",\r\n            \"isDefault\": true\r\n        },\r\n        {\r\n            \"street\": \"18624 Main st\",\r\n            \"city\": \"Tucson\",\r\n            \"state\": \"OK\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"54321\",\r\n            \"isDefault\": false\r\n        }\r\n    ],\r\n    \"phoneNumber\": \"+1234567898\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin User - Find user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjgyMDcsImV4cCI6MTc3MDE1NDYwN30.eRqMNulcxIYESdoe7bUo2A3YTAvRee4IMcjsN4v9Au8",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/users?username=genesis6",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "11",
+              "disabled": true
+            },
+            {
+              "key": "email",
+              "value": "genesis3@gmail.com",
+              "disabled": true
+            },
+            {
+              "key": "username",
+              "value": "genesis6"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "User - User login",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"identifier\": \"genesis\",\r\n    \"password\": \"987654321\"\r\n}",
+          "raw": "{\r\n    \"identifier\": \"genesis7\",\r\n    \"password\": \"123456789\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -136,7 +223,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2OTA1MTc0OCwiZXhwIjoxNzY5MTM4MTQ4fQ.OzpGfAsKUITpIhLcHsyCQtfG0HkF5FhSjId28VqoHPk",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjU1MzYsImV4cCI6MTc3MDE1MTkzNn0.VUfpHUoDqGC9UlwmP_oZALeWgPGWsNyoPLaKc2xYoNo",
               "type": "string"
             }
           ]
@@ -176,7 +263,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2ODk0OTcyMywiZXhwIjoxNzY5MDM2MTIzfQ.-xxDmctPB7pMMVcN9QrLlpEPmRpfnoGH1iTIXLql3Hw",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjUzOTksImV4cCI6MTc3MDE1MTc5OX0.cmKSLd69WaRj5b7I-mZWm8lV-tsBUkbmH9dMOMfxMfo",
               "type": "string"
             }
           ]
@@ -185,7 +272,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"genesis1\",\r\n    \"firstName\": \"genesis1\",\r\n    \"lastName\": \"kaiser1\",\r\n    \"email\": \"genesis@gmail.com\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"123 Main st\",\r\n            \"city\": \"San Francisco\",\r\n            \"state\": \"CA\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"12345\",\r\n            \"isDefault\": true\r\n        },\r\n        {\r\n            \"street\": \"123456 Main st\",\r\n            \"city\": \"Tucson\",\r\n            \"state\": \"OK\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"54321\",\r\n            \"isDefault\": false\r\n        }\r\n    ],\r\n    \"phoneNumber\": \"+1236549870\"\r\n}",
+          "raw": "{\r\n    \"username\": \"genesis5\",\r\n    \"firstName\": \"genesis7\",\r\n    \"lastName\": \"kaiser7\",\r\n    \"email\": \"genesis7@gmail.com\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"1237 Main st\",\r\n            \"city\": \"San Francisco\",\r\n            \"state\": \"CA\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"12345\",\r\n            \"isDefault\": true\r\n        },\r\n        {\r\n            \"street\": \"1234567 Main st\",\r\n            \"city\": \"Tucson\",\r\n            \"state\": \"OK\",\r\n            \"country\": \"USA\",\r\n            \"zipCode\": \"54321\",\r\n            \"isDefault\": false\r\n        }\r\n    ],\r\n    \"phoneNumber\": \"+1236549877\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -215,7 +302,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NjkwNTE3MDUsImV4cCI6MTc2OTEzODEwNX0.EStD2E6j6QOMy6seFizZ6QWYCCs4PaqSFsEa7HbYwCo",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjU1NjUsImV4cCI6MTc3MDE1MTk2NX0.OEJOxs1caBGnrLUubh8u_QU4bDZnVXe9x4VaA3d5sFI",
               "type": "string"
             }
           ]
@@ -245,7 +332,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2OTA1MTYxMiwiZXhwIjoxNzY5MTM4MDEyfQ.RddGG3SSnBd_-0ufs5AezSC4N6AOIM_d5Jet4_yZ39A",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjUzOTksImV4cCI6MTc3MDE1MTc5OX0.cmKSLd69WaRj5b7I-mZWm8lV-tsBUkbmH9dMOMfxMfo",
               "type": "string"
             }
           ]
@@ -254,7 +341,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"phoneNumber\": \"+1240547890\"\r\n}",
+          "raw": "{\r\n    \"phoneNumber\": \"+1236549878\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -279,11 +366,21 @@
     {
       "name": "Address - create address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjg0ODMsImV4cCI6MTc3MDE1NDg4M30.YNVf06C7BuTI3NWhSsKIazOeyt_6AWG7b44NUMgFpCc",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": " {\r\n    \"street\": \"16010 Main st\",\r\n    \"city\": \"Sugar Land\",\r\n    \"state\": \"TX\",\r\n    \"country\": \"USA\",\r\n    \"zipCode\": \"85425\",\r\n    \"isDefault\": true\r\n}",
+          "raw": " {\r\n    \"street\": \"16010 Main st\",\r\n    \"city\": \"Sugar Land\",\r\n    \"state\": \"TX\",\r\n    \"country\": \"USA\",\r\n    \"zipCode\": \"85425\",\r\n    \"isDefault\": false\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -291,7 +388,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses",
+          "raw": "http://localhost:8080/v1/users/addresses",
           "protocol": "http",
           "host": [
             "localhost"
@@ -300,7 +397,6 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses"
           ]
         }
@@ -310,6 +406,16 @@
     {
       "name": "Address - Update address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjg0ODMsImV4cCI6MTc3MDE1NDg4M30.YNVf06C7BuTI3NWhSsKIazOeyt_6AWG7b44NUMgFpCc",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
@@ -322,7 +428,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses/12",
+          "raw": "http://localhost:8080/v1/users/addresses/34",
           "protocol": "http",
           "host": [
             "localhost"
@@ -331,9 +437,8 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses",
-            "12"
+            "34"
           ]
         }
       },
@@ -342,11 +447,21 @@
     {
       "name": "Address - Partially Update address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjg0ODMsImV4cCI6MTc3MDE1NDg4M30.YNVf06C7BuTI3NWhSsKIazOeyt_6AWG7b44NUMgFpCc",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": " {\r\n    \"street\": \"16987 Main st\"\r\n}",
+          "raw": "{\r\n    \"street\": \"16100 Main st\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -354,7 +469,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses/12",
+          "raw": "http://localhost:8080/v1/users/addresses/34",
           "protocol": "http",
           "host": [
             "localhost"
@@ -363,9 +478,8 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses",
-            "12"
+            "34"
           ]
         }
       },
@@ -374,19 +488,20 @@
     {
       "name": "Address - Update default",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNjg0ODMsImV4cCI6MTc3MDE1NDg4M30.YNVf06C7BuTI3NWhSsKIazOeyt_6AWG7b44NUMgFpCc",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": " {\r\n    \"street\": \"16987 Main st\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses/9/default",
+          "raw": "http://localhost:8080/v1/users/addresses/3/default",
           "protocol": "http",
           "host": [
             "localhost"
@@ -395,9 +510,8 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses",
-            "9",
+            "3",
             "default"
           ]
         }
@@ -407,10 +521,20 @@
     {
       "name": "Address - delete address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NjkyMDYyMTMsImV4cCI6MTc2OTI5MjYxM30.ec6kfxavqFHnX7ZDa6zBfXDiJZ_QKNM0haNqfA_3L_Q",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses/13",
+          "raw": "http://localhost:8080/v1/users/addresses/21",
           "protocol": "http",
           "host": [
             "localhost"
@@ -419,9 +543,8 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses",
-            "13"
+            "21"
           ]
         }
       },
@@ -430,10 +553,20 @@
     {
       "name": "Address - Get default address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NjkyMDY3NzIsImV4cCI6MTc2OTI5MzE3Mn0.hAJVzaonAPrjR4g_w6041l7EjmpaFul_TjvoXw157e4",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses/default",
+          "raw": "http://localhost:8080/v1/users/addresses/default",
           "protocol": "http",
           "host": [
             "localhost"
@@ -442,7 +575,6 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses",
             "default"
           ]
@@ -451,12 +583,345 @@
       "response": []
     },
     {
-      "name": "Address - Get All address",
+      "name": "Admin Address - Get address",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/1/addresses",
+          "raw": "http://localhost:8080/v1/admin/addresses?page=0&sort=id,asc&userId=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "sort",
+              "value": "id,asc"
+            },
+            {
+              "key": "userId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Address - Create address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": " {\r\n    \"street\": \"16010 Main st\",\r\n    \"city\": \"Sugar Land\",\r\n    \"state\": \"TX\",\r\n    \"country\": \"USA\",\r\n    \"zipCode\": \"85425\",\r\n    \"isDefault\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/addresses?userId=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "id,asc",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Address - Update address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": " {\r\n    \"street\": \"16011 Main st\",\r\n    \"city\": \"Sugar Land\",\r\n    \"state\": \"TX\",\r\n    \"country\": \"USA\",\r\n    \"zipCode\": \"85425\",\r\n    \"isDefault\": false\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/addresses/35?userId=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses",
+            "35"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "id,asc",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Address - Partially update address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"street\": \"16015 Main st\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/addresses/35?userId=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses",
+            "35"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "id,asc",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Address - Delete Address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"street\": \"16015 Main st\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/addresses/35",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses",
+            "35"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "id,asc",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "5",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Address - Set default Address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/addresses/4/default",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
+            "addresses",
+            "4",
+            "default"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "id,asc",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "5",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Address - Get All address",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMiIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NjkyMDY3NzIsImV4cCI6MTc2OTI5MzE3Mn0.hAJVzaonAPrjR4g_w6041l7EjmpaFul_TjvoXw157e4",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/addresses",
           "protocol": "http",
           "host": [
             "localhost"
@@ -465,7 +930,6 @@
           "path": [
             "v1",
             "users",
-            "1",
             "addresses"
           ]
         }
@@ -475,11 +939,21 @@
     {
       "name": "Category - Create category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"FOOD\",\r\n    \"description\": \"Food\",\r\n    \"productIds\": []\r\n}",
+          "raw": "{\r\n    \"name\": \"TEST\",\r\n    \"description\": \"Test\",\r\n    \"productIds\": []\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -507,6 +981,16 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "body": {
@@ -519,7 +1003,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/categories/product/5",
+          "raw": "http://localhost:8080/v1/categories/product/9",
           "protocol": "http",
           "host": [
             "localhost"
@@ -529,7 +1013,43 @@
             "v1",
             "categories",
             "product",
-            "5"
+            "9"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Category - Get All Category (User/Admin)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/categories?page=1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "categories"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            }
           ]
         }
       },
@@ -538,11 +1058,21 @@
     {
       "name": "Category - Update category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\": \"BEVERAGES\",\r\n    \"description\": \"Beverages\",\r\n    \"productIds\": []\r\n}",
+          "raw": "{\r\n    \"name\": \"TEST1\",\r\n    \"description\": \"Test1\",\r\n    \"productIds\": []\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -550,7 +1080,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/categories/4",
+          "raw": "http://localhost:8080/v1/categories/15",
           "protocol": "http",
           "host": [
             "localhost"
@@ -559,7 +1089,7 @@
           "path": [
             "v1",
             "categories",
-            "4"
+            "15"
           ]
         }
       },
@@ -568,11 +1098,21 @@
     {
       "name": "Category -  Partially Update category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"description\": \"Beverages\"\r\n}",
+          "raw": "{\r\n    \"name\": \"TEST2\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -580,7 +1120,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/categories/4",
+          "raw": "http://localhost:8080/v1/categories/15",
           "protocol": "http",
           "host": [
             "localhost"
@@ -589,7 +1129,7 @@
           "path": [
             "v1",
             "categories",
-            "4"
+            "15"
           ]
         }
       },
@@ -598,10 +1138,20 @@
     {
       "name": "Category - Delete category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/categories/2",
+          "raw": "http://localhost:8080/v1/categories/15",
           "protocol": "http",
           "host": [
             "localhost"
@@ -610,7 +1160,7 @@
           "path": [
             "v1",
             "categories",
-            "2"
+            "15"
           ]
         }
       },
@@ -624,7 +1174,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTc2OTA1MTc3OCwiZXhwIjoxNzY5MTM4MTc4fQ.lHNMNb-LABZ5p7ethuuHkJHpElLm3YWrLGAIX-tRaMk",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
               "type": "string"
             }
           ]
@@ -633,7 +1183,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"productName\": \"GAMES\",\r\n    \"description\": \"game\",\r\n    \"stockQuantity\": 100,\r\n    \"categories\": [\r\n        {\r\n            \"name\": \"ENTERTAINMENT\",\r\n            \"description\": \"Entertainment\",\r\n            \"productIds\": []\r\n        },\r\n        {\r\n            \"name\": \"FUN\",\r\n            \"description\": \"Fun\",\r\n            \"productIds\": []\r\n        }\r\n    ],\r\n    \"price\": 49.99,\r\n    \"imageUrl\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3M-xR4PTf-oldWP8s2UWBCDxtZatNqXs1NA&s\"\r\n}",
+          "raw": "{\r\n    \"productName\": \"Marvel Shirt\",\r\n    \"description\": \"A Shirt with marvel picture\",\r\n    \"stockQuantity\": 200,\r\n    \"categoriesId\": [11],\r\n    \"price\": 20.99,\r\n    \"imageUrl\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3M-xR4PTf-oldWP8s2UWBCDxtZatNqXs1NA&s\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -658,19 +1208,20 @@
     {
       "name": "Product - Add category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"productName\": \"Coca-cola\",\r\n    \"description\": \"coke\",\r\n    \"stockQuantity\": 100,\r\n    \"categories\": [\r\n        {\r\n            \"name\": \"BEVERAGES\",\r\n            \"description\": \"Beverages\",\r\n            \"productIds\": []\r\n        }\r\n    ],\r\n    \"price\": 1.99,\r\n    \"imageUrl\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3M-xR4PTf-oldWP8s2UWBCDxtZatNqXs1NA&s\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/products/1/categories/8",
+          "raw": "http://localhost:8080/v1/products/11/categories/2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -679,9 +1230,9 @@
           "path": [
             "v1",
             "products",
-            "1",
+            "11",
             "categories",
-            "8"
+            "2"
           ]
         }
       },
@@ -690,19 +1241,20 @@
     {
       "name": "Product - Remove category",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"productName\": \"Coca-cola\",\r\n    \"description\": \"coke\",\r\n    \"stockQuantity\": 100,\r\n    \"categories\": [\r\n        {\r\n            \"name\": \"BEVERAGES\",\r\n            \"description\": \"Beverages\",\r\n            \"productIds\": []\r\n        }\r\n    ],\r\n    \"price\": 1.99,\r\n    \"imageUrl\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3M-xR4PTf-oldWP8s2UWBCDxtZatNqXs1NA&s\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/products/1/categories/8",
+          "raw": "http://localhost:8080/v1/products/11/categories/2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -711,9 +1263,9 @@
           "path": [
             "v1",
             "products",
-            "1",
+            "11",
             "categories",
-            "8"
+            "2"
           ]
         }
       },
@@ -722,171 +1274,27 @@
     {
       "name": "Product - Update Product",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"productName\": \"Coca Cola\",\r\n    \"description\": \"Sugar Drink\",\r\n    \"stockQuantity\": 500,\r\n    \"categories\": [\r\n        {\r\n            \"name\": \"BEVERAGES\",\r\n            \"description\": \"Beverages\",\r\n            \"productIds\": []\r\n        }, \r\n        {\r\n            \"name\": \"FOOD\",\r\n            \"description\": \"Food\",\r\n            \"productIds\": []\r\n        }\r\n    ],\r\n    \"price\": 2.99,\r\n    \"imageUrl\": \"https://i5.walmartimages.com/seo/Great-Value-Whole-Vitamin-D-Milk-Gallon-Plastic-Jug-128-Fl-Oz_6a7b09b4-f51d-4bea-a01c-85767f1b481a.86876244397d83ce6cdedb030abe6e4a.jpeg\"\r\n}",
+          "raw": "{\r\n    \"productName\": \"Final Fantasy VII\",\r\n    \"description\": \"A final fantasy game for ps5\",\r\n    \"stockQuantity\": 200,\r\n    \"categoriesId\": [5, 6],\r\n    \"price\": 69.99,\r\n    \"imageUrl\": \"https://i5.walmartimages.com/seo/Great-Value-Whole-Vitamin-D-Milk-Gallon-Plastic-Jug-128-Fl-Oz_6a7b09b4-f51d-4bea-a01c-85767f1b481a.86876244397d83ce6cdedb030abe6e4a.jpeg\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
             }
           }
         },
-        "url": {
-          "raw": "http://localhost:8080/v1/products/2",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products",
-            "2"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Partially Update Product",
-      "request": {
-        "method": "PATCH",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"productName\": \"Coca Cola Diet\"\r\n    // \"description\": \"Sugar Drink\",\r\n    // \"stockQuantity\": 500,\r\n    // \"categories\": [\r\n    //     {\r\n    //         \"name\": \"BEVERAGES\",\r\n    //         \"description\": \"Beverages\",\r\n    //         \"productIds\": []\r\n    //     }, \r\n    //     {\r\n    //         \"name\": \"FOOD\",\r\n    //         \"description\": \"Food\",\r\n    //         \"productIds\": []\r\n    //     }\r\n    // ],\r\n    // \"price\": 2.99,\r\n    // \"imageUrl\": \"https://i5.walmartimages.com/seo/Great-Value-Whole-Vitamin-D-Milk-Gallon-Plastic-Jug-128-Fl-Oz_6a7b09b4-f51d-4bea-a01c-85767f1b481a.86876244397d83ce6cdedb030abe6e4a.jpeg\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "http://localhost:8080/v1/products/2",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products",
-            "2"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Get Product Price",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/v1/products/2/price",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products",
-            "2",
-            "price"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Get Product Quantity",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/v1/products/2/quantity",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products",
-            "2",
-            "quantity"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Get Product By Keyword",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/v1/products?sort=stockQuantity,asc",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products"
-          ],
-          "query": [
-            {
-              "key": "keyword",
-              "value": "milk",
-              "disabled": true
-            },
-            {
-              "key": "sort",
-              "value": "stockQuantity,asc",
-              "type": "text"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Get Product By Category",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:8080/v1/products/category?categoryName=DAIRY",
-          "protocol": "http",
-          "host": [
-            "localhost"
-          ],
-          "port": "8080",
-          "path": [
-            "v1",
-            "products",
-            "category"
-          ],
-          "query": [
-            {
-              "key": "categoryName",
-              "value": "DAIRY"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Product - Delete Product",
-      "request": {
-        "method": "DELETE",
-        "header": [],
         "url": {
           "raw": "http://localhost:8080/v1/products/4",
           "protocol": "http",
@@ -904,13 +1312,23 @@
       "response": []
     },
     {
-      "name": "Review - Create review",
+      "name": "Product - Partially Update Product",
       "request": {
-        "method": "POST",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"rating\": 4,\r\n    \"comment\": \"Good\"\r\n}",
+          "raw": "{\r\n    // \"productName\": \"Thermal cup\",\r\n    // \"description\": \"Cup that can keep heat or cold drink for a long time\",\r\n    // \"stockQuantity\": 120\r\n    // \"categories\": [],\r\n     \"price\": 4.99\r\n    // \"imageUrl\": \"https://i5.walmartimages.com/seo/Great-Value-Whole-Vitamin-D-Milk-Gallon-Plastic-Jug-128-Fl-Oz_6a7b09b4-f51d-4bea-a01c-85767f1b481a.86876244397d83ce6cdedb030abe6e4a.jpeg\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -918,7 +1336,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/products/2/reviews/3",
+          "raw": "http://localhost:8080/v1/products/3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -927,9 +1345,225 @@
           "path": [
             "v1",
             "products",
-            "2",
-            "reviews",
             "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Product - Get Product Price",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products/5/price",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "5",
+            "price"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Product - Get Product Quantity",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products/5/quantity",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "5",
+            "quantity"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Product - Get Product By Keyword",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products?sort=price,asc",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products"
+          ],
+          "query": [
+            {
+              "key": "keyword",
+              "value": "marvel",
+              "disabled": true
+            },
+            {
+              "key": "sort",
+              "value": "price,asc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Product - Get Product By Category",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products/category?categoryName=ELECTRONIC&sort=price,asc",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "category"
+          ],
+          "query": [
+            {
+              "key": "categoryName",
+              "value": "ELECTRONIC"
+            },
+            {
+              "key": "sort",
+              "value": "price,asc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Product - Delete Product",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NzAwNzA5OTcsImV4cCI6MTc3MDE1NzM5N30.N3DLucj4Ux8sUMGSM5xG2mTNyCrKg7suQeDNaLFqZow",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Review - Create review",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5MTk3LCJleHAiOjE3NzAyMjU1OTd9.ocjlbL6QiJ-OaxbI1Q5f2gJ8wnUIhnreKOGUKgO7KT0",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"rating\": 1,\r\n    \"comment\": \"normal\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/products/7/reviews",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "7",
+            "reviews"
           ]
         }
       },
@@ -938,11 +1572,21 @@
     {
       "name": "Review - Update review",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"rating\": 3,\r\n    \"comment\": \"Fair\"\r\n}",
+          "raw": "{\r\n    \"rating\": 1,\r\n    \"comment\": \"Bad\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -950,7 +1594,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/reviews/4/3",
+          "raw": "http://localhost:8080/v1/users/reviews/3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -958,8 +1602,8 @@
           "port": "8080",
           "path": [
             "v1",
+            "users",
             "reviews",
-            "4",
             "3"
           ]
         }
@@ -969,6 +1613,16 @@
     {
       "name": "Review - Delete review",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
         "body": {
@@ -981,7 +1635,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/reviews/4/3",
+          "raw": "http://localhost:8080/v1/users/reviews/3",
           "protocol": "http",
           "host": [
             "localhost"
@@ -989,8 +1643,8 @@
           "port": "8080",
           "path": [
             "v1",
+            "users",
             "reviews",
-            "4",
             "3"
           ]
         }
@@ -1000,6 +1654,16 @@
     {
       "name": "Review - Get Review",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -1011,6 +1675,139 @@
           "port": "8080",
           "path": [
             "v1",
+            "reviews"
+          ],
+          "query": [
+            {
+              "key": "start",
+              "value": "2026-01-15",
+              "disabled": true
+            },
+            {
+              "key": "end",
+              "value": "2026-01-15",
+              "disabled": true
+            },
+            {
+              "key": "productId",
+              "value": "1",
+              "disabled": true
+            },
+            {
+              "key": "startRating",
+              "value": "1",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "endRating",
+              "value": "3",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "1",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Review - Get Review Copy",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/reviews",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "reviews"
+          ],
+          "query": [
+            {
+              "key": "start",
+              "value": "2026-01-15",
+              "disabled": true
+            },
+            {
+              "key": "end",
+              "value": "2026-01-15",
+              "disabled": true
+            },
+            {
+              "key": "productId",
+              "value": "1",
+              "disabled": true
+            },
+            {
+              "key": "startRating",
+              "value": "1",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "endRating",
+              "value": "3",
+              "type": "text",
+              "disabled": true
+            },
+            {
+              "key": "userId",
+              "value": "1",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Review - Get Review For product",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyMDg4MjYsImV4cCI6MTc2OTI5NTIyNn0.CZyRLiBW0Y5igtf-pwFlp1ItKJIT9ed9RsF7clj_l1s",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/products/9/reviews",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "products",
+            "9",
             "reviews"
           ],
           "query": [
@@ -1054,10 +1851,20 @@
     {
       "name": "ShoppingCart - Get User cart",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5MTk3LCJleHAiOjE3NzAyMjU1OTd9.ocjlbL6QiJ-OaxbI1Q5f2gJ8wnUIhnreKOGUKgO7KT0",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/carts",
+          "raw": "http://localhost:8080/v1/carts?userId=1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1065,9 +1872,13 @@
           "port": "8080",
           "path": [
             "v1",
-            "users",
-            "3",
             "carts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "1"
+            }
           ]
         }
       },
@@ -1076,10 +1887,20 @@
     {
       "name": "ShoppingCart - Clear Cart",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5MTk3LCJleHAiOjE3NzAyMjU1OTd9.ocjlbL6QiJ-OaxbI1Q5f2gJ8wnUIhnreKOGUKgO7KT0",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/carts",
+          "raw": "http://localhost:8080/v1/carts?userId=1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1087,9 +1908,14 @@
           "port": "8080",
           "path": [
             "v1",
-            "users",
-            "3",
             "carts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "1",
+              "type": "text"
+            }
           ]
         }
       },
@@ -1098,6 +1924,16 @@
     {
       "name": "ShoppingCartItem - Add Item to cart",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
@@ -1110,7 +1946,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/items",
+          "raw": "http://localhost:8080/v1/users/items",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1119,7 +1955,6 @@
           "path": [
             "v1",
             "users",
-            "3",
             "items"
           ]
         }
@@ -1129,11 +1964,21 @@
     {
       "name": "ShoppingCartItem - Update quantity of an item in cart",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PATCH",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"quantity\": 2\r\n}",
+          "raw": "{\r\n    \"quantity\": 1\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1141,7 +1986,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/items/product/5",
+          "raw": "http://localhost:8080/v1/users/items/product/2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1150,31 +1995,31 @@
           "path": [
             "v1",
             "users",
-            "3",
             "items",
             "product",
-            "5"
+            "2"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "ShoppingCartItem - Update quantity of an item in cart Copy",
+      "name": "ShoppingCartItem - Remove item from cart",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"quantity\": 2\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/items/product/5",
+          "raw": "http://localhost:8080/v1/users/items/product/2",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1183,10 +2028,9 @@
           "path": [
             "v1",
             "users",
-            "3",
             "items",
             "product",
-            "5"
+            "2"
           ]
         }
       },
@@ -1194,23 +2038,21 @@
     },
     {
       "name": "ShoppingCartItem - Get item in user cart",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"quantity\": 2\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/items/1",
+          "raw": "http://localhost:8080/v1/users/items",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1219,9 +2061,39 @@
           "path": [
             "v1",
             "users",
-            "3",
+            "items"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ShoppingCartItem - Get item by product",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/items/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
             "items",
-            "1"
+            "2"
           ]
         }
       },
@@ -1230,10 +2102,20 @@
     {
       "name": "Orders - Get all order by user",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders?start=2026-01-14&end=2026-01-16",
+          "raw": "http://localhost:8080/v1/users/orders?status=IN_PROCESS",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1242,22 +2124,22 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders"
           ],
           "query": [
             {
               "key": "status",
-              "value": "IN_PROCESS",
-              "disabled": true
+              "value": "IN_PROCESS"
             },
             {
               "key": "start",
-              "value": "2026-01-14"
+              "value": "2026-01-23",
+              "disabled": true
             },
             {
               "key": "end",
-              "value": "2026-01-16"
+              "value": "2026-01-24",
+              "disabled": true
             }
           ]
         }
@@ -1267,6 +2149,16 @@
     {
       "name": "Orders - Get all order for admin",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzMSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE3NjkyNzE5NDksImV4cCI6MTc2OTM1ODM0OX0.EhG064kGzTfYXBGvsgx9FnKu82TDgLtIQtLsLhWP66w",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -1302,8 +2194,18 @@
       "response": []
     },
     {
-      "name": "Orders - Get order items",
+      "name": "Orders - Get order items admin",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -1338,10 +2240,20 @@
     {
       "name": "Orders - Get order by Id",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders/3",
+          "raw": "http://localhost:8080/v1/users/orders/1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1350,9 +2262,8 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders",
-            "3"
+            "1"
           ],
           "query": [
             {
@@ -1419,10 +2330,20 @@
     {
       "name": "Orders - Get order items for user in an order",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders/3/items",
+          "raw": "http://localhost:8080/v1/users/orders/1/items",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1431,9 +2352,8 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders",
-            "3",
+            "1",
             "items"
           ],
           "query": [
@@ -1460,10 +2380,20 @@
     {
       "name": "Orders - Get order items for user in all orders",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3",
+          "raw": "http://localhost:8080/v1/users",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1471,8 +2401,7 @@
           "port": "8080",
           "path": [
             "v1",
-            "users",
-            "3"
+            "users"
           ],
           "query": [
             {
@@ -1498,10 +2427,20 @@
     {
       "name": "Orders - Delete order by Id",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3Njk0Njc3NjUsImV4cCI6MTc2OTU1NDE2NX0.vjp7ACUKxRE8RFw-hLJCtmQtgbYOa8Sd071iT1pdEtE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders/2",
+          "raw": "http://localhost:8080/v1/users/orders/1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1510,9 +2449,8 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders",
-            "2"
+            "1"
           ],
           "query": [
             {
@@ -1538,11 +2476,21 @@
     {
       "name": "Orders - Create order",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"quantity\": 3\r\n        },\r\n        {\r\n            \"productId\": 5,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 10,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 9,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 2,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": 1,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1550,7 +2498,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders",
+          "raw": "http://localhost:8080/v1/users/orders",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1559,8 +2507,183 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Orders - Create order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 10,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 9,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 2,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": 1,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/orders?userId=2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "orders"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "2",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Orders - Checkout order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3Njk1MzM2NDEsImV4cCI6MTc2OTYyMDA0MX0.y60arqnVizlwwGBZ9kLDH-zb_XvIlgHJ499T1YTzkH8",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/orders/checkout/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "orders",
+            "checkout",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Orders - Checkout order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTM5NzM4LCJleHAiOjE3NzAyMjYxMzh9.2PfztDmWU4I66_lZsT0rgTGKRTPVhfxQc3IJkaDNd18",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/orders/checkout/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "orders",
+            "checkout",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Orders - Cancel Order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3Njk1NTExMzAsImV4cCI6MTc2OTYzNzUzMH0.Um38XRytf5jGyCui-YcTKZPWXpQa4M6xG0xopfW2dzo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/orders/cancel/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "orders",
+            "cancel",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Orders - Cancel Order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3Njk1NTExMzAsImV4cCI6MTc2OTYzNzUzMH0.Um38XRytf5jGyCui-YcTKZPWXpQa4M6xG0xopfW2dzo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/orders/cancel/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "orders",
+            "cancel",
+            "1"
           ]
         }
       },
@@ -1569,11 +2692,21 @@
     {
       "name": "Orders - Update order",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 1,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": 5,\r\n            \"quantity\": 2\r\n        }\r\n    ]\r\n}",
+          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 9,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 2,\r\n            \"quantity\": 3\r\n        },\r\n        {\r\n            \"productId\": 7,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": 11,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1581,7 +2714,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/orders/3",
+          "raw": "http://localhost:8080/v1/users/orders/1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1590,22 +2723,31 @@
           "path": [
             "v1",
             "users",
-            "3",
             "orders",
-            "3"
+            "1"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "Payments - Create Payment",
+      "name": "Admin Orders - Update order",
       "request": {
-        "method": "POST",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NjkyNzEyMjUsImV4cCI6MTc2OTM1NzYyNX0.JRb-9m91432BHtUf7qpHzhv6dGuAnIsQC0kTmTEIcqE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"orderId\": 3,\r\n    \"paymentType\": \"CREDIT_CARD\"\r\n}",
+          "raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"productId\": 9,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": 2,\r\n            \"quantity\": 3\r\n        },\r\n        {\r\n            \"productId\": 7,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": 11,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1613,7 +2755,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/payments",
+          "raw": "http://localhost:8080/v1/users/orders/1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1622,8 +2764,46 @@
           "path": [
             "v1",
             "users",
-            "3",
-            "payments"
+            "orders",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payments - Process Payment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTU0NzM3LCJleHAiOjE3NzAyNDExMzd9.kZG9X0UZTFpJqH3b9WEncPVYCEoMP48cXpISmceI64c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/payments/3?paymentType=CREDIT_CARD",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "payments",
+            "3"
+          ],
+          "query": [
+            {
+              "key": "paymentType",
+              "value": "CREDIT_CARD"
+            }
           ]
         }
       },
@@ -1632,11 +2812,21 @@
     {
       "name": "Payments - Update Payment",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTU0NzM3LCJleHAiOjE3NzAyNDExMzd9.kZG9X0UZTFpJqH3b9WEncPVYCEoMP48cXpISmceI64c",
+              "type": "string"
+            }
+          ]
+        },
         "method": "PUT",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"orderId\": 3,\r\n    \"paymentType\": \"PAYPAL\"\r\n}",
+          "raw": "{\r\n    \"orderId\": 1,\r\n    \"paymentType\": \"PAYPAL\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1644,7 +2834,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/payments/1",
+          "raw": "http://localhost:8080/v1/users/payments/1",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1653,7 +2843,6 @@
           "path": [
             "v1",
             "users",
-            "3",
             "payments",
             "1"
           ]
@@ -1662,24 +2851,22 @@
       "response": []
     },
     {
-      "name": "Payments - Update Payment Copy",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
+      "name": "Payments - Get Payment",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTU0NzM3LCJleHAiOjE3NzAyNDExMzd9.kZG9X0UZTFpJqH3b9WEncPVYCEoMP48cXpISmceI64c",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"orderId\": 3,\r\n    \"paymentType\": \"PAYPAL\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "url": {
-          "raw": "http://localhost:8080/v1/users/3/payments?status=FAILED",
+          "raw": "http://localhost:8080/v1/users/payments?type=CREDIT_CARD",
           "protocol": "http",
           "host": [
             "localhost"
@@ -1688,7 +2875,92 @@
           "path": [
             "v1",
             "users",
-            "3",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "type",
+              "value": "CREDIT_CARD"
+            },
+            {
+              "key": "status",
+              "value": "FAILED",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payments - Get Payment For Order",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTU0NzM3LCJleHAiOjE3NzAyNDExMzd9.kZG9X0UZTFpJqH3b9WEncPVYCEoMP48cXpISmceI64c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/payments/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "payments",
+            "3"
+          ],
+          "query": [
+            {
+              "key": "type",
+              "value": "CREDIT_CARD",
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": "FAILED",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Payments - Get Payment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzIiwicm9sZXMiOlsiUk9MRV9VU0VSIiwiUk9MRV9BRE1JTiJdLCJpYXQiOjE3NzAwNjg4MzQsImV4cCI6MTc3MDE1NTIzNH0.EDZ3nGMEoyjs5hvAdJtIQQ6ZS01AkihiXeVppG770Kw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/admin/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "admin",
             "payments"
           ],
           "query": [
@@ -1699,7 +2971,47 @@
             },
             {
               "key": "status",
-              "value": "FAILED"
+              "value": "FAILED",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Payments - Delete Payment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lc2lzNyIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNzcwMTU0NzM3LCJleHAiOjE3NzAyNDExMzd9.kZG9X0UZTFpJqH3b9WEncPVYCEoMP48cXpISmceI64c",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/users/payments/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "users",
+            "payments",
+            "1"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "FAILED",
+              "disabled": true
             }
           ]
         }

@@ -1,6 +1,8 @@
 package com.example.EcommerceBackendProject.Repository;
 
 import com.example.EcommerceBackendProject.Entity.Address;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    List<Address> findByUserId(Long userId);
+    Page<Address> findByUserId(Long userId, Pageable pageable);
 
     boolean existsByUserIdAndIsDefaultTrue(Long userId);
 

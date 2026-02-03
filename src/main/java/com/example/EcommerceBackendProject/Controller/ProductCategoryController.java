@@ -1,7 +1,6 @@
 package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.Service.ProductService;
-import com.example.EcommerceBackendProject.Utilities.PageableSortValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/v1/users/payments")
+@PreAuthorize("hasRole('USER')")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -42,17 +44,18 @@ public class PaymentController {
 
     @GetMapping
     public ResponseEntity<Page<PaymentResponseDTO>> getPaymentByStatus(@RequestParam(required = false) PaymentStatus status,
+                                                                       @RequestParam(required = false) Long orderId,
                                                                        @RequestParam(required = false) PaymentType type,
                                                                        @RequestParam(required = false) LocalDate start,
                                                                        @RequestParam(required = false) LocalDate end,
-                                                                       @PageableDefault(size = 10) Pageable pageable) {
+                                                                       @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
         Long userId = SecurityUtils.getCurrentUserId();
         LocalDateTime startTime = (start == null) ? null : start.atStartOfDay();
         LocalDateTime endTime = (end == null) ? null : end.plusDays(1).atStartOfDay();
 
         pageable = pageableSortValidator.validate(pageable, SortableFields.PAYMENT.getFields());
-        Page<Payment> payment = paymentService.findPayments(userId, status, type, startTime, endTime, pageable);
+        Page<Payment> payment = paymentService.findPayments(userId, orderId, status, type, startTime, endTime, pageable);
 
         return ResponseEntity.ok(payment.map(PaymentMapper::toDTO));
     }
