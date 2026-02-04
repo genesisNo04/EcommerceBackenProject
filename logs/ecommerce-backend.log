@@ -1,0 +1,392 @@
+2026-02-04 15:21:18 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 44 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 474 ms [callerType=, callerId=]
+2026-02-04 15:21:18 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting... [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@31a34aa9 [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed. [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.252 seconds (process running for 204.037) [callerType=, callerId=]
+2026-02-04 15:21:19 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:21:28 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:21:28 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:21:28 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms [callerType=, callerId=]
+2026-02-04 15:21:28 [http-nio-8080-exec-2] INFO  c.e.E.S.impl.AddressServiceImpl - SEARCH address for [userId=5] [callerType=ADMIN, callerId=10]
+2026-02-04 15:24:31 [http-nio-8080-exec-5] INFO  c.e.E.S.impl.AddressServiceImpl - RESET default address for user [userId=5] [callerType=ADMIN, callerId=10]
+2026-02-04 15:24:31 [http-nio-8080-exec-5] INFO  c.e.E.S.impl.AddressServiceImpl - CREATE address [addressId=37] for user [userId=5] default=true [callerType=ADMIN, callerId=10]
+2026-02-04 15:24:57 [http-nio-8080-exec-6] INFO  c.e.E.S.impl.AddressServiceImpl - SEARCH address for [userId=5] [callerType=ADMIN, callerId=10]
+2026-02-04 15:26:23 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:26:23 [Thread-5] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:26:23 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:26:23 [Thread-5] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:26:23 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:26:23 [Thread-5] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:26:23 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:26:23 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:26:23 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:26:23 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 69 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 563 ms [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting... [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7ff5de [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed. [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.45 seconds (process running for 509.365) [callerType=, callerId=]
+2026-02-04 15:26:24 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:26:26 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:26:26 [Thread-9] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:26:26 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:26:26 [Thread-9] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:26:26 [Thread-9] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:26:26 [Thread-9] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 50 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:26:26 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 473 ms [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting... [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7ba93601 [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed. [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.303 seconds (process running for 512.206) [callerType=, callerId=]
+2026-02-04 15:26:27 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:26:37 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:26:37 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:26:37 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms [callerType=, callerId=]
+2026-02-04 15:26:37 [http-nio-8080-exec-2] INFO  c.e.E.S.impl.AddressServiceImpl - SEARCH for default address for [userId=5] [callerType=ADMIN, callerId=10]
+2026-02-04 15:28:44 [http-nio-8080-exec-3] INFO  c.e.E.S.impl.AddressServiceImpl - UPDATE address for [addressId=37]  [callerType=ADMIN, callerId=10]
+2026-02-04 15:29:29 [http-nio-8080-exec-4] INFO  c.e.E.S.impl.AddressServiceImpl - PATCH address for [addressId=37] [callerType=ADMIN, callerId=10]
+2026-02-04 15:29:48 [http-nio-8080-exec-8] INFO  c.e.E.S.impl.AddressServiceImpl - DELETE address [addressId=37] [callerType=ADMIN, callerId=10]
+2026-02-04 15:33:00 [http-nio-8080-exec-10] INFO  c.e.E.S.impl.AddressServiceImpl - SET default address to [addressId=10] [callerType=ADMIN, callerId=10]
+2026-02-04 15:36:45 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:36:45 [Thread-13] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:36:45 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:36:45 [Thread-13] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:36:45 [Thread-13] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:36:45 [Thread-13] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:36:45 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:36:45 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:36:45 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 59 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 504 ms [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting... [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@303c6b4f [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed. [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.223 seconds (process running for 1131.232) [callerType=, callerId=]
+2026-02-04 15:36:46 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:36:48 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:36:48 [Thread-17] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:36:48 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:36:48 [Thread-17] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:36:48 [Thread-17] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:36:48 [Thread-17] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 43 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 387 ms [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting... [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@43c1cc40 [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed. [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:36:48 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.118 seconds (process running for 1133.892) [callerType=, callerId=]
+2026-02-04 15:36:49 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:37:11 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:37:11 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:37:11 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms [callerType=, callerId=]
+2026-02-04 15:37:11 [http-nio-8080-exec-2] INFO  c.e.E.Service.impl.AuthServiceImpl - LOGIN with user  [callerType=, callerId=]
+2026-02-04 15:37:55 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:37:55 [Thread-21] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:37:55 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:37:55 [Thread-21] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:37:55 [Thread-21] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:37:55 [Thread-21] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 41 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 409 ms [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Starting... [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-7 - Added connection com.mysql.cj.jdbc.ConnectionImpl@43f01d9f [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Start completed. [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:37:56 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:37:57 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:37:57 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:37:57 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.134 seconds (process running for 1201.588) [callerType=, callerId=]
+2026-02-04 15:37:57 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:37:58 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:37:58 [Thread-25] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:37:58 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:37:58 [Thread-25] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:37:58 [Thread-25] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:37:58 [Thread-25] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-7 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:37:58 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:37:58 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 45 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 372 ms [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Starting... [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-8 - Added connection com.mysql.cj.jdbc.ConnectionImpl@38819de9 [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Start completed. [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 1.049 seconds (process running for 1204.204) [callerType=, callerId=]
+2026-02-04 15:37:59 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:40:11 [http-nio-8080-exec-2] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:40:11 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:40:11 [http-nio-8080-exec-2] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms [callerType=, callerId=]
+2026-02-04 15:40:11 [http-nio-8080-exec-2] INFO  c.e.E.Service.impl.AuthServiceImpl - LOGIN with user [callerType=, callerId=]
+2026-02-04 15:40:12 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications) [callerType=, callerId=]
+2026-02-04 15:40:12 [Thread-29] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:40:12 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:40:12 [Thread-29] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:40:12 [Thread-29] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:40:12 [Thread-29] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-8 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 40 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 397 ms [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Starting... [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-9 - Added connection com.mysql.cj.jdbc.ConnectionImpl@66d300a [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Start completed. [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:40:12 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] WARN  o.s.b.w.s.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController' defined in file [C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes\com\example\EcommerceBackendProject\Controller\AuthController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.example.EcommerceBackendProject.Service.AuthService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {} [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-9 - Shutdown completed. [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled. [callerType=, callerId=]
+2026-02-04 15:40:13 [restartedMain] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.example.EcommerceBackendProject.Controller.AuthController required a bean of type 'com.example.EcommerceBackendProject.Service.AuthService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.example.EcommerceBackendProject.Service.AuthService' in your configuration.
+ [callerType=, callerId=]
+2026-02-04 15:40:14 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Starting EcommerceBackendProjectApplication using Java 24 with PID 90772 (C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject\target\classes started by Nam Nguyen in C:\Programming\PersonalProject\EcommerceBackendProject\EcommerceBackendProject) [callerType=, callerId=]
+2026-02-04 15:40:14 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - The following 1 profile is active: "local" [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode. [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 45 ms. Found 10 JPA repository interfaces. [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http) [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat] [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.14] [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 342 ms [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default] [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Starting... [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-10 - Added connection com.mysql.cj.jdbc.ConnectionImpl@67db0ea [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Start completed. [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default) [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/ecommerce_db?useSSL=false&serverTimezone=UTC]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.33
+	Default catalog/schema: ecommerce_db/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration) [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] WARN  o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/' [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  c.e.E.EcommerceBackendProjectApplication - Started EcommerceBackendProjectApplication in 0.861 seconds (process running for 1340.098) [callerType=, callerId=]
+2026-02-04 15:40:15 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged [callerType=, callerId=]
+2026-02-04 15:40:26 [http-nio-8080-exec-3] INFO  o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:40:26 [http-nio-8080-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet' [callerType=, callerId=]
+2026-02-04 15:40:26 [http-nio-8080-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms [callerType=, callerId=]
+2026-02-04 15:40:27 [http-nio-8080-exec-3] INFO  c.e.E.Service.impl.AuthServiceImpl - LOGIN attempt for identifier=genesis7 [callerType=, callerId=]
+2026-02-04 15:41:16 [http-nio-8080-exec-6] INFO  c.e.E.Service.impl.AuthServiceImpl - REGISTER with identifier=genesis9 [callerType=, callerId=]
+2026-02-04 15:41:16 [http-nio-8080-exec-6] INFO  c.e.E.Service.impl.AuthServiceImpl - LOGIN attempt for identifier=genesis9 [callerType=, callerId=]
+2026-02-04 15:43:53 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 2 class path changes (0 additions, 1 deletion, 1 modification) [callerType=, callerId=]
+2026-02-04 15:43:53 [Thread-33] INFO  o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete [callerType=, callerId=]
+2026-02-04 15:43:53 [tomcat-shutdown] INFO  o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete [callerType=, callerId=]
+2026-02-04 15:43:53 [Thread-33] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default' [callerType=, callerId=]
+2026-02-04 15:43:53 [Thread-33] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown initiated... [callerType=, callerId=]
+2026-02-04 15:43:53 [Thread-33] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-10 - Shutdown completed. [callerType=, callerId=]

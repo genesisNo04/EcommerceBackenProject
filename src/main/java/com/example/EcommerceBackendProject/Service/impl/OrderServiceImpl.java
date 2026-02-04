@@ -11,6 +11,8 @@ import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final ShoppingCartService shoppingCartService;
+    private final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, ShoppingCartService shoppingCartService) {
         this.orderRepository = orderRepository;
@@ -75,13 +78,17 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalAmount(total);
 
+        log.info("UPDATE order [orderId={}] for user [userId={}]", orderId, userId);
+
         return order;
     }
 
     @Override
     public Order findOrderById(Long orderId, Long userId) {
-        return orderRepository.findByIdAndUserId(orderId, userId)
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
+        log.info("FETCH order [orderId={}] for user [userId={}]", orderId, userId);
+        return order;
     }
 
     @Override
@@ -93,53 +100,72 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Only CREATED orders can be deleted");
         }
         orderRepository.delete(order);
+        log.info("DELETE order [orderId={}] for user [userId={}]", orderId, userId);
     }
 
     @Override
     public Page<Order> findAllOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable);
+        Page<Order> orders = orderRepository.findAll(pageable);
+        log.info("FETCH all orders total={}", orders.getTotalElements());
+        return orders;
     }
 
     @Override
     public Page<Order> findUserOrders(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+        Page<Order> orders;
 
         if (orderStatus != null && (start != null || end != null)) {
-            return orderRepository.findByUserIdAndOrderStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
+            orders = orderRepository.findByUserIdAndOrderStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
+            log.info("FETCH all orders with [status={}] [startDate={}] [endDate={}]", orderStatus, start, end);
+            return orders;
         }
 
         if (start != null || end != null) {
-            return orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
+            orders = orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
+            log.info("FETCH all orders with [startDate={}] [endDate={}]",start, end);
+            return orders;
         }
 
         if (orderStatus != null) {
-            return orderRepository.findByUserIdAndOrderStatus(userId, orderStatus, pageable);
+            orders = orderRepository.findByUserIdAndOrderStatus(userId, orderStatus, pageable);
+            log.info("FETCH all orders with [status={}]", orderStatus);
+            return orders;
         }
 
-        return orderRepository.findByUserId(userId, pageable);
+        orders = orderRepository.findByUserId(userId, pageable);
+        log.info("FETCH all orders for user [userId={}] [total={}]", userId, orders.getTotalElements());
+        return orders;
     }
 
     @Override
     public Page<Order> findAllFiltered(Long userId, OrderStatus orderStatus, LocalDateTime start, LocalDateTime end, Pageable pageable) {
+        Page<Order> orders;
 
         if (userId != null) {
-            return findUserOrders(userId, orderStatus, start, end, pageable);
+            orders = findUserOrders(userId, orderStatus, start, end, pageable);
+            return orders;
         }
 
         // Global admin filters
         if (orderStatus != null && (start != null || end != null)) {
-            return orderRepository.findByOrderStatusAndCreatedAtBetween(
+            orders = orderRepository.findByOrderStatusAndCreatedAtBetween(
                     orderStatus, start, end, pageable);
+            return orders;
         }
 
         if (start != null || end != null) {
-            return orderRepository.findByCreatedAtBetween(start, end, pageable);
+            orders = orderRepository.findByCreatedAtBetween(start, end, pageable);
+            return orders;
         }
 
         if (orderStatus != null) {
-            return orderRepository.findByOrderStatus(orderStatus, pageable);
+            orders = orderRepository.findByOrderStatus(orderStatus, pageable);
+            return orders;
         }
 
-        return orderRepository.findAll(pageable);
+        orders = orderRepository.findAll(pageable);
+        log.info("FETCH all orders [total={}]", orders.getTotalElements());
+        return orders;
     }
 
     @Override
