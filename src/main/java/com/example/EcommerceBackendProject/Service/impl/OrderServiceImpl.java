@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalAmount(total);
 
-        log.info("UPDATE order [orderId={}] for user [userId={}]", orderId, userId);
+        log.info("UPDATED order [orderId={}] for user [targetUserId={}]", orderId, userId);
 
         return order;
     }
@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     public Order findOrderById(Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
-        log.info("FETCH order [orderId={}] for user [userId={}]", orderId, userId);
+        log.info("FETCHED order [orderId={}] for user [targetUserId={}]", orderId, userId);
         return order;
     }
 
@@ -100,13 +100,13 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Only CREATED orders can be deleted");
         }
         orderRepository.delete(order);
-        log.info("DELETE order [orderId={}] for user [userId={}]", orderId, userId);
+        log.info("DELETED order [orderId={}] for user [targetUserId={}]", orderId, userId);
     }
 
     @Override
     public Page<Order> findAllOrders(Pageable pageable) {
         Page<Order> orders = orderRepository.findAll(pageable);
-        log.info("FETCH all orders total={}", orders.getTotalElements());
+        log.info("FETCHED orders [total={}]", orders.getTotalElements());
         return orders;
     }
 
@@ -116,24 +116,24 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderStatus != null && (start != null || end != null)) {
             orders = orderRepository.findByUserIdAndOrderStatusAndCreatedAtBetween(userId, orderStatus, start, end, pageable);
-            log.info("FETCH all orders with [status={}] [startDate={}] [endDate={}]", orderStatus, start, end);
+            log.info("FETCHED orders with [status={}] [startDate={}] [endDate={}] [total={}]", orderStatus, start, end, orders.getTotalElements());
             return orders;
         }
 
         if (start != null || end != null) {
             orders = orderRepository.findByUserIdAndCreatedAtBetween(userId, start, end, pageable);
-            log.info("FETCH all orders with [startDate={}] [endDate={}]",start, end);
+            log.info("FETCHED orders with [startDate={}] [endDate={}] [total={}]",start, end, orders.getTotalElements());
             return orders;
         }
 
         if (orderStatus != null) {
             orders = orderRepository.findByUserIdAndOrderStatus(userId, orderStatus, pageable);
-            log.info("FETCH all orders with [status={}]", orderStatus);
+            log.info("FETCHED orders with [status={}] [total={}]", orderStatus, orders.getTotalElements());
             return orders;
         }
 
         orders = orderRepository.findByUserId(userId, pageable);
-        log.info("FETCH all orders for user [userId={}] [total={}]", userId, orders.getTotalElements());
+        log.info("FETCHED orders for user [targetUserId={}] [total={}]", userId, orders.getTotalElements());
         return orders;
     }
 
@@ -164,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orders = orderRepository.findAll(pageable);
-        log.info("FETCH all orders [total={}]", orders.getTotalElements());
+        log.info("FETCHED orders [total={}]", orders.getTotalElements());
         return orders;
     }
 
@@ -203,7 +203,10 @@ public class OrderServiceImpl implements OrderService {
 
         order.setTotalAmount(total);
         order.setOrderStatus(OrderStatus.CREATED);
-        return orderRepository.save(order);
+        orderRepository.save(order);
+        log.info("CREATED order [orderId={}] for user [targetUserId={}]", order.getId(), userId);
+
+        return order;
     }
 
     @Override
@@ -220,7 +223,6 @@ public class OrderServiceImpl implements OrderService {
     public Order checkout(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoResourceFoundException("Order not found"));
-
         return checkout(order);
     }
 
@@ -256,6 +258,9 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setTotalAmount(total);
+
+        log.info("SUBMITTED order [orderId={}] [totalAmount={}]", order.getId(), order.getTotalAmount());
+
         return order;
     }
 
@@ -289,6 +294,8 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+        log.info("CANCELED order [orderId={}]", order.getId());
+
         order.markCanceled();
     }
 
@@ -296,6 +303,9 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> findByOrderId(Long orderId, Pageable pageable) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NoResourceFoundException("No order found"));
+
+        log.info("FETCHED order with [orderId={}]", order.getId());
+
         return new PageImpl<>(List.of(order), pageable, 1);
     }
 }

@@ -11,6 +11,8 @@ import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ShoppingCartItemRepository;
 import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,10 +38,16 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Override
     public Integer findProductQuantityWithProductId(Long productId) {
-        return productRepository.findStockQuantityByProductId(productId)
+        Integer quantity = productRepository.findStockQuantityByProductId(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found."));
+
+        log.info("FETCHED stock quantity for product [productId={}]", productId);
+
+        return quantity;
     }
 
     @Override
@@ -53,8 +61,11 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = ProductMapper.toEntity(productRequestDTO);
         product.getCategories().addAll(categories);
+        productRepository.save(product);;
 
-        return productRepository.save(product);
+        log.info("CREATED product [productId={}]", product.getId());
+
+        return product;
     }
 
     @Override
@@ -75,6 +86,8 @@ public class ProductServiceImpl implements ProductService {
             productUpdate.getCategories().clear();
             productUpdate.getCategories().addAll(categories);
         }
+
+        log.info("UPDATED product [productId={}]", productUpdate.getId());
 
         return productUpdate;
     }
@@ -119,6 +132,8 @@ public class ProductServiceImpl implements ProductService {
             productUpdate.setStockQuantity(productUpdateRequestDTO.getStockQuantity());
         }
 
+        log.info("PATCHED product [productId={}]", productUpdate.getId());
+
         return productUpdate;
     }
 
@@ -130,27 +145,37 @@ public class ProductServiceImpl implements ProductService {
 
         shoppingCartItemRepository.deleteByProductId(productId);
         productRepository.delete(product);
+
+        log.info("DELETED product [productId={}]", product.getId());
     }
 
     @Override
     public BigDecimal findProductPrice(Long productId) {
-        return productRepository.findPriceById(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
+        BigDecimal price = productRepository.findPriceById(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
+        log.info("FETCHED price for product [productId={}] [price={}]", productId, price);
+        return price;
     }
 
     @Override
     public Page<Product> findProductByKeyword(String keyword, Pageable pageable) {
-        return productRepository.findByProductNameContainingIgnoreCase(keyword, pageable);
+        Page<Product> products = productRepository.findByProductNameContainingIgnoreCase(keyword, pageable);
+        log.info("FETCHED products with keyword [keyword={}] [total={}]", keyword, products.getTotalElements());
+        return products;
     }
 
     @Override
     public Page<Product> findProductByCategory(Category category, Pageable pageable) {
-        return productRepository.findByCategories(category, pageable);
+        Page<Product> products = productRepository.findByCategories(category, pageable);
+        log.info("FETCHED products with category [category={}] [total={}]", category.getName(), products.getTotalElements());
+        return products;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        Page<Product> products = productRepository.findAll(pageable);
+        log.info("FETCHED products [total={}]", products.getTotalElements());
+        return products;
     }
 
     @Override
@@ -161,6 +186,7 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
 
         product.addCategory(category);
+        log.info("ADDED category [categoryId={}] to product [productId={}]", categoryId, productId);
     }
 
     @Override
@@ -171,5 +197,6 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
 
         product.removeCategory(category);
+        log.info("REMOVED category [categoryId={}] from product [productId={}]", categoryId, productId);
     }
 }

@@ -4,6 +4,8 @@ import com.example.EcommerceBackendProject.DTO.ApiErrorResponseDTO;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,17 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleBadRequestException(BadRequestException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status)
                 .body(new ApiErrorResponseDTO(
@@ -37,6 +47,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleUserAccessDeniedException(UserAccessDeniedException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
 
+        log.error("FORBIDDEN request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -48,6 +64,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+
+        log.error("FORBIDDEN request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -61,6 +83,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidOrderItemQuantityException(InvalidOrderItemQuantityException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -72,6 +100,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+
+        log.error("NOT FOUND request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -85,6 +119,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -96,6 +136,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoUserFoundException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleNoUserFoundException(NoUserFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+
+        log.error("NOT FOUND request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -109,6 +155,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -120,6 +172,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidOrderStatusException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidOrderStatusException(InvalidOrderStatusException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -133,6 +191,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidPaymentStatusException(InvalidPaymentStatusException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -144,6 +208,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidPaymentTypeException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidPaymentTypeException(InvalidPaymentTypeException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -157,6 +227,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidRoleException(InvalidRoleException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -168,6 +244,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidSortableFieldsException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleInvalidSortableFieldsException(InvalidSortableFieldsException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -181,6 +263,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
+        log.error("NOT FOUND request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -192,6 +280,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         String message = ex.getBindingResult()
                 .getFieldErrors()
@@ -212,6 +306,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -223,6 +323,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleDbError(DataIntegrityViolationException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
+
+        log.error("CONFLICT request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -236,6 +342,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleIllegalStateException(IllegalStateException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -247,6 +359,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
@@ -260,6 +378,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponseDTO> handleOptimisticLockingException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
 
+        log.error("CONFLICT request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),
                 status.name(),
@@ -272,6 +396,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<ApiErrorResponseDTO> handleMalformedJwtException(Exception ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
+
+        log.error("FORBIDDEN request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
 
         return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
                 status.value(),

@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category saved = categoryRepository.save(category);
 
-        log.info("CREATE category [categoryId={}]", saved.getId());
+        log.info("CREATED category [categoryId={}]", saved.getId());
 
         return saved;
     }
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
         productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product with id: " + productId));
 
-        log.info("SEARCH category by [productId={}]", productId);
+        log.info("FETCHED category by [productId={}]", productId);
 
         return categoryRepository.findByProductId(productId);
     }
@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.getProducts().forEach(product -> product.removeCategory(category));
 
-        log.info("DELETE category [categoryId={}]", categoryId);
+        log.info("DELETED category [categoryId={}]", categoryId);
 
         categoryRepository.delete(category);
     }
@@ -106,7 +106,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findByName(String name) {
         Category category = categoryRepository.findByName(name).orElseThrow(() -> new NoResourceFoundException("No category found!"));
-        log.info("SEARCH category by [categoryName={}] return found [categoryId={}]", name, category.getId());
+        log.info("FETCHED category by [categoryName={}] return found [categoryId={}]", name, category.getId());
         return category;
     }
 
@@ -126,7 +126,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         products.forEach(p -> p.addCategory(category));
 
-        log.info("UPDATE category [categoryId={}]", categoryId);
+        log.info("UPDATED category [categoryId={}]", categoryId);
 
         return category;
     }
@@ -153,7 +153,7 @@ public class CategoryServiceImpl implements CategoryService {
             products.forEach(p -> p.addCategory(category));
         }
 
-        log.info("PATCH category [categoryId={}]", categoryId);
+        log.info("PATCHED category [categoryId={}]", categoryId);
 
         return category;
     }
@@ -161,7 +161,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<Category> findCategories(Pageable pageable) {
         Page<Category> categories = categoryRepository.findAll(pageable);
-        log.info("FETCH all categories, total={}", categories.getTotalElements());
+        log.info("FETCHED categories, total={}", categories.getTotalElements());
         return categories;
     }
 }

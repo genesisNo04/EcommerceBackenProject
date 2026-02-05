@@ -10,6 +10,8 @@ import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.ShoppingCartItemRepository;
 import com.example.EcommerceBackendProject.Service.ShoppingCartItemService;
 import com.example.EcommerceBackendProject.Service.ShoppingCartService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     private final ShoppingCartItemRepository shoppingCartItemRepository;
     private final ShoppingCartService shoppingCartService;
     private final ProductRepository productRepository;
+    private final static Logger log = LoggerFactory.getLogger(ShoppingCartItemServiceImpl.class);
 
     public ShoppingCartItemServiceImpl(ShoppingCartItemRepository shoppingCartItemRepository, ShoppingCartService shoppingCartService, ProductRepository productRepository) {
         this.shoppingCartItemRepository = shoppingCartItemRepository;
@@ -60,7 +63,10 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
         ShoppingCartItem shoppingCartItem = new ShoppingCartItem(product, shoppingCartItemRequestDTO.getQuantity(), product.getPrice(), cart);
         cart.addItem(shoppingCartItem);
-        return shoppingCartItemRepository.save(shoppingCartItem);
+        log.info("ADDED product [productId={}] [quantity={}] to user cart [targetUserId={}]", shoppingCartItemRequestDTO.getProductId(), shoppingCartItem.getQuantity(), userId);
+        shoppingCartItemRepository.save(shoppingCartItem);
+        log.info("CREATED shopping cart item [itemId={}]", shoppingCartItem.getId());
+        return shoppingCartItem;
     }
 
     @Override
@@ -86,6 +92,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
 
         item.setQuantity(shoppingCartItemUpdateRequestDTO.getQuantity());
+        log.info("UPDATED quantity [quantity={}] for product [productId={}] for item [itemId={}]", item.getQuantity(), productId, item.getId());
         return item;
     }
 
@@ -100,19 +107,28 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
                 ).orElseThrow(() -> new NoResourceFoundException("No resource found"));
 
         cart.removeItem(item);
+        log.info("REMOVED product [productId={}] from user cart [itemId={}, userId={}]", productId, item.getId(), userId);
     }
 
     @Override
     public Page<ShoppingCartItem> findItemsByUser(Long userId, Pageable pageable) {
         ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
-        return shoppingCartItemRepository.findByShoppingCartId(cart.getId(), pageable);
+        Page<ShoppingCartItem> items = shoppingCartItemRepository.findByShoppingCartId(cart.getId(), pageable);
+        log.info("FETCHED {} items from user cart [targetUserId={}]", items.getTotalElements(), userId);
+
+        return items;
     }
 
     @Override
     public ShoppingCartItem findItemByUserAndProduct(Long productId, Long userId) {
         ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
-        return shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cart.getId(), productId, userId)
+
+        ShoppingCartItem item = shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cart.getId(), productId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No item founds"));
+
+        log.info("FETCHED product [productId={}] from user cart [targetUserId={}]", productId, userId);
+
+        return item;
     }
 
 }

@@ -42,7 +42,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("SEARCH address for [userId={}]", userId);
+        log.info("FETCHED address for [targetUserId={}]", userId);
 
         return addressRepository.findByUserId(userId, pageable);
     }
@@ -57,17 +57,17 @@ public class AddressServiceImpl implements AddressService {
 
         if (address.getIsDefault()) {
             addressRepository.resetDefaultForUser(userId);
-            log.info("RESET default address for user [userId={}]", userId);
+            log.info("RESET default address for user [targetUserId={}]", userId);
         } else if (!addressRepository.existsByUserIdAndIsDefaultTrue(userId)) {
             address.setIsDefault(true);
-            log.info("PROMOTE address as default for user {}", userId);
+            log.info("PROMOTED address as default for user [targetUserId={}]", userId);
         }
 
         Address saved = addressRepository.save(address);
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("CREATE address [addressId={}] for user [userId={}] default={}", saved.getId(), userId, saved.getIsDefault());
+        log.info("CREATED address [addressId={}] for user [targetUserId={}] default={}", saved.getId(), userId, saved.getIsDefault());
 
         return saved;
     }
@@ -80,7 +80,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("SEARCH for default address for [userId={}]", userId);
+        log.info("FETCHED for default address for [targetUserId={}]", userId);
 
         return addressRepository.findByUserIdAndIsDefaultTrue(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User does not have a default address"));
@@ -97,7 +97,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("UPDATE address [addressId={}] for [userId={}]", updatedAddress.getId(), userId);
+        log.info("UPDATED address [addressId={}] for [targetUserId={}]", updatedAddress.getId(), userId);
 
         return updateAddressInternally(updatedAddress, addressRequestDTO);
     }
@@ -113,7 +113,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("PATCH address for [userId={}]", userId);
+        log.info("PATCHED address for [targetUserId={}]", userId);
 
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
     }
@@ -129,7 +129,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("DELETE address for [userId={}]", userId);
+        log.info("DELETED address for [targetUserId={}]", userId);
 
         deleteAddressInternally(addressToDelete);
     }
@@ -144,7 +144,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("ASSIGN default address for [userId={}]", userId);
+        log.info("ASSIGNED default address for [targetUserId={}]", userId);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class AddressServiceImpl implements AddressService {
     public Page<Address> findAllAddress(Pageable pageable) {
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("SEARCH all addresses");
+        log.info("FETCH addresses");
 
         return addressRepository.findAll(pageable);
     }
@@ -186,7 +186,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("UPDATE address for [addressId={}] ", addressId);
+        log.info("UPDATED address for [addressId={}] ", addressId);
 
         return updateAddressInternally(updatedAddress, addressRequestDTO);
     }
@@ -198,7 +198,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("PATCH address for [addressId={}]", addressId);
+        log.info("PATCHED address for [addressId={}]", addressId);
 
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
     }
@@ -210,7 +210,7 @@ public class AddressServiceImpl implements AddressService {
 
         Long callerId = SecurityUtils.getCurrentUserId();
         LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
-        log.info("DELETE address [addressId={}]", addressId);
+        log.info("DELETED address [addressId={}]", addressId);
 
         deleteAddressInternally(addressToDelete);
     }

@@ -11,6 +11,8 @@ import com.example.EcommerceBackendProject.Repository.ReviewRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.ReviewService;
 import com.example.EcommerceBackendProject.Specification.ReviewSpecification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private ProductRepository productRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(ReviewServiceImpl.class);
+
     @Override
     @Transactional
     public Review createReview(ReviewRequestDTO reviewRequestDTO, Long userId, Long productId) {
@@ -48,7 +52,11 @@ public class ReviewServiceImpl implements ReviewService {
         review.setProduct(product);
 
         try {
-            return reviewRepository.save(review);
+            reviewRepository.save(review);
+
+            log.info("CREATED review [reviewId={}] for product [productId={}]", review.getId(), productId);
+
+            return review;
         } catch (DataIntegrityViolationException ex) {
             throw new ResourceAlreadyExistsException("Review already exists for this product");
         }
@@ -66,6 +74,9 @@ public class ReviewServiceImpl implements ReviewService {
 
         currentReview.setRating(reviewRequestDTO.getRating());
         currentReview.setComment(reviewRequestDTO.getComment());
+
+        log.info("UPDATED review [reviewId={}]", currentReview.getId());
+
         return currentReview;
     }
 
@@ -80,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         reviewRepository.delete(currentReview);
+        log.info("DELETED review [reviewId={}] for user [targetUserId={}]", currentReview.getId(), userId);
     }
 
     @Override
@@ -116,8 +128,10 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         spec = spec.and(ReviewSpecification.createdBetween(start, end));
+        Page<Review> reviews = reviewRepository.findAll(spec, pageable);
+        log.info("FETCHED reviews [total={}] for user [targetUserId={}] product [productId={}] ratingRange=[{}-{}]", reviews.getTotalElements(), userId, productId, startRating, endRating);
 
-        return reviewRepository.findAll(spec, pageable);
+        return reviews;
     }
 
     @Override
@@ -126,5 +140,6 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
 
         reviewRepository.delete(currentReview);
+        log.info("DELETED review [reviewId={}]", currentReview.getId());
     }
 }

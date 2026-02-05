@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.LoginRequestDTO;
 import com.example.EcommerceBackendProject.DTO.LoginResponseDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.CustomUserDetails;
+import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Security.JwtService;
 import com.example.EcommerceBackendProject.Service.AuthService;
 import com.example.EcommerceBackendProject.Service.UserService;
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(customUserDetails);
 
-        log.info("LOGIN attempt for identifier={}", loginRequestDTO.getIdentifier());
+        log.info("LOGGED IN attempt for [targetUserId={}]", customUserDetails.getId());
 
         return new LoginResponseDTO(
                 token,
@@ -55,9 +56,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponseDTO register(UserRequestDTO userRequestDTO) {
-        userService.createCustomerUser(userRequestDTO);
+        User user = userService.createCustomerUser(userRequestDTO);
 
-        log.info("REGISTER with identifier={}", userRequestDTO.getUsername());
+        log.info("REGISTERED with [targetUserId={}]", user.getId());
 
         return login(new LoginRequestDTO(
                 userRequestDTO.getUsername(),

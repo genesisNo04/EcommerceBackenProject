@@ -30,21 +30,21 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public Page<OrderItem> findOrderItems(Long orderId, Pageable pageable) {
         Page<OrderItem> items = orderItemRepository.findByOrderId(orderId, pageable);
-        log.info("FETCH order items for [orderId={}] [total={}]", orderId, items.getTotalElements());
+        log.info("FETCHED order items for [orderId={}] [total={}]", orderId, items.getTotalElements());
         return items;
     }
 
     @Override
     public Page<OrderItem> findAllOrderItemsForUser(Long userId, Pageable pageable) {
         Page<OrderItem> items = orderItemRepository.findByOrderUserId(userId, pageable);
-        log.info("FETCH all order items for [userId={}] [total={}]", userId, items.getTotalElements());
+        log.info("FETCHED order items for [targetUserId={}] [total={}]", userId, items.getTotalElements());
         return items;
     }
 
     @Override
     public Page<OrderItem> findOrderItemsForUserInOrder(Long userId, Long orderId, Pageable pageable) {
         Page<OrderItem> items = orderItemRepository.findByOrderIdAndOrderUserId(orderId, userId, pageable);
-        log.info("FETCH all order item of [userId={}] in [orderId={}] [total={}]", userId, orderId, items.getTotalElements());
+        log.info("FETCHED order item of [targetUserId={}] in [orderId={}] [total={}]", userId, orderId, items.getTotalElements());
         return items;
     }
 }
