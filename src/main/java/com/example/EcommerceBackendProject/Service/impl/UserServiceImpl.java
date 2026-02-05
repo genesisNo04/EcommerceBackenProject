@@ -12,6 +12,8 @@ import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +27,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final ShoppingCartRepository shoppingCartRepository;
     private final AddressService addressService;
     private final PasswordEncoder passwordEncoder;
+    private final static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(UserRepository userRepository, ShoppingCartRepository shoppingCartRepository, AddressService addressService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, AddressService addressService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.shoppingCartRepository = shoppingCartRepository;
         this.addressService = addressService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -43,33 +44,41 @@ public class UserServiceImpl implements UserService {
             }
         }
         oldUser.setEmail(newEmail);
+        log.info("SET email for user [targetUserId={}]", oldUser.getId());
     }
 
-    private void validateAndSetUsername(User user, String username) {
-        if (username != null && !user.getUsername().equals(username)) {
+    private void validateAndSetUsername(User oldUser, String username) {
+        if (username != null && !oldUser.getUsername().equals(username)) {
             if (userRepository.existsByUsername(username)) {
                 throw new ResourceAlreadyExistsException("Username is already in use");
             }
         }
-        user.setUsername(username);
+        oldUser.setUsername(username);
+        log.info("SET username for user [targetUserId={}]", oldUser.getId());
     }
 
     @Override
     public User findById(Long userId) {
-        return userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCHED user [targetUserId={}]", user.getId());
+        return user;
     }
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCHED user [targetUserId={}]", user.getId());
+        return user;
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCHED user [targetUserId={}]", user.getId());
+        return user;
     }
 
     @Override
@@ -82,7 +91,9 @@ public class UserServiceImpl implements UserService {
         user.setCart(shoppingCart);
         shoppingCart.setUser(user);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        log.info("CREATED user [targetUserId={}]", savedUser.getId());
+        return savedUser;
     }
 
     private User createUser(UserRequestDTO userRequestDTO) {
@@ -111,6 +122,7 @@ public class UserServiceImpl implements UserService {
         oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
         oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
         validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
+        log.info("UPDATED user [targetUserId={}]", oldUser.getId());
         return oldUser;
     }
 
@@ -144,6 +156,8 @@ public class UserServiceImpl implements UserService {
         if (userUpdateRequestDTO.getEmail() != null) {
             validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
+
+        log.info("PATCHED user [targetUserId={}]", oldUser.getId());
         return oldUser;
     }
 
@@ -154,6 +168,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
         userRepository.delete(user);
+        log.info("DELETED user [targetUserId={}]", userId);
     }
 
     @Override
@@ -163,6 +178,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        log.info("UPDATED password for user [targetUserId={}]", userId);
     }
 
     @Override
@@ -170,18 +186,23 @@ public class UserServiceImpl implements UserService {
     public User createAdmin(UserRequestDTO userRequestDTO) {
         User user = createUser(userRequestDTO);
         user.assignAdminRole();
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        log.info("CREATED admin user [targetUserId={}]", savedUser.getId());
+        return savedUser;
     }
 
     @Override
     public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAll(pageable);
+        log.info("FETCH users [total={}]", users.getTotalElements());
+        return users;
     }
 
     @Override
     public Page<User> findById(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCH users [targetUserId={}]", userId);
         return new PageImpl<>(List.of(user), pageable, 1);
     }
 
@@ -189,6 +210,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> findByUsername(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCH users [targetUserId={}]", user.getId());
         return new PageImpl<>(List.of(user), pageable, 1);
     }
 
@@ -196,6 +218,7 @@ public class UserServiceImpl implements UserService {
     public Page<User> findByEmail(String email, Pageable pageable) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+        log.info("FETCH users [targetUserId={}]", user.getId());
         return new PageImpl<>(List.of(user), pageable, 1);
     }
 }

@@ -63,4 +63,9 @@ public class SecurityUtils {
             throw new UserAccessDeniedException("Admin privileges required");
         }
     }
+
+    public static boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
 }

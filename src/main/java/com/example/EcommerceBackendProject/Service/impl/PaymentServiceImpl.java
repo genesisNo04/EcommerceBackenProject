@@ -6,22 +6,19 @@ import com.example.EcommerceBackendProject.Entity.Payment.Payment;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentGateway;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentRequest;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentResult;
-import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Exception.InvalidPaymentStatusException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.PaymentRepository;
-import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.PaymentService;
 import com.example.EcommerceBackendProject.Specification.PaymentSpecification;
-import org.aspectj.weaver.ast.Or;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,39 +30,25 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    private final UserRepository userRepository;
-
     private final OrderRepository orderRepository;
 
     private final PaymentGateway paymentGateway;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, UserRepository userRepository, OrderRepository orderRepository, PaymentGateway paymentGateway) {
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
+    public PaymentServiceImpl(PaymentRepository paymentRepository, OrderRepository orderRepository, PaymentGateway paymentGateway) {
         this.paymentRepository = paymentRepository;
-        this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.paymentGateway = paymentGateway;
     }
 
     @Override
     public Payment findPaymentByOrderIdAndUserId(Long orderId, Long userId) {
-        return paymentRepository.findByOrderIdAndOrderUserId(orderId, userId)
+        Payment payment = paymentRepository.findByOrderIdAndOrderUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("Payment not found for this order."));
+        log.info("FETCHED payment [paymentId={}] for order [orderId={}]", payment.getId(), orderId);
+        return payment;
     }
-
-//    @Override
-//    @Transactional
-//    public Payment createPayment(PaymentRequestDTO paymentRequestDTO, Long userId) {
-//        if(paymentRepository.findByOrderIdAndOrderUserId(paymentRequestDTO.getOrderId(), userId).isPresent()) {
-//            throw new ResourceAlreadyExistsException("Payment already exists for this order");
-//        }
-//
-//        Order order = orderRepository.findByIdAndUserId(paymentRequestDTO.getOrderId(), userId)
-//                .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
-//        Payment payment = Payment.createPayment(order, paymentRequestDTO.getPaymentType(), "Test reference id", PaymentStatus.AUTHORIZED);
-//        order.setPayment(payment);
-//
-//        return paymentRepository.save(payment);
-//    }
 
     @Override
     @Transactional
@@ -79,6 +62,8 @@ public class PaymentServiceImpl implements PaymentService {
             order.setPayment(null);
             payment.setOrder(null);
         }
+
+        log.info("DELETED payment [paymentId={}]", paymentId);
         paymentRepository.delete(payment);
     }
 
@@ -95,6 +80,8 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = payment.getOrder();
         payment.setPaymentType(paymentRequestDTO.getPaymentType());
         payment.setAmount(order.getTotalAmount());
+
+        log.info("UPDATED payment [paymentId={}]", paymentId);
 
         return paymentRepository.save(payment);
     }
@@ -125,21 +112,10 @@ public class PaymentServiceImpl implements PaymentService {
             spec = spec.and(PaymentSpecification.createdBetween(start, end));
         }
 
-//        if (status != null && paymentType != null && (start != null || end != null)) {
-//            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserIdAndCreatedAtBetween(status, paymentType, userId, start, end, pageable);
-//        } else if (start != null || end != null) {
-//            payment = paymentRepository.findByCreatedAtBetweenAndOrderUserId(start, end, userId, pageable);
-//        } else if (status != null && paymentType != null) {
-//            payment = paymentRepository.findByStatusAndPaymentTypeAndOrderUserId(status, paymentType, userId, pageable);
-//        } else if (status != null) {
-//            payment = paymentRepository.findByStatusAndOrderUserId(status, userId, pageable);
-//        } else if (paymentType != null) {
-//            payment = paymentRepository.findByPaymentTypeAndOrderUserId(paymentType, userId, pageable);
-//        } else {
-//            payment = paymentRepository.findByOrderUserId(userId, pageable);
-//        }
+        Page<Payment> payments = paymentRepository.findAll(spec, pageable);
+        log.info("FETCHED payments [total={}]", payments.getTotalElements());
 
-        return paymentRepository.findAll(spec, pageable);
+        return payments;
     }
 
     @Override
@@ -171,6 +147,8 @@ public class PaymentServiceImpl implements PaymentService {
             order.attachPayment(payment);
             paymentRepository.save(payment);
         }
+
+        log.info("PROCESSED payment [paymentId={}] [status={}] for order [orderId={}] user [targetUserId={}]", payment.getId(), payment.getStatus(), orderId, userId);
 
         return payment;
     }
