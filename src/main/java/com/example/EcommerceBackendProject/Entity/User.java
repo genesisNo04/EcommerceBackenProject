@@ -16,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
@@ -45,7 +46,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
     //This tell spring how to store the enum, there are 2 type, first is string and ordinal (index of ENUM): 0,1,2
     @Enumerated(EnumType.STRING)
