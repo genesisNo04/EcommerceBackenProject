@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,15 +202,23 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         log.info("FETCH users [targetUserId={}]", userId);
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 
     @Override
     public Page<User> findByUsername(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+
         log.info("FETCH users [targetUserId={}]", user.getId());
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 
     @Override
@@ -217,6 +226,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         log.info("FETCH users [targetUserId={}]", user.getId());
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 }
