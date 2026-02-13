@@ -115,12 +115,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
         validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
         oldUser.setLastName(userUpdateRequestDTO.getLastName());
         oldUser.getAddresses().clear();
         oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
         oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
-        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         log.info("UPDATED user [targetUserId={}]", oldUser.getId());
         return oldUser;
     }
@@ -133,6 +133,10 @@ public class UserServiceImpl implements UserService {
 
         if (userUpdateRequestDTO.getUsername() != null) {
             validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+        }
+
+        if (userUpdateRequestDTO.getEmail() != null) {
+            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
 
         if (userUpdateRequestDTO.getFirstName() != null) {
@@ -150,10 +154,6 @@ public class UserServiceImpl implements UserService {
 
         if (userUpdateRequestDTO.getPhoneNumber() != null) {
             oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
-        }
-
-        if (userUpdateRequestDTO.getEmail() != null) {
-            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
 
         log.info("PATCHED user [targetUserId={}]", oldUser.getId());

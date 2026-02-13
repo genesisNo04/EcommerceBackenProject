@@ -5,13 +5,12 @@ import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.Role;
-import com.example.EcommerceBackendProject.Exception.BadRequestException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
-import static com.example.EcommerceBackendProject.UnitTest.UserServiceTest.UserServiceTestUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -30,14 +29,15 @@ public class UserServiceCreateTest extends BaseUserServiceTest{
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(createAddressDTO(true), createAddressDTO(false)));
         List<Address> resultAddress = addresses.stream().map(AddressMapper::toEntity).toList();
 
-        UserRequestDTO dto = new UserRequestDTO(
+        UserRequestDTO dto = createUserDTO(
                 "testuser",
                 "test123",
                 "test@gmail.com",
                 "test",
                 "user",
-                addresses,
-                "+123456789"
+                "+123456789",
+                addresses
+
         );
 
         when(passwordEncoder.encode(anyString())).thenReturn("saved-password");
@@ -65,14 +65,14 @@ public class UserServiceCreateTest extends BaseUserServiceTest{
     @Test
     void createCustomerUser_DuplicateUsername() {
 
-        UserRequestDTO dto = new UserRequestDTO(
+        UserRequestDTO dto = createUserDTO(
                 "testuser",
                 "test123",
                 "test@gmail.com",
                 "test",
                 "user",
-                List.of(),
-                "+123456789"
+                "+123456789",
+                List.of()
         );
 
         when(userRepository.existsByUsername("testuser")).thenReturn(true);
@@ -87,14 +87,15 @@ public class UserServiceCreateTest extends BaseUserServiceTest{
     @Test
     void createCustomerUser_DuplicateEmail() {
 
-        UserRequestDTO dto = new UserRequestDTO(
+        UserRequestDTO dto = createUserDTO(
                 "testuser",
                 "test123",
                 "test@gmail.com",
                 "test",
                 "user",
-                List.of(),
-                "+123456789"
+                "+123456789",
+                List.of()
+
         );
 
         when(userRepository.existsByEmail("test@gmail.com")).thenReturn(true);
@@ -109,18 +110,18 @@ public class UserServiceCreateTest extends BaseUserServiceTest{
     @Test
     void createCustomerUser_DuplicateUserNameAndEmail() {
 
-        UserRequestDTO dto = new UserRequestDTO(
+        UserRequestDTO dto = createUserDTO(
                 "testuser",
                 "test123",
                 "test@gmail.com",
                 "test",
                 "user",
-                List.of(),
-                "+123456789"
+                "+123456789",
+                List.of()
+
         );
 
         when(userRepository.existsByEmail("test@gmail.com")).thenReturn(true);
-        when(userRepository.existsByUsername("testuser")).thenReturn(true);
 
         assertDuplicateThrows(dto);
 
@@ -131,14 +132,14 @@ public class UserServiceCreateTest extends BaseUserServiceTest{
     @Test
     void createAdmin() {
         List<AddressRequestDTO> addresses = List.of(createAddressDTO(true), createAddressDTO(false));
-        UserRequestDTO userRequestDTO = new UserRequestDTO(
+        UserRequestDTO userRequestDTO = createUserDTO(
                 "AdminUser",
                 "admin",
                 "admin@gmail.com",
                 "test",
                 "user",
-                addresses,
-                "+12345678981");
+                "+12345678981",
+                addresses);
 
         when(passwordEncoder.encode("admin")).thenReturn("adminpass");
 

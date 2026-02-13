@@ -5,7 +5,7 @@ import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
-import static com.example.EcommerceBackendProject.UnitTest.UserServiceTest.UserServiceTestUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 

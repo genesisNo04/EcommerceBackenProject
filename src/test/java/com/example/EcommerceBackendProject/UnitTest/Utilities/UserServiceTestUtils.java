@@ -1,4 +1,4 @@
-package com.example.EcommerceBackendProject.UnitTest.UserServiceTest;
+package com.example.EcommerceBackendProject.UnitTest.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;

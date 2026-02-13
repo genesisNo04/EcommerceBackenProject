@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.UnitTest.UserServiceTest;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static com.example.EcommerceBackendProject.UnitTest.UserServiceTest.UserServiceTestUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +37,15 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
     }
 
     @Test
+    void findById_userNotFound() {
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findById(1L));
+
+        verify(userRepository).findById(1L);
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
     void findByUsername() {
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(createAddressDTO(true), createAddressDTO(false)));
         User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", addresses);
@@ -51,6 +61,15 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
         assertEquals(2, fetchUser.getAddresses().size(), "Address size not match");
         assertEquals("+12345678981", fetchUser.getPhoneNumber(), "Phone Number not match");
         verify(userRepository).findByUsername("testuser");
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
+    void findByUsername_userNotFound() {
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findByUsername("user"));
+
+        verify(userRepository).findByUsername("user");
         verifyNoInteractions(passwordEncoder, addressService);
     }
 
@@ -74,6 +93,15 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
     }
 
     @Test
+    void findByEmail_userNotFound() {
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findByEmail("user@gmail.com"));
+
+        verify(userRepository).findByEmail("user@gmail.com");
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
     void findById_returnSingleItemPage() {
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(createAddressDTO(true), createAddressDTO(false)));
         User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", addresses);
@@ -86,6 +114,16 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
         assertEquals(1, fetchUser.getTotalElements(), "Total element should only be 1");
         assertEquals(1, fetchUser.getContent().size(), "Total element should only be 1");
         assertEquals("testuser", fetchUser.getContent().get(0).getUsername(), "Username does not match");
+        verify(userRepository).findById(1L);
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
+    void findById_SingleItemPage_userNotFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findById(1L, pageable));
+
         verify(userRepository).findById(1L);
         verifyNoInteractions(passwordEncoder, addressService);
     }
@@ -108,6 +146,16 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
     }
 
     @Test
+    void findByUsername_SingleItemPage_userNotFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findByUsername("user", pageable));
+
+        verify(userRepository).findByUsername("user");
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
     void findByEmail_returnSingleItemPage() {
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(createAddressDTO(true), createAddressDTO(false)));
         User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", addresses);
@@ -121,6 +169,16 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
         assertEquals(1, fetchUser.getContent().size(), "Total element should only be 1");
         assertEquals("testuser", fetchUser.getContent().get(0).getUsername(), "Username does not match");
         verify(userRepository).findByEmail("testuser@gmail.com");
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
+    void findByEmail_SingleItemPage_userNotFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () ->
+                userService.findByEmail("user@gmail.com", pageable));
+
+        verify(userRepository).findByEmail("user@gmail.com");
         verifyNoInteractions(passwordEncoder, addressService);
     }
 
@@ -144,6 +202,23 @@ public class UserServiceReadTest extends  BaseUserServiceTest{
         assertEquals(5, fetchUser.getTotalElements(), "Total element should only be 5");
         assertEquals(5, fetchUser.getContent().size(), "Total element should only be 5");
         assertEquals(1, fetchUser.getTotalPages(), "Total page should only be 1");
+        verify(userRepository).findAll(pageable);
+        verifyNoInteractions(passwordEncoder, addressService);
+    }
+
+    @Test
+    void findAllUser_noUserFound() {
+        List<User> users = List.of();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<User> page = new PageImpl<>(users, pageable, users.size());
+
+        when(userRepository.findAll(pageable)).thenReturn(page);
+
+        Page<User> fetchUser = userService.findAll(pageable);
+
+        assertEquals(0, fetchUser.getTotalElements(), "Total element should only be 0");
+        assertEquals(0, fetchUser.getContent().size(), "Total element should only be 0");
+        assertEquals(0, fetchUser.getTotalPages(), "Total page should only be 0");
         verify(userRepository).findAll(pageable);
         verifyNoInteractions(passwordEncoder, addressService);
     }
