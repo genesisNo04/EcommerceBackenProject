@@ -19,11 +19,8 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtService jwtService;
-
     private final AuthenticationManager authenticationManager;
-
     private final UserService userService;
-
     private static final Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
     public AuthServiceImpl(JwtService jwtService, AuthenticationManager authenticationManager, UserService userService) {

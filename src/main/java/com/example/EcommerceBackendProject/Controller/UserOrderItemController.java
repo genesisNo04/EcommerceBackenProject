@@ -20,17 +20,19 @@ public class UserOrderItemController {
 
     private final OrderItemService orderItemService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public UserOrderItemController(OrderItemService orderItemService, PageableSortValidator pageableSortValidator) {
+    public UserOrderItemController(OrderItemService orderItemService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.orderItemService = orderItemService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @GetMapping("/orders/{orderId}/items")
     @Transactional(readOnly = true)
     public ResponseEntity<Page<OrderItemResponseDTO>> getOrderItems(@PathVariable Long orderId,
                                                                    @PageableDefault(size = 10) Pageable pageable) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<OrderItem> orderItems = orderItemService.findOrderItemsForUserInOrder(userId, orderId, pageable);
         Page<OrderItemResponseDTO> responseDTOS = orderItems.map(OrderItemMapper::toDTO);
@@ -41,7 +43,7 @@ public class UserOrderItemController {
     @Transactional(readOnly = true)
     public ResponseEntity<Page<OrderItemResponseDTO>> getAllOrderItems(@PageableDefault(size = 10) Pageable pageable) {
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<OrderItem> orderItems = orderItemService.findAllOrderItemsForUser(userId, pageable);
         Page<OrderItemResponseDTO> responseDTOS = orderItems.map(OrderItemMapper::toDTO);

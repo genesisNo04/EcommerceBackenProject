@@ -19,18 +19,20 @@ import java.util.stream.Collectors;
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
+    private final SecurityUtils securityUtils;
 
-    public ShoppingCartController(ShoppingCartService shoppingCartService) {
+    public ShoppingCartController(ShoppingCartService shoppingCartService, SecurityUtils securityUtils) {
         this.shoppingCartService = shoppingCartService;
+        this.securityUtils = securityUtils;
     }
 
     private Long resolveUserId(Long requestedUserId) {
         if (requestedUserId != null) {
-            SecurityUtils.requireAdmin();
+            securityUtils.requireAdmin();
             return requestedUserId;
         }
 
-        return SecurityUtils.getCurrentUserId();
+        return securityUtils.getCurrentUserId();
     }
 
     @GetMapping

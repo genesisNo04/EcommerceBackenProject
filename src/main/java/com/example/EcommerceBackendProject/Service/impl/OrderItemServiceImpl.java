@@ -16,16 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderItemServiceImpl implements OrderItemService {
 
-    @Autowired
-    private OrderItemRepository orderItemRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
 
     private static final Logger log = LoggerFactory.getLogger(OrderItemServiceImpl.class);
+
+    public OrderItemServiceImpl(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
+    }
 
     @Override
     public Page<OrderItem> findOrderItems(Long orderId, Pageable pageable) {

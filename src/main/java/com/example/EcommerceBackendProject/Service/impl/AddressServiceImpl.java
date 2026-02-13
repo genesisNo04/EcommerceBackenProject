@@ -25,23 +25,21 @@ import java.util.*;
 @Service
 public class AddressServiceImpl implements AddressService {
 
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     private static final Logger log = LoggerFactory.getLogger(AddressServiceImpl.class);
 
+    private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
+    public AddressServiceImpl(AddressRepository addressRepository, UserRepository userRepository) {
+        this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public Page<Address> getUserAddresses(Long userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("FETCHED address for [targetUserId={}]", userId);
 
         return addressRepository.findByUserId(userId, pageable);
@@ -65,8 +63,6 @@ public class AddressServiceImpl implements AddressService {
 
         Address saved = addressRepository.save(address);
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("CREATED address [addressId={}] for user [targetUserId={}] default={}", saved.getId(), userId, saved.getIsDefault());
 
         return saved;
@@ -78,8 +74,6 @@ public class AddressServiceImpl implements AddressService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("FETCHED for default address for [targetUserId={}]", userId);
 
         return addressRepository.findByUserIdAndIsDefaultTrue(userId)
@@ -95,8 +89,6 @@ public class AddressServiceImpl implements AddressService {
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("UPDATED address [addressId={}] for [targetUserId={}]", updatedAddress.getId(), userId);
 
         return updateAddressInternally(updatedAddress, addressRequestDTO);
@@ -111,8 +103,6 @@ public class AddressServiceImpl implements AddressService {
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("PATCHED address for [targetUserId={}]", userId);
 
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
@@ -127,8 +117,6 @@ public class AddressServiceImpl implements AddressService {
         Address addressToDelete = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("DELETED address for [targetUserId={}]", userId);
 
         deleteAddressInternally(addressToDelete);
@@ -142,8 +130,6 @@ public class AddressServiceImpl implements AddressService {
 
         setDefaultAddressInternally(address);
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("ASSIGNED default address for [targetUserId={}]", userId);
     }
 
@@ -171,8 +157,6 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Page<Address> findAllAddress(Pageable pageable) {
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("FETCH addresses");
 
         return addressRepository.findAll(pageable);
@@ -184,8 +168,6 @@ public class AddressServiceImpl implements AddressService {
         Address updatedAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("UPDATED address for [addressId={}] ", addressId);
 
         return updateAddressInternally(updatedAddress, addressRequestDTO);
@@ -196,8 +178,6 @@ public class AddressServiceImpl implements AddressService {
         Address updatedAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("PATCHED address for [addressId={}]", addressId);
 
         return patchAddressInternally(updatedAddress, addressUpdateRequestDTO);
@@ -208,8 +188,6 @@ public class AddressServiceImpl implements AddressService {
         Address addressToDelete = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("DELETED address [addressId={}]", addressId);
 
         deleteAddressInternally(addressToDelete);
@@ -221,8 +199,6 @@ public class AddressServiceImpl implements AddressService {
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
 
-        Long callerId = SecurityUtils.getCurrentUserId();
-        LoggingContext.setCallerContext(callerId, SecurityUtils.isAdmin());
         log.info("SET default address to [addressId={}]", addressId);
 
         setDefaultAddressInternally(address);

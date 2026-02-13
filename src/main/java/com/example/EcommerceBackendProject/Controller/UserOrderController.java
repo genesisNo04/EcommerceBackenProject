@@ -28,10 +28,12 @@ public class UserOrderController {
 
     private final OrderService orderService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public UserOrderController(OrderService orderService, PageableSortValidator pageableSortValidator) {
+    public UserOrderController(OrderService orderService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.orderService = orderService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @GetMapping
@@ -39,7 +41,7 @@ public class UserOrderController {
                                                                      @RequestParam(required = false) LocalDate start,
                                                                      @RequestParam(required = false) LocalDate end,
                                                                      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDER.getFields());
         LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  LocalDateTime.of(start, LocalTime.MIDNIGHT);
         LocalDateTime endTime = (end == null) ? LocalDateTime.now() : LocalDateTime.of(end, LocalTime.MIDNIGHT.minusSeconds(1));
@@ -52,42 +54,42 @@ public class UserOrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponseDTO> findOrderById(@PathVariable Long orderId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Order order = orderService.findOrderById(orderId, userId);
         return ResponseEntity.ok(OrderMapper.toDTO(order));
     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrderById(@PathVariable Long orderId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         orderService.deleteOrder(orderId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Order order = orderService.createOrder(orderRequestDTO, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(OrderMapper.toDTO(order));
     }
 
     @PostMapping("/checkout/{orderId}")
     public ResponseEntity<OrderResponseDTO> checkoutOrder(@PathVariable Long orderId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Order order = orderService.checkout(orderId, userId);
         return ResponseEntity.ok(OrderMapper.toDTO(order));
     }
 
     @PostMapping("/cancel/{orderId}")
     public ResponseEntity<Void> cancelOrder(@PathVariable Long orderId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         orderService.cancelOrder(orderId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{orderId}")
     public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long orderId, @Valid @RequestBody OrderRequestDTO orderRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Order order = orderService.updateOrder(orderRequestDTO, orderId, userId);
         return ResponseEntity.ok(OrderMapper.toDTO(order));
     }

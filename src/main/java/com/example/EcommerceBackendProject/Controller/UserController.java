@@ -16,14 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final SecurityUtils securityUtils;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SecurityUtils securityUtils) {
         this.userService = userService;
+        this.securityUtils = securityUtils;
     }
 
     @PutMapping
     public ResponseEntity<UserResponseDTO> updateUser(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        Long id = SecurityUtils.getCurrentUserId();
+        Long id = securityUtils.getCurrentUserId();
         User user = userService.updateUser(id, userUpdateRequestDTO);
         UserResponseDTO userResponseDTO = UserMapper.toDTO(user);
 
@@ -32,7 +34,7 @@ public class UserController {
 
     @PatchMapping
     public ResponseEntity<UserResponseDTO> partiallyUpdateUser(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
-        Long id = SecurityUtils.getCurrentUserId();
+        Long id = securityUtils.getCurrentUserId();
         User user = userService.patchUser(id, userUpdateRequestDTO);
         UserResponseDTO userResponseDTO = UserMapper.toDTO(user);
 
@@ -41,21 +43,21 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser() {
-        Long id = SecurityUtils.getCurrentUserId();
+        Long id = securityUtils.getCurrentUserId();
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> changeUserPassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
-        Long id = SecurityUtils.getCurrentUserId();
+        Long id = securityUtils.getCurrentUserId();
         userService.changePassword(id, changePasswordDTO.getPassword());
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/username")
     public ResponseEntity<UserResponseDTO> getUserByUsername() {
-        String username = SecurityUtils.getCurrentUsername();
+        String username = securityUtils.getCurrentUsername();
         User user = userService.findByUsername(username);
         UserResponseDTO userResponseDTO = UserMapper.toDTO(user);
 
@@ -64,7 +66,7 @@ public class UserController {
 
     @GetMapping("/email")
     public ResponseEntity<UserResponseDTO> getUserByEmail() {
-        String email = SecurityUtils.getCurrentEmail();
+        String email = securityUtils.getCurrentEmail();
         User user = userService.findByEmail(email);
         UserResponseDTO userResponseDTO = UserMapper.toDTO(user);
 

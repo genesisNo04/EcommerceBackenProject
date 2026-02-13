@@ -24,36 +24,38 @@ public class ShoppingCartItemController {
 
     private final ShoppingCartItemService shoppingCartItemService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public ShoppingCartItemController(ShoppingCartItemService shoppingCartItemService, PageableSortValidator pageableSortValidator) {
+    public ShoppingCartItemController(ShoppingCartItemService shoppingCartItemService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.shoppingCartItemService = shoppingCartItemService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @PostMapping
     public ResponseEntity<ShoppingCartItemResponseDTO> addItemToCart(@Valid @RequestBody ShoppingCartItemRequestDTO shoppingCartItemRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         ShoppingCartItem item = shoppingCartItemService.addItemToCart(shoppingCartItemRequestDTO, userId);
         return ResponseEntity.ok(ShoppingCartItemMapper.toDTO(item));
     }
 
     @PatchMapping("/product/{productId}")
     public ResponseEntity<ShoppingCartItemResponseDTO> updateItemQuantity(@PathVariable Long productId, @Valid @RequestBody ShoppingCartItemUpdateRequestDTO shoppingCartItemUpdateRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         ShoppingCartItem item = shoppingCartItemService.updateItemQuantity(shoppingCartItemUpdateRequestDTO, userId, productId);
         return ResponseEntity.ok(ShoppingCartItemMapper.toDTO(item));
     }
 
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<Void> removeItemFromCart(@PathVariable Long productId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         shoppingCartItemService.removeItemFromCart(productId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<Page<ShoppingCartItemResponseDTO>> getItemsForUser(@PageableDefault(size = 10) Pageable pageable) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.ORDERITEM.getFields());
         Page<ShoppingCartItem> items = shoppingCartItemService.findItemsByUser(userId, pageable);
         return ResponseEntity.ok(items.map(ShoppingCartItemMapper::toDTO));
@@ -61,7 +63,7 @@ public class ShoppingCartItemController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ShoppingCartItemResponseDTO> getItemForUser(@PathVariable Long productId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         ShoppingCartItem item = shoppingCartItemService.findItemByUserAndProduct(productId, userId);
         return ResponseEntity.ok(ShoppingCartItemMapper.toDTO(item));
     }
