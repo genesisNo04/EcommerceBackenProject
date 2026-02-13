@@ -26,19 +26,17 @@ import java.util.Set;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
     private ShoppingCartItemRepository shoppingCartItemRepository;
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private CategoryRepository categoryRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
+
+    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartItemRepository shoppingCartItemRepository, CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.shoppingCartItemRepository = shoppingCartItemRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Integer findProductQuantityWithProductId(Long productId) {

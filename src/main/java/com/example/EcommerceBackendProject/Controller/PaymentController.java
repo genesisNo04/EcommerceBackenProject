@@ -29,15 +29,17 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public PaymentController(PaymentService paymentService, PageableSortValidator pageableSortValidator) {
+    public PaymentController(PaymentService paymentService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.paymentService = paymentService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<PaymentResponseDTO> getPaymentForOrder(@PathVariable Long orderId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Payment payment = paymentService.findPaymentByOrderIdAndUserId(orderId, userId);
         return ResponseEntity.ok(PaymentMapper.toDTO(payment));
     }
@@ -50,7 +52,7 @@ public class PaymentController {
                                                                        @RequestParam(required = false) LocalDate end,
                                                                        @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         LocalDateTime startTime = (start == null) ? null : start.atStartOfDay();
         LocalDateTime endTime = (end == null) ? null : end.plusDays(1).atStartOfDay();
 
@@ -62,21 +64,21 @@ public class PaymentController {
 
     @PostMapping("/{orderId}")
     public ResponseEntity<PaymentResponseDTO> processPayment(@PathVariable Long orderId, @RequestParam PaymentType paymentType) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Payment payment = paymentService.processPayment(orderId, userId, paymentType);
         return ResponseEntity.status(HttpStatus.CREATED).body(PaymentMapper.toDTO(payment));
     }
 
     @DeleteMapping("/{paymentId}")
     public ResponseEntity<Void> deletePayment(@PathVariable Long paymentId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         paymentService.deletePayment(paymentId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{paymentId}")
     public ResponseEntity<PaymentResponseDTO> updatePayment(@PathVariable Long paymentId, @Valid @RequestBody PaymentRequestDTO paymentRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Payment payment = paymentService.updatePayment(paymentId, paymentRequestDTO, userId);
         return ResponseEntity.ok(PaymentMapper.toDTO(payment));
     }
