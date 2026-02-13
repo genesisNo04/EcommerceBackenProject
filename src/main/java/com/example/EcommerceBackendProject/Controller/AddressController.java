@@ -21,14 +21,16 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
 
     private final AddressService addressService;
+    private final SecurityUtils securityUtils;
 
-    public AddressController(AddressService addressService) {
+    public AddressController(AddressService addressService, SecurityUtils securityUtils) {
         this.addressService = addressService;
+        this.securityUtils = securityUtils;
     }
 
     @PostMapping
     public ResponseEntity<AddressResponseDTO> createAddress(@Valid @RequestBody AddressRequestDTO addressRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Address address = addressService.createAddress(addressRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.status(HttpStatus.CREATED).body(addressResponseDTO);
@@ -36,7 +38,7 @@ public class AddressController {
 
     @PutMapping("/{addressId}")
     public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long addressId, @Valid @RequestBody AddressRequestDTO addressRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Address address = addressService.updateAddress(addressId, addressRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
@@ -44,7 +46,7 @@ public class AddressController {
 
     @PatchMapping("/{addressId}")
     public ResponseEntity<AddressResponseDTO> partiallyUpdateAddress(@PathVariable Long addressId, @Valid @RequestBody AddressUpdateRequestDTO addressUpdateRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Address address = addressService.patchAddress(addressId, addressUpdateRequestDTO, userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
@@ -52,14 +54,14 @@ public class AddressController {
 
     @DeleteMapping("/{addressId}")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long addressId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         addressService.deleteAddress(addressId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/default")
     public ResponseEntity<AddressResponseDTO> getDefaultAddress() {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Address address = addressService.getDefaultAddress(userId);
         AddressResponseDTO addressResponseDTO = AddressMapper.toDTO(address);
         return ResponseEntity.ok(addressResponseDTO);
@@ -67,7 +69,7 @@ public class AddressController {
 
     @GetMapping
     public ResponseEntity<Page<AddressResponseDTO>> getUserAddresses(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Page<Address> address = addressService.getUserAddresses(userId, pageable);
         Page<AddressResponseDTO> response = address.map(AddressMapper::toDTO);
         return ResponseEntity.ok(response);
@@ -75,7 +77,7 @@ public class AddressController {
 
     @PatchMapping("/{addressId}/default")
     public ResponseEntity<Void> setDefaultAddress(@PathVariable Long addressId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         addressService.setDefaultAddress(addressId, userId);
         return ResponseEntity.noContent().build();
     }

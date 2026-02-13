@@ -19,13 +19,15 @@ import java.util.Optional;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
-    @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final UserRepository userRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
+
+    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository, UserRepository userRepository) {
+        this.shoppingCartRepository = shoppingCartRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public ShoppingCart findByUserId(Long userId) {

@@ -26,16 +26,17 @@ import java.time.LocalDateTime;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private ProductRepository productRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ReviewServiceImpl.class);
+
+    public ReviewServiceImpl(ReviewRepository reviewRepository, UserRepository userRepository, ProductRepository productRepository) {
+        this.reviewRepository = reviewRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
 
     @Override
     @Transactional

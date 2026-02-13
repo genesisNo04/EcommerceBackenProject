@@ -26,22 +26,24 @@ public class UserReviewController {
 
     private final ReviewService reviewService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public UserReviewController(ReviewService reviewService, PageableSortValidator pageableSortValidator) {
+    public UserReviewController(ReviewService reviewService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.reviewService = reviewService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @PutMapping("/{reviewId}")
     public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long reviewId, @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Review review = reviewService.updateReview(reviewRequestDTO, reviewId, userId);
         return ResponseEntity.ok(ReviewMapper.toDTO(review));
     }
 
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<ReviewResponseDTO> deleteReview(@PathVariable Long reviewId) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         reviewService.deleteReview(reviewId, userId);
         return ResponseEntity.noContent().build();
     }
@@ -54,7 +56,7 @@ public class UserReviewController {
                                                                @RequestParam(required = false) LocalDate end,
                                                                @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         pageable = pageableSortValidator.validate(pageable, SortableFields.REVIEW.getFields());
 
         LocalDateTime startTime = (start == null) ? LocalDateTime.of(1970, 1, 1, 0, 0) :  start.atStartOfDay();

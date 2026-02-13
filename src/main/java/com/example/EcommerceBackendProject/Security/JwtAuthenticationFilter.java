@@ -21,10 +21,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final SecurityUtils securityUtils;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService, SecurityUtils securityUtils) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.securityUtils = securityUtils;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 Long callerId = ((CustomUserDetails) userDetails).getId();
-                boolean isAdmin = SecurityUtils.isAdmin();
+                boolean isAdmin = securityUtils.isAdmin();
                 LoggingContext.setCallerContext(callerId, isAdmin);
             }
 

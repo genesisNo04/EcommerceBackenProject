@@ -29,9 +29,7 @@ import java.time.LocalDateTime;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
-
     private final OrderRepository orderRepository;
-
     private final PaymentGateway paymentGateway;
 
     private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);

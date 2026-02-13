@@ -25,16 +25,18 @@ public class ProductReviewController {
 
     private final ReviewService reviewService;
     private final PageableSortValidator pageableSortValidator;
+    private final SecurityUtils securityUtils;
 
-    public ProductReviewController(ReviewService reviewService, PageableSortValidator pageableSortValidator) {
+    public ProductReviewController(ReviewService reviewService, PageableSortValidator pageableSortValidator, SecurityUtils securityUtils) {
         this.reviewService = reviewService;
         this.pageableSortValidator = pageableSortValidator;
+        this.securityUtils = securityUtils;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ReviewResponseDTO> createReview(@PathVariable Long productId, @Valid @RequestBody ReviewRequestDTO reviewRequestDTO) {
-        Long userId = SecurityUtils.getCurrentUserId();
+        Long userId = securityUtils.getCurrentUserId();
         Review review = reviewService.createReview(reviewRequestDTO, userId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ReviewMapper.toDTO(review));
     }
