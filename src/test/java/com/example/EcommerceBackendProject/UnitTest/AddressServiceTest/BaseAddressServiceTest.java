@@ -16,9 +16,6 @@ abstract class BaseAddressServiceTest {
     public UserRepository userRepository;
 
     @Mock
-    public SecurityUtils securityUtils;
-
-    @Mock
     public AddressRepository addressRepository;
 
     @InjectMocks

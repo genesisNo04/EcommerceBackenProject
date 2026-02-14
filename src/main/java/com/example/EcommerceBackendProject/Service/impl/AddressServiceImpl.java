@@ -5,7 +5,7 @@ import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
+import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
@@ -38,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Page<Address> getUserAddresses(Long userId, Pageable pageable) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         log.info("FETCHED address for [targetUserId={}]", userId);
 
@@ -49,7 +49,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address createAddress(AddressRequestDTO addressRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
         Address address = AddressMapper.toEntity(addressRequestDTO);
         address.setUser(user);
 
@@ -72,7 +72,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address getDefaultAddress(Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         log.info("FETCHED for default address for [targetUserId={}]", userId);
 
@@ -84,7 +84,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address updateAddress(Long addressId, AddressRequestDTO addressRequestDTO, Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
@@ -98,7 +98,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address patchAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO, Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
@@ -112,7 +112,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public void deleteAddress(Long addressId, Long userId) {
         userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found with id: " + userId));
+                .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         Address addressToDelete = addressRepository.findByUserIdAndId(userId, addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
