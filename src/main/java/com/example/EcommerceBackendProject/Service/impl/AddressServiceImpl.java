@@ -233,7 +233,6 @@ public class AddressServiceImpl implements AddressService {
             promoteOldestIfNoDefault(address.getUser().getId());
         }
 
-
         if (addressUpdateRequestDTO.getStreet() != null) {
             address.setStreet(addressUpdateRequestDTO.getStreet());
         }

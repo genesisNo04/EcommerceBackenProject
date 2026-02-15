@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,5 +94,27 @@ public class AddressServiceReadTest extends BaseAddressServiceTest {
 
         assertEquals("No user found with id: " + userId, ex.getMessage(), "Total element should only be 5");
         verify(addressRepository, never()).findByUserId(userId, pageable);
+    }
+
+    @Test
+    void findAllAddress() {
+        Address address = createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        Address address1 = createAddress("124 Main st", "Sacramento", "CA", "USA", "12345", false);
+        Address address2 = createAddress("125 Main st", "Sacramento", "CA", "USA", "12345", false);
+        Address address3 = createAddress("126 Main st", "Sacramento", "CA", "USA", "12345", false);
+        Address address4 = createAddress("127 Main st", "Sacramento", "CA", "USA", "12345", false);
+        List<Address> addresses = new ArrayList<>(List.of(address, address1, address2, address3, address4));
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Address> page = new PageImpl<>(addresses, pageable, addresses.size());
+
+        when(addressRepository.findAll(pageable)).thenReturn(page);
+
+        Page<Address> fetchAddresses = addressService.findAllAddress(pageable);
+
+        assertEquals(5, fetchAddresses.getTotalElements(), "Total element should only be 5");
+        assertEquals(5, fetchAddresses.getContent().size(), "Total element should only be 5");
+        assertEquals(1, fetchAddresses.getTotalPages(), "Total page should only be 1");
+        verify(addressRepository).findAll(pageable);
     }
 }
