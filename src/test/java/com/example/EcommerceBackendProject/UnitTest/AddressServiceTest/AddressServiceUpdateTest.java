@@ -4,6 +4,7 @@ import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Enum.Role;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public class AddressServiceUpdateTest extends BaseAddressServiceTest {
         address.setId(1L);
         address.setUser(user);
 
-        AddressRequestDTO updateAddressDTO = createAddressDto("1234 Main st", "Los Angeles", "CA", "USA", "54321", true);
+        AddressRequestDTO updateAddressDTO = createAddressDto("1234 Main st", "Tucson", "OK", "USA", "54321", true);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(addressRepository.findByUserIdAndId(1L, 1L)).thenReturn(Optional.of(address));
@@ -36,8 +37,8 @@ public class AddressServiceUpdateTest extends BaseAddressServiceTest {
         Address addressSaved = addressService.updateAddress(1L, updateAddressDTO, 1L);
 
         assertEquals("1234 Main st", addressSaved.getStreet(), "Street name is not match");
-        assertEquals("Los Angeles", addressSaved.getCity(), "Street name is not match");
-        assertEquals("CA", addressSaved.getState(), "Street name is not match");
+        assertEquals("Tucson", addressSaved.getCity(), "Street name is not match");
+        assertEquals("OK", addressSaved.getState(), "Street name is not match");
         assertEquals("USA", addressSaved.getCountry(), "Street name is not match");
         assertEquals("54321", addressSaved.getZipCode(), "Street name is not match");
         assertEquals(1L, addressSaved.getUser().getId(), "User does not match");
@@ -130,6 +131,34 @@ public class AddressServiceUpdateTest extends BaseAddressServiceTest {
     }
 
     @Test
+    void patchAddress_defaultTrue() {
+        User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
+        user.setId(1L);
+
+        AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        Address address = AddressMapper.toEntity(addressRequestDTO);
+        address.setId(1L);
+        address.setUser(user);
+
+        AddressRequestDTO addressRequestDTO1 = createAddressDto("1235 Main st", "Sacramento", "CA", "USA", "12345", false);
+        Address address1 = AddressMapper.toEntity(addressRequestDTO1);
+        address1.setId(2L);
+        address1.setUser(user);
+
+        AddressUpdateRequestDTO updateAddressDTO = createUpdateAddressDto("1234 Main st", "Los Angeles", null, null, "54321", true);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(addressRepository.findByUserIdAndId(1L, 2L)).thenReturn(Optional.of(address1));
+
+        Address addressSaved = addressService.patchAddress(2L, updateAddressDTO, 1L);
+
+        assertTrue(addressSaved.getIsDefault());
+        verify(addressRepository).resetDefaultForUser(1L);
+        verify(addressRepository, never()).findFirstByUserIdOrderByCreatedAtAsc(1L);
+        verify(addressRepository, never()).save(address);
+    }
+
+    @Test
     void setDefaultAddress() {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         user.setId(1L);
@@ -160,7 +189,7 @@ public class AddressServiceUpdateTest extends BaseAddressServiceTest {
     }
 
     @Test
-    void patchAddress_adminUpdateAddress() {
+    void patchAddress_updateAnyAddress() {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         user.setId(1L);
 

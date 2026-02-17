@@ -134,7 +134,6 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @Transactional
     public List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user) {
         if (dto == null || dto.isEmpty()) {
             return new ArrayList<>();
@@ -225,11 +224,11 @@ public class AddressServiceImpl implements AddressService {
 
         boolean wasDefault = address.getIsDefault();
 
-        if (addressUpdateRequestDTO.getIsDefault() != null) {
+        if (!wasDefault && Boolean.TRUE.equals(addressUpdateRequestDTO.getIsDefault())) {
+            addressRepository.resetDefaultForUser(address.getUser().getId());
             address.setIsDefault(addressUpdateRequestDTO.getIsDefault());
-        }
-
-        if (wasDefault && Boolean.FALSE.equals(address.getIsDefault())) {
+        } else if (wasDefault && Boolean.FALSE.equals(addressUpdateRequestDTO.getIsDefault())) {
+            address.setIsDefault(false);
             promoteOldestIfNoDefault(address.getUser().getId());
         }
 

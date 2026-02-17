@@ -43,7 +43,6 @@ public class AddressServiceCreateTest extends BaseAddressServiceTest {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         user.setId(1L);
         AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", false);
-        Address address = AddressMapper.toEntity(addressRequestDTO);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(addressRepository.save(any(Address.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -71,5 +70,25 @@ public class AddressServiceCreateTest extends BaseAddressServiceTest {
         assertFalse(addressSaved.getIsDefault(), "Address is set default when it should not");
         verify(addressRepository, never()).resetDefaultForUser(1L);
         verify(addressRepository).existsByUserIdAndIsDefaultTrue(1L);
+    }
+
+    @Test
+    void resolveAddress_nullList() {
+        User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
+        List<Address> addresses = addressService.resolveAddresses(List.of(), user);
+
+        assertEquals(0, addresses.size());
+    }
+
+    @Test
+    void resolveAddress_OneDefault() {
+        User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
+        user.setId(1L);
+        AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO1 = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+
+        List<Address> addresses = addressService.resolveAddresses(List.of(addressRequestDTO, addressRequestDTO1), user);
+
+        assertEquals(2, addresses.size());
     }
 }
