@@ -134,6 +134,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional
     public List<Address> resolveAddresses(List<AddressRequestDTO> dto, User user) {
         if (dto == null || dto.isEmpty()) {
             return new ArrayList<>();
@@ -173,6 +174,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional
     public Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
@@ -183,6 +185,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    @Transactional
     public void deleteAnyAddress(Long addressId) {
         Address addressToDelete = addressRepository.findById(addressId)
                 .orElseThrow(() -> new NoResourceFoundException("Address not found"));
@@ -203,7 +206,7 @@ public class AddressServiceImpl implements AddressService {
         setDefaultAddressInternally(address);
     }
 
-    @Transactional
+
     private Address updateAddressInternally(Address address, AddressRequestDTO addressRequestDTO) {
         if (addressRequestDTO.getIsDefault()) {
             addressRepository.resetDefaultForUser(address.getUser().getId());
@@ -219,7 +222,6 @@ public class AddressServiceImpl implements AddressService {
         return address;
     }
 
-    @Transactional
     private Address patchAddressInternally(Address address, AddressUpdateRequestDTO addressUpdateRequestDTO) {
 
         boolean wasDefault = address.getIsDefault();
@@ -255,7 +257,6 @@ public class AddressServiceImpl implements AddressService {
         return address;
     }
 
-    @Transactional
     private void deleteAddressInternally(Address address) {
         boolean wasDefault = address.getIsDefault();
 

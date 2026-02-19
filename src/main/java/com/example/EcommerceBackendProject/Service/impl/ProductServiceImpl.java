@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = ProductMapper.toEntity(productRequestDTO);
         product.getCategories().addAll(categories);
-        productRepository.save(product);;
+        productRepository.save(product);
 
         log.info("CREATED product [productId={}]", product.getId());
 

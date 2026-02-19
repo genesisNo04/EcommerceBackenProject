@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.AddressServiceUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.AddressTestUtils.*;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,7 +21,6 @@ public class AddressServiceCreateTest extends BaseAddressServiceTest {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         user.setId(1L);
         AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", true);
-        Address address = AddressMapper.toEntity(addressRequestDTO);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(addressRepository.save(any(Address.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -75,13 +74,21 @@ public class AddressServiceCreateTest extends BaseAddressServiceTest {
     @Test
     void resolveAddress_nullList() {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
+        List<Address> addresses = addressService.resolveAddresses(null, user);
+
+        assertEquals(0, addresses.size());
+    }
+
+    @Test
+    void resolveAddress_emptyList() {
+        User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         List<Address> addresses = addressService.resolveAddresses(List.of(), user);
 
         assertEquals(0, addresses.size());
     }
 
     @Test
-    void resolveAddress_OneDefault() {
+    void resolveAddress_oneDefault() {
         User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
         user.setId(1L);
         AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", false);
@@ -90,5 +97,17 @@ public class AddressServiceCreateTest extends BaseAddressServiceTest {
         List<Address> addresses = addressService.resolveAddresses(List.of(addressRequestDTO, addressRequestDTO1), user);
 
         assertEquals(2, addresses.size());
+    }
+
+    @Test
+    void resolveAddress_twoDefault() {
+        User user = createTestUser("testuser", "test123", "test@gmail.com", "test", "user", "+12345678951", List.of());
+        user.setId(1L);
+        AddressRequestDTO addressRequestDTO = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO1 = createAddressDto("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> addressService.resolveAddresses(List.of(addressRequestDTO, addressRequestDTO1), user));
+
+        assertEquals("Only one default address allowed", ex.getMessage());
     }
 }

@@ -1,10 +1,10 @@
 package com.example.EcommerceBackendProject.DTO;
 
-import com.example.EcommerceBackendProject.Entity.Category;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ProductRequestDTO {
 
     @NotBlank
