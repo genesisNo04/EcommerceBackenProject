@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.UnitTest.ProductServiceTest;
 
 import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
+import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,5 +19,5 @@ abstract class BaseProductServiceTest {
     public ProductRepository productRepository;
 
     @Mock
-    public CategoryRepository categoryRepository;
+    public CategoryService categoryService;
 }

@@ -17,7 +17,7 @@ public interface CategoryService {
 
     void deleteCategory(Long categoryId);
 
-    Set<Category> resolveCategories(Set<CategoryRequestDTO> categoryRequestDTOs);
+    Set<Category> resolveCategories(Set<Long> categoryIds);
 
     Category findByName(String name);
 
@@ -26,4 +26,6 @@ public interface CategoryService {
     Category patchCategory(Long categoryId, CategoryUpdateRequestDTO categoryUpdateRequestDTO);
 
     Page<Category> findCategories(Pageable pageable);
+
+    Category findById(Long id);
 }

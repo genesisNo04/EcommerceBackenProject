@@ -76,33 +76,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
-    public Set<Category> resolveCategories(Set<CategoryRequestDTO> categoryRequestDTOs) {
-        if (categoryRequestDTOs == null || categoryRequestDTOs.isEmpty()) {
-            return Collections.emptySet();
+    public Set<Category> resolveCategories(Set<Long> categoryIds) {
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(categoryIds));
+
+        if (categories.size() != categoryIds.size()) {
+            throw new NoResourceFoundException("One or more categories is not found");
         }
 
-        Set<String> categoryNames = categoryRequestDTOs
-                .stream()
-                .map(CategoryRequestDTO::getName)
-                .collect(Collectors.toSet());
-
-        List<Category> existingCategoryList = categoryRepository.findAllByNameIn(categoryNames);
-        Map<String, Category> existingCategories = existingCategoryList.stream()
-                .collect(Collectors.toMap(Category::getName, c -> c));
-
-        Set<Category> result = new HashSet<>();
-
-        for (CategoryRequestDTO dto: categoryRequestDTOs) {
-            Category category = existingCategories.get(dto.getName());
-
-            if (category == null) {
-                category = categoryRepository.save(CategoryMapper.toEntity(dto));
-            }
-
-            result.add(category);
-        }
-
-        return result;
+        return categories;
     }
 
     @Override
@@ -165,5 +146,10 @@ public class CategoryServiceImpl implements CategoryService {
         Page<Category> categories = categoryRepository.findAll(pageable);
         log.info("FETCHED categories, total={}", categories.getTotalElements());
         return categories;
+    }
+
+    @Override
+    public Category findById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new NoResourceFoundException("No category found"));
     }
 }
