@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.UnitTest.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Mapper.CategoryMapper;
 
@@ -16,5 +17,9 @@ public class CategoryTestUtils {
 
     public static CategoryRequestDTO createTestCategoryDTO(String name, String description, Set<Long> ids) {
         return new CategoryRequestDTO(name, description, ids);
+    }
+
+    public static CategoryUpdateRequestDTO createTestUpdateCategoryDTO(String name, String description, Set<Long> ids) {
+        return new CategoryUpdateRequestDTO(name, description, ids);
     }
 }
