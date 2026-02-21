@@ -2,6 +2,7 @@ package com.example.EcommerceBackendProject.UnitTest.ProductServiceTest;
 
 import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
+import com.example.EcommerceBackendProject.Repository.ShoppingCartItemRepository;
 import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,4 +21,7 @@ abstract class BaseProductServiceTest {
 
     @Mock
     public CategoryService categoryService;
+
+    @Mock
+    public ShoppingCartItemRepository shoppingCartItemRepository;
 }

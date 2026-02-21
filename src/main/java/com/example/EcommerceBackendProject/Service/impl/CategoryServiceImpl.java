@@ -40,8 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceAlreadyExistsException("Category is already existed with this name: " + categoryRequestDTO.getName());
         }
         Category category = CategoryMapper.toEntity(categoryRequestDTO);
-        Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
-                .orElseThrow(() -> new NoResourceFoundException("Product not found!"))).collect(Collectors.toSet());
+//        Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
+//                .orElseThrow(() -> new NoResourceFoundException("Product not found!"))).collect(Collectors.toSet());
+        List<Product> products = productRepository.findAllById(categoryRequestDTO.getProductIds());
         products.forEach(product -> product.addCategory(category));
 
         Category saved = categoryRepository.save(category);

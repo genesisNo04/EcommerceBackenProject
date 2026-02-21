@@ -134,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
-        Product product = productRepository.findByIdForUpdate(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         shoppingCartItemRepository.deleteByProductId(productId);

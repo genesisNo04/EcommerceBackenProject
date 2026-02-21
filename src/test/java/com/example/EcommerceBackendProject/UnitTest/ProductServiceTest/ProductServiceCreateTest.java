@@ -18,8 +18,8 @@ public class ProductServiceCreateTest extends BaseProductServiceTest{
 
     @Test
     void createProduct() {
-        Category category = createCategory("ELECTRONIC", "electronic");
-        Category category1 = createCategory("FOOD", "food");
+        Category category = createTestCategory("ELECTRONIC", "electronic");
+        Category category1 = createTestCategory("FOOD", "food");
         Set<Category> categories = Set.of(category, category1);
         ProductRequestDTO productRequestDTO = createTestProductDTO("PS5", "Playstation", BigDecimal.valueOf(499.99), 100, Set.of(1L, 2L), "testurl");
 
