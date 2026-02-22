@@ -78,6 +78,26 @@ public class CategoryServiceCreateTest extends BaseCategoryServiceTest{
     }
 
     @Test
+    void createCategory_emptyProducts() {
+        CategoryRequestDTO categoryRequestDTO = createTestCategoryDTO("ELECTRONIC", "electronic", Set.of());
+
+        when(categoryRepository.existsByName("ELECTRONIC")).thenReturn(false);
+        when(productRepository.findAllById(Set.of()))
+                .thenReturn(List.of());
+        when(categoryRepository.save(any(Category.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Category saved = categoryService.createCategory(categoryRequestDTO);
+
+        assertEquals("ELECTRONIC", saved.getName());
+        assertEquals("electronic", saved.getDescription());
+        assertEquals(0, saved.getProducts().size());
+
+        verify(categoryRepository).existsByName("ELECTRONIC");
+        verify(categoryRepository).save(any(Category.class));
+        verify(productRepository, never()).findAllById(Set.of());
+    }
+
+    @Test
     void resolveCategory() {
         Category category1 = createTestCategory("ENTERTAINMENT", "Entertainment");
         Category category2 = createTestCategory("ELECTRONIC", "Electronic");

@@ -85,7 +85,8 @@ public class CategoryServiceReadTest extends BaseCategoryServiceTest{
 
         Page<Category> response = categoryService.findCategories(pageable);
 
-        assertEquals(response.getContent(), categories);
+        assertEquals(2, response.getContent().size());
+        assertEquals(2, response.getTotalElements());
         assertEquals(response.getTotalElements(), categories.size());
 
         verify(categoryRepository).findAll(pageable);

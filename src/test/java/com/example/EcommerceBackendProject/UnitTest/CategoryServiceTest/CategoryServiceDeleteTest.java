@@ -31,6 +31,24 @@ public class CategoryServiceDeleteTest extends BaseCategoryServiceTest{
     }
 
     @Test
+    void deleteCategory_multipleProduct() {
+        Category category = createTestCategory("ENTERTAINMENT", "Entertainment");
+        Product product = createTestProduct("XBOX", "xbox", BigDecimal.valueOf(499.99), 50, "testurl");
+        product.addCategory(category);
+        Product product1 = createTestProduct("XBOX", "xbox", BigDecimal.valueOf(499.99), 50, "testurl");
+        product1.addCategory(category);
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+
+        categoryService.deleteCategory(1L);
+        assertFalse(product.getCategories().contains(category));
+        assertFalse(product1.getCategories().contains(category));
+
+        verify(categoryRepository).findById(1L);
+        verify(categoryRepository).delete(category);
+    }
+
+    @Test
     void deleteCategory_categoryNotFound() {
         NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> categoryService.deleteCategory(1L));
 

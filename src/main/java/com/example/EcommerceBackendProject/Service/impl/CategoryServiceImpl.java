@@ -41,13 +41,15 @@ public class CategoryServiceImpl implements CategoryService {
         }
         Category category = CategoryMapper.toEntity(categoryRequestDTO);
 
-        List<Product> products = productRepository.findAllById(categoryRequestDTO.getProductIds());
+        if (!categoryRequestDTO.getProductIds().isEmpty()) {
+            List<Product> products = productRepository.findAllById(categoryRequestDTO.getProductIds());
 
-        if (products.size() < categoryRequestDTO.getProductIds().size()) {
-            throw new NoResourceFoundException("One or more products not found");
+            if (products.size() < categoryRequestDTO.getProductIds().size()) {
+                throw new NoResourceFoundException("One or more products not found");
+            }
+
+            products.forEach(product -> product.addCategory(category));
         }
-
-        products.forEach(product -> product.addCategory(category));
 
         Category saved = categoryRepository.save(category);
 
@@ -72,7 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoResourceFoundException("No category with id: " + categoryId));
 
-        category.getProducts().forEach(product -> product.removeCategory(category));
+        for (Product product : new HashSet<>(category.getProducts())) {
+            product.removeCategory(category);
+        }
 
         log.info("DELETED category [categoryId={}]", categoryId);
 
@@ -104,6 +108,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoResourceFoundException("No Category with id: " + categoryId));
 
+        if (!categoryRequestDTO.getName().equals(category.getName()) && categoryRepository.existsByName(categoryRequestDTO.getName())) {
+            throw new ResourceAlreadyExistsException("Category already exist with name: " + categoryRequestDTO.getName());
+        }
+
         for (Product product : new HashSet<>(category.getProducts())) {
             product.removeCategory(category);
         }
@@ -112,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
         category.setDescription(categoryRequestDTO.getDescription());
 
         Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
-                .orElseThrow(() -> new NoResourceFoundException("No Category with id: " + id))).collect(Collectors.toSet());
+                .orElseThrow(() -> new NoResourceFoundException("No product with id: " + id))).collect(Collectors.toSet());
 
         products.forEach(p -> p.addCategory(category));
 
