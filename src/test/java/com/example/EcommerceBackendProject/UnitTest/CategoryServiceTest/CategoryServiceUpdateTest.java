@@ -6,7 +6,6 @@ import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
-import com.example.EcommerceBackendProject.Repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 

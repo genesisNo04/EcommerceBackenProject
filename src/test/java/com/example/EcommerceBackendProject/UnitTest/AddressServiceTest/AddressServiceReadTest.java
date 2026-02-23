@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.AddressTestUtils.*;
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.createTestUser;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserTestUtils.createTestUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

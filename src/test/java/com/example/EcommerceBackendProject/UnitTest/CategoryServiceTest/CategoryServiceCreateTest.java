@@ -82,8 +82,6 @@ public class CategoryServiceCreateTest extends BaseCategoryServiceTest{
         CategoryRequestDTO categoryRequestDTO = createTestCategoryDTO("ELECTRONIC", "electronic", Set.of());
 
         when(categoryRepository.existsByName("ELECTRONIC")).thenReturn(false);
-        when(productRepository.findAllById(Set.of()))
-                .thenReturn(List.of());
         when(categoryRepository.save(any(Category.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Category saved = categoryService.createCategory(categoryRequestDTO);

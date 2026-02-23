@@ -10,7 +10,7 @@ import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;

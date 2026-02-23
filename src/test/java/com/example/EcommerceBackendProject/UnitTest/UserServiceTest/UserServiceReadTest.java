@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserServiceTestUtils.*;
+import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

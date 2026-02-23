@@ -5,14 +5,13 @@ import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Enum.Role;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Mapper.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserServiceTestUtils {
+public class UserTestUtils {
 
     public static AddressRequestDTO createAddressDTO(boolean isDefault) {
 
