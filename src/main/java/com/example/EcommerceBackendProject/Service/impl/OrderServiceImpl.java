@@ -5,7 +5,6 @@ import com.example.EcommerceBackendProject.Entity.*;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.Exception.NoUserFoundException;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
@@ -86,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findOrderById(Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
+                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
         log.info("FETCHED order [orderId={}] for user [targetUserId={}]", orderId, userId);
         return order;
     }
@@ -95,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void deleteOrder(Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Order not found!"));
+                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
         if (order.getOrderStatus() != OrderStatus.CREATED) {
             throw new IllegalStateException("Only CREATED orders can be deleted");
         }
@@ -172,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order createOrder(OrderRequestDTO orderRequestDTO, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("No user found!"));
+                .orElseThrow(() -> new NoResourceFoundException("No user found"));
 
         Order order = new Order(user);
 
@@ -180,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (var itemDto : orderRequestDTO.getOrderItems()) {
             Product product = productRepository.findById(itemDto.getProductId())
-                    .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+                    .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
             if (itemDto.getQuantity() <= 0) {
                 throw new InvalidOrderItemQuantityException("Invalid quantity");
@@ -277,7 +276,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
+                .orElseThrow(() -> new NoResourceFoundException("No order found"));
 
         cancelOrderInternally(order);
     }

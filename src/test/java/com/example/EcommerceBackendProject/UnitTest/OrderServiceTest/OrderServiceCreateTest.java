@@ -6,6 +6,7 @@ import com.example.EcommerceBackendProject.Entity.OrderItem;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
+import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -30,9 +31,6 @@ public class OrderServiceCreateTest extends BaseOrderServiceTest {
         product.setId(1L);
         Product product1 = createTestProduct("XBOX", "xbox", BigDecimal.valueOf(499.99), 100, "testurl");
         product1.setId(2L);
-        OrderItem orderItem = createTestOrderItem(null, product, 1, BigDecimal.valueOf(499.99));
-        OrderItem orderItem1 = createTestOrderItem(null, product1, 1, BigDecimal.valueOf(499.99));
-        Set<OrderItem> items = Set.of(orderItem, orderItem1);
         OrderRequestDTO orderRequestDTO = new OrderRequestDTO(List.of(createOrderItemDto(1L, 1), createOrderItemDto(2L, 1)));
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
@@ -61,6 +59,34 @@ public class OrderServiceCreateTest extends BaseOrderServiceTest {
         verify(productRepository).findById(1L);
         verify(productRepository).findById(2L);
         verify(orderRepository).save(any(Order.class));
+    }
+
+    @Test
+    void createOrder_userNotFound() {
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(List.of(createOrderItemDto(1L, 1), createOrderItemDto(2L, 1)));
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> orderService.createOrder(orderRequestDTO, 1L));
+
+        assertEquals("No user found", ex.getMessage());
+
+        verify(userRepository).findById(1L);
+        verify(productRepository, never()).findById(1L);
+        verify(orderRepository, never()).save(any(Order.class));
+    }
+
+    @Test
+    void createOrder_productNotFound() {
+        User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", List.of());
+        user.setId(1L);
+        OrderRequestDTO orderRequestDTO = new OrderRequestDTO(List.of(createOrderItemDto(1L, 1), createOrderItemDto(2L, 1)));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> orderService.createOrder(orderRequestDTO, 1L));
+
+        assertEquals("No product found", ex.getMessage());
+
+        verify(userRepository).findById(1L);
+        verify(productRepository).findById(1L);
+        verify(orderRepository, never()).save(any(Order.class));
     }
 
 }
