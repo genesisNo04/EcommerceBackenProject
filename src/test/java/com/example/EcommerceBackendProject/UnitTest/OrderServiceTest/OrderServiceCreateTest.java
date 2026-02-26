@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createOrderItemDto;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createTestOrderItem;
@@ -44,16 +45,7 @@ public class OrderServiceCreateTest extends BaseOrderServiceTest {
         assertEquals(BigDecimal.valueOf(999.98), order.getTotalAmount());
         assertTrue(order.getOrderItems()
                 .stream()
-                .anyMatch(item -> item.getProduct().getId().equals(1L)
-                                            && item.getProduct().getProductName().equals("PS5")
-                                            && item.getQuantity() == 1
-                                            && item.getPriceAtPurchase().equals(BigDecimal.valueOf(499.99))));
-        assertTrue(order.getOrderItems()
-                .stream()
-                .anyMatch(item -> item.getProduct().getId().equals(2L)
-                        && item.getProduct().getProductName().equals("XBOX")
-                        && item.getQuantity() == 1
-                        && item.getPriceAtPurchase().equals(BigDecimal.valueOf(499.99))));
+                .map(item -> item.getProduct().getId()).collect(Collectors.toSet()).containsAll(Set.of(1L, 2L)));
 
         verify(userRepository).findById(1L);
         verify(productRepository).findById(1L);

@@ -43,7 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment findPaymentByOrderIdAndUserId(Long orderId, Long userId) {
         Payment payment = paymentRepository.findByOrderIdAndOrderUserId(orderId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Payment not found for this order."));
+                .orElseThrow(() -> new NoResourceFoundException("Payment not found for this order"));
         log.info("FETCHED payment [paymentId={}] for order [orderId={}]", payment.getId(), orderId);
         return payment;
     }
@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public void deletePayment(Long paymentId, Long userId) {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
+                .orElseThrow(() -> new NoResourceFoundException("No payment found"));
 
         Order order = payment.getOrder();
 
@@ -69,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public Payment updatePayment(Long paymentId, PaymentRequestDTO paymentRequestDTO, Long userId) {
         Payment payment = paymentRepository.findByIdAndOrderUserId(paymentId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("No payment found!"));
+                .orElseThrow(() -> new NoResourceFoundException("No payment found"));
 
         if (payment.getStatus() != PaymentStatus.INITIATED) {
             throw new InvalidPaymentStatusException("Only INITIATED payments can be updated");
@@ -81,7 +81,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         log.info("UPDATED payment [paymentId={}]", paymentId);
 
-        return paymentRepository.save(payment);
+        return payment;
     }
 
     @Override
