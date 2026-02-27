@@ -88,7 +88,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         ShoppingCartItem item = shoppingCartItemRepository
                 .findByShoppingCartIdAndProductIdAndShoppingCartUserId(
                         cart.getId(), productId, userId
-                ).orElseThrow(() -> new NoResourceFoundException("No resource found"));
+                ).orElseThrow(() -> new NoResourceFoundException("No item found"));
 
 
         item.setQuantity(shoppingCartItemUpdateRequestDTO.getQuantity());

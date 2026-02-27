@@ -85,7 +85,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void deleteReview(Long reviewId, Long userId) {
         Review currentReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+                .orElseThrow(() -> new NoResourceFoundException("Review not found"));
 
         if (!currentReview.getUser().getId().equals(userId)) {
             throw new IllegalStateException("Not authorized to delete this review");
@@ -128,6 +128,10 @@ public class ReviewServiceImpl implements ReviewService {
             spec = spec.and(ReviewSpecification.ratingBetween(min, max));
         }
 
+        if (start != null && end != null && start.isAfter(end)) {
+            throw new BadRequestException("Start date cannot be later than End date");
+        }
+
         spec = spec.and(ReviewSpecification.createdBetween(start, end));
         Page<Review> reviews = reviewRepository.findAll(spec, pageable);
         log.info("FETCHED reviews [total={}] for user [targetUserId={}] product [productId={}] ratingRange=[{}-{}]", reviews.getTotalElements(), userId, productId, startRating, endRating);
@@ -138,7 +142,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void deleteReview(Long reviewId) {
         Review currentReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+                .orElseThrow(() -> new NoResourceFoundException("Review not found"));
 
         reviewRepository.delete(currentReview);
         log.info("DELETED review [reviewId={}]", currentReview.getId());
