@@ -43,10 +43,10 @@ public class ReviewServiceImpl implements ReviewService {
     public Review createReview(ReviewRequestDTO reviewRequestDTO, Long userId, Long productId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoUserFoundException("User not found."));
+                .orElseThrow(() -> new NoResourceFoundException("No user found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResourceFoundException("No product found."));
+                .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         Review review = ReviewMapper.toEntity(reviewRequestDTO);
         review.setUser(user);
@@ -67,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public Review updateReview(ReviewRequestDTO reviewRequestDTO, Long reviewId, Long userId) {
         Review currentReview = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new NoResourceFoundException("Review not found!"));
+                .orElseThrow(() -> new NoResourceFoundException("Review not found"));
 
         if (!currentReview.getUser().getId().equals(userId)) {
             throw new UserAccessDeniedException("Not authorized to update this review");

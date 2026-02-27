@@ -1,7 +1,8 @@
 package com.example.EcommerceBackendProject.UnitTest.PaymentServiceTest;
 
+import com.example.EcommerceBackendProject.Entity.Payment.FakePaymentGateway;
+import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.PaymentRepository;
-import com.example.EcommerceBackendProject.Service.PaymentService;
 import com.example.EcommerceBackendProject.Service.impl.PaymentServiceImpl;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,4 +17,10 @@ abstract class BasePaymentServiceTest {
 
     @Mock
     public PaymentRepository paymentRepository;
+
+    @Mock
+    public FakePaymentGateway paymentGateway;
+
+    @Mock
+    public OrderRepository orderRepository;
 }

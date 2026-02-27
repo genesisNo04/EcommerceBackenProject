@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createOrderItemDto;
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createTestOrderItem;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.ProductTestUtils.createTestProduct;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserTestUtils.createTestUser;
 import static org.mockito.Mockito.*;

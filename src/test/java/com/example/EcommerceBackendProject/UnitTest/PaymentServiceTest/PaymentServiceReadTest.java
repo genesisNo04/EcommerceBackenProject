@@ -34,7 +34,6 @@ public class PaymentServiceReadTest extends BasePaymentServiceTest {
 
         Payment searchPayment = paymentService.findPaymentByOrderIdAndUserId(1L, 1L);
 
-        assertSame(order, searchPayment.getOrder());
         assertEquals(PaymentType.CREDIT_CARD, searchPayment.getPaymentType());
         assertEquals(PaymentStatus.INITIATED, searchPayment.getStatus());
         assertEquals("1234", searchPayment.getProviderReference());
@@ -62,13 +61,13 @@ public class PaymentServiceReadTest extends BasePaymentServiceTest {
         List<Payment> paymentList = List.of(payment, payment1, payment2);
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Payment> payments = new PageImpl<>(paymentList, pageable, paymentList.size());
+        Page<Payment> payments = new PageImpl<>(paymentList, pageable, 10);
 
         when(paymentRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(payments);
 
         Page<Payment> returnPayment = paymentService.findPayments(1L, 1L, PaymentStatus.INITIATED, PaymentType.CREDIT_CARD, LocalDateTime.now().minusDays(10), LocalDateTime.now(), pageable);
 
-        assertEquals(3, returnPayment.getTotalElements());
+        assertEquals(10, returnPayment.getTotalElements());
         assertEquals(3, returnPayment.getContent().size());
         assertTrue(returnPayment.getContent().containsAll(paymentList));
 

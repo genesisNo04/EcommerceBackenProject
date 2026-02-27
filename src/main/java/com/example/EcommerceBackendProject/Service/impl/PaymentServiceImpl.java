@@ -120,7 +120,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public Payment processPayment(Long orderId, Long userId, PaymentType paymentType) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("Order not found"));
+                .orElseThrow(() -> new NoResourceFoundException("No order found"));
 
         if (order.getOrderStatus() == OrderStatus.PAID) {
             return order.getPayment();
