@@ -14,7 +14,7 @@ import static com.example.EcommerceBackendProject.UnitTest.Utilities.ProductTest
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShoppingCartItemServiceAddItemTest extends BaseShoppingCartItemTest{
+public class ShoppingCartItemServiceAddItemTest extends BaseShoppingCartItemServiceTest {
 
     @Test
     void addItemToCart_itemExistInCart() {

@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-abstract class BaseShoppingCartItemTest {
+abstract class BaseShoppingCartItemServiceTest {
 
     @Mock
     public ShoppingCartItemRepository shoppingCartItemRepository;

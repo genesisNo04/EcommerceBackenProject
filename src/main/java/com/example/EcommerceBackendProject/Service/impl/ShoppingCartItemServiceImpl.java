@@ -104,7 +104,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         ShoppingCartItem item = shoppingCartItemRepository
                 .findByShoppingCartIdAndProductIdAndShoppingCartUserId(
                         cart.getId(), productId, userId
-                ).orElseThrow(() -> new NoResourceFoundException("No resource found"));
+                ).orElseThrow(() -> new NoResourceFoundException("No item found"));
 
         cart.removeItem(item);
         log.info("REMOVED product [productId={}] from user cart [itemId={}, userId={}]", productId, item.getId(), userId);
@@ -124,7 +124,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         ShoppingCart cart = shoppingCartService.getCartOrThrow(userId);
 
         ShoppingCartItem item = shoppingCartItemRepository.findByShoppingCartIdAndProductIdAndShoppingCartUserId(cart.getId(), productId, userId)
-                .orElseThrow(() -> new NoResourceFoundException("No item founds"));
+                .orElseThrow(() -> new NoResourceFoundException("No item found"));
 
         log.info("FETCHED product [productId={}] from user cart [targetUserId={}]", productId, userId);
 

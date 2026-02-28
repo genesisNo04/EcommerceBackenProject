@@ -1,6 +1,5 @@
 package com.example.EcommerceBackendProject.UnitTest.ShoppingCartItemServiceTest;
 
-import com.example.EcommerceBackendProject.DTO.ShoppingCartItemRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ShoppingCartItemUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
@@ -15,7 +14,7 @@ import static com.example.EcommerceBackendProject.UnitTest.Utilities.ProductTest
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShoppingCartItemServiceUpdateItemTest extends BaseShoppingCartItemTest {
+public class ShoppingCartItemServiceUpdateItemTest extends BaseShoppingCartItemServiceTest {
 
     @Test
     void updateItemQuantity() {
