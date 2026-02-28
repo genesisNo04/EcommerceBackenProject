@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.DTO;
 
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ProductUpdateRequestDTO {
 
     private String productName;

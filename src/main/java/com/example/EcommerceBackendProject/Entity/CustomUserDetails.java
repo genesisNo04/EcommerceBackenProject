@@ -1,6 +1,6 @@
 package com.example.EcommerceBackendProject.Entity;
 
-import org.jspecify.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,8 +48,13 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
+//    @Override
+//    public @Nullable String getPassword() {
+//        return user.getPassword();
+//    }
+
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return user.getPassword();
     }
 

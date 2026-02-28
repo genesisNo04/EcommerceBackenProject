@@ -4,11 +4,9 @@ import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Enum.Role;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
 import com.example.EcommerceBackendProject.Mapper.UserMapper;
-import com.example.EcommerceBackendProject.Repository.ShoppingCartRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
 import com.example.EcommerceBackendProject.Service.UserService;
@@ -16,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,12 +115,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
         validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
         oldUser.setLastName(userUpdateRequestDTO.getLastName());
         oldUser.getAddresses().clear();
         oldUser.getAddresses().addAll(addressService.resolveAddresses(userUpdateRequestDTO.getAddress(), oldUser));
         oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
-        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         log.info("UPDATED user [targetUserId={}]", oldUser.getId());
         return oldUser;
     }
@@ -134,6 +133,10 @@ public class UserServiceImpl implements UserService {
 
         if (userUpdateRequestDTO.getUsername() != null) {
             validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+        }
+
+        if (userUpdateRequestDTO.getEmail() != null) {
+            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
 
         if (userUpdateRequestDTO.getFirstName() != null) {
@@ -151,10 +154,6 @@ public class UserServiceImpl implements UserService {
 
         if (userUpdateRequestDTO.getPhoneNumber() != null) {
             oldUser.setPhoneNumber(userUpdateRequestDTO.getPhoneNumber());
-        }
-
-        if (userUpdateRequestDTO.getEmail() != null) {
-            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
         }
 
         log.info("PATCHED user [targetUserId={}]", oldUser.getId());
@@ -203,15 +202,23 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         log.info("FETCH users [targetUserId={}]", userId);
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 
     @Override
     public Page<User> findByUsername(String username, Pageable pageable) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
+
         log.info("FETCH users [targetUserId={}]", user.getId());
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 
     @Override
@@ -219,6 +226,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
         log.info("FETCH users [targetUserId={}]", user.getId());
-        return new PageImpl<>(List.of(user), pageable, 1);
+
+        Pageable singleItemPageable =
+                PageRequest.of(pageable.getPageNumber(), 1, pageable.getSort());
+        return new PageImpl<>(List.of(user), singleItemPageable, 1);
     }
 }

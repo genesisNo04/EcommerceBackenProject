@@ -26,22 +26,22 @@ import java.util.Set;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
-    private ShoppingCartItemRepository shoppingCartItemRepository;
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final ShoppingCartItemRepository shoppingCartItemRepository;
+    private final CategoryService categoryService;
 
     private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
-    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartItemRepository shoppingCartItemRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ShoppingCartItemRepository shoppingCartItemRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
         this.shoppingCartItemRepository = shoppingCartItemRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @Override
     public Integer findProductQuantityWithProductId(Long productId) {
         Integer quantity = productRepository.findStockQuantityByProductId(productId)
-                .orElseThrow(() -> new NoResourceFoundException("No product found."));
+                .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         log.info("FETCHED stock quantity for product [productId={}]", productId);
 
@@ -51,15 +51,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Product createProduct(ProductRequestDTO productRequestDTO) {
-        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productRequestDTO.getCategoriesId()));
-
-        if (categories.size() != productRequestDTO.getCategoriesId().size()) {
-            throw new NoResourceFoundException("One or more categories is not found");
-        }
+        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategoriesId());
 
         Product product = ProductMapper.toEntity(productRequestDTO);
         product.getCategories().addAll(categories);
-        productRepository.save(product);;
+        productRepository.save(product);
 
         log.info("CREATED product [productId={}]", product.getId());
 
@@ -70,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product updateProduct(ProductRequestDTO productRequestDTO, Long productId) {
         Product productUpdate = productRepository.findByIdForUpdate(productId)
-                .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+                .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         productUpdate.setProductName(productRequestDTO.getProductName());
         productUpdate.setPrice(productRequestDTO.getPrice());
@@ -78,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
         productUpdate.setDescription(productRequestDTO.getDescription());
         productUpdate.setStockQuantity(productRequestDTO.getStockQuantity());
 
-        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productRequestDTO.getCategoriesId()));
+        Set<Category> categories = categoryService.resolveCategories(productRequestDTO.getCategoriesId());
 
         if (!productUpdate.getCategories().equals(categories)) {
             productUpdate.getCategories().clear();
@@ -94,11 +90,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product patchProduct(ProductUpdateRequestDTO productUpdateRequestDTO, Long productId) {
         Product productUpdate = productRepository.findByIdForUpdate(productId)
-                .orElseThrow(() -> new NoResourceFoundException("No product found!"));
+                .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         if (productUpdateRequestDTO.getCategoriesId() != null) {
 
-            Set<Category> categories = new HashSet<>(categoryRepository.findAllById(productUpdateRequestDTO.getCategoriesId()));
+            Set<Category> categories = categoryService.resolveCategories(productUpdateRequestDTO.getCategoriesId());
 
             if (categories.size() != productUpdateRequestDTO.getCategoriesId().size()) {
                 throw new NoResourceFoundException("One or more categories is not found");
@@ -138,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
-        Product product = productRepository.findByIdForUpdate(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResourceFoundException("No product found"));
 
         shoppingCartItemRepository.deleteByProductId(productId);
@@ -181,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
     public void addCategory(Long productId, Long categoryId) {
         Product product = productRepository.findByIdForUpdate(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
+        Category category = categoryService.findById(categoryId);
 
         product.addCategory(category);
         log.info("ADDED category [categoryId={}] to product [productId={}]", categoryId, productId);
@@ -192,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
     public void removeCategory(Long productId, Long categoryId) {
         Product product = productRepository.findByIdForUpdate(productId).orElseThrow(() -> new NoResourceFoundException("No product found"));
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NoResourceFoundException("No category found"));
+        Category category = categoryService.findById(categoryId);
 
         product.removeCategory(category);
         log.info("REMOVED category [categoryId={}] from product [productId={}]", categoryId, productId);

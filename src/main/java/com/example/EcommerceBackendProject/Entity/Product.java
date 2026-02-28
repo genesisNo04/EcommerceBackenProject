@@ -57,8 +57,8 @@ public class Product {
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.categories = categories;
         this.imageUrl = imageUrl;
+        this.categories.addAll(categories);
     }
 
     @PrePersist
@@ -70,6 +70,10 @@ public class Product {
     @PreUpdate
     private void modifiedAt() {
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = new HashSet<>(categories);
     }
 
     public void addCategory(Category category) {
