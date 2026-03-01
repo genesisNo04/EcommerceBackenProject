@@ -1,82 +1,52 @@
-package com.example.EcommerceBackendProject.ServiceLayerTest;
+package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
-import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Exception.ResourceAlreadyExistsException;
+import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.AddressTestFactory;
+import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.UserTestFactory;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class UserServiceTestRefactoring {
+public class UserServiceTest {
 
     @Autowired
     private UserService userService;
 
-    private AddressRequestDTO createAddress(boolean isDefault) {
-        Random random = new Random();
-        return new AddressRequestDTO(
-                random.nextInt() + " Main st",
-                "Sacramento",
-                "CA",
-                "USA",
-                "12345",
-                isDefault);
-    }
-
-    private UserUpdateRequestDTO createUpdateDTOTestUser(String username, String firstName, String lastName,
-                                                   String email, String phoneNumber, List<AddressRequestDTO> addresses) {
-        return new UserUpdateRequestDTO(
-                username,
-                firstName,
-                lastName,
-                addresses,
-                phoneNumber,
-                email);
-    }
-
-    private User createTestUser(String username, String password, String email, List<AddressRequestDTO> addresses) {
-        UserRequestDTO userRequestDTO = new UserRequestDTO(
-                username,
-                password,
-                email,
-                "test",
-                "user",
-                addresses,
-                "+12345678981" );
-        return userService.createCustomerUser(userRequestDTO);
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void createUser_success() {
-        AddressRequestDTO addressRequestDTO = createAddress(true);
-        AddressRequestDTO addressRequestDTO1 = createAddress(false);
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress(false);
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(addressRequestDTO, addressRequestDTO1));
 
         Address address = AddressMapper.toEntity(addressRequestDTO);
         Address address1 = AddressMapper.toEntity(addressRequestDTO1);
 
-        User user = createTestUser("testuser", "test123", "testuser@gmail.com", addresses);
-
+        UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", addresses);
+        User user = userService.createCustomerUser(userRequestDTO);
         assertNotNull(user.getId(), "Id is not generated");
         assertEquals("testuser", user.getUsername(), "Username does not match");
-        assertNotEquals("test123", user.getPassword(), "Password is not encrypted");
+        assertTrue(passwordEncoder.matches("test123", user.getPassword()), "Password is not encrypted");
         assertEquals("testuser@gmail.com", user.getEmail(), "Email does not match");
         assertEquals("test", user.getFirstName(), "Firs tname does not match");
         assertEquals("user", user.getLastName(), "Last name does not match");
@@ -94,26 +64,31 @@ public class UserServiceTestRefactoring {
 
     @Test
     void createUser_duplicate_username() {
-        AddressRequestDTO addressRequestDTO = createAddress(true);
-        AddressRequestDTO addressRequestDTO1 = createAddress(false);
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress(false);
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(addressRequestDTO, addressRequestDTO1));
+        UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", addresses);
+        userService.createCustomerUser(userRequestDTO);
 
-        createTestUser("testuser1", "test123", "testuser1@gmail.com", addresses);
+        UserRequestDTO userRequestDTO1 = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", addresses);
 
-        Exception ex = assertThrows(ResourceAlreadyExistsException.class, () -> createTestUser("testuser1", "test123", "testuser11@gmail.com", addresses));
+        Exception ex = assertThrows(ResourceAlreadyExistsException.class, () -> userService.createCustomerUser(userRequestDTO));
 
         assertEquals("username or email is already exists.", ex.getMessage());
     }
 
     @Test
     void createUser_duplicate_email() {
-        AddressRequestDTO addressRequestDTO = createAddress(true);
-        AddressRequestDTO addressRequestDTO1 = createAddress(false);
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress(false);
         List<AddressRequestDTO> addresses = new ArrayList<>(List.of(addressRequestDTO, addressRequestDTO1));
 
-        createTestUser("testuser2", "test123", "testuser2@gmail.com", addresses);
+        UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", addresses);
+        userService.createCustomerUser(userRequestDTO);
 
-        Exception ex = assertThrows(ResourceAlreadyExistsException.class, () -> createTestUser("testuser3", "test123", "testuser2@gmail.com", addresses));
+        UserRequestDTO userRequestDTO1 = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", addresses);
+
+        Exception ex = assertThrows(ResourceAlreadyExistsException.class, () -> userService.createCustomerUser(userRequestDTO));
 
         assertEquals("username or email is already exists.", ex.getMessage());
     }
@@ -128,7 +103,7 @@ public class UserServiceTestRefactoring {
 
         User searchUser = userService.findById(user.getId());
         assertEquals(user.getUsername(), searchUser.getUsername(), "Username does not match");
-        assertNotEquals(searchUser.getEmail(), user.getPassword(), "Password is not encrypted");
+        assertTrue(passwordEncoder.matches("test123", user.getPassword()), "Password is not encrypted");
         assertEquals(searchUser.getEmail(), user.getEmail(), "Email does not match");
         assertEquals(searchUser.getFirstName(), user.getFirstName(), "First name does not match");
         assertEquals(searchUser.getLastName(), user.getLastName(), "Last name does not match");
@@ -154,7 +129,7 @@ public class UserServiceTestRefactoring {
 
         User searchUser = userService.findByUsername(user.getUsername());
         assertEquals(user.getUsername(), searchUser.getUsername(), "Username does not match");
-        assertNotEquals(searchUser.getEmail(), user.getPassword(), "Password is not encrypted");
+        assertTrue(passwordEncoder.matches("test123", user.getPassword()), "Password is not encrypted");
         assertEquals(searchUser.getEmail(), user.getEmail(), "Email does not match");
         assertEquals(searchUser.getFirstName(), user.getFirstName(), "First name does not match");
         assertEquals(searchUser.getLastName(), user.getLastName(), "Last name does not match");
@@ -180,7 +155,7 @@ public class UserServiceTestRefactoring {
 
         User searchUser = userService.findByEmail(user.getEmail());
         assertEquals(user.getUsername(), searchUser.getUsername(), "Username does not match");
-        assertNotEquals(searchUser.getEmail(), user.getPassword(), "Password is not encrypted");
+        assertTrue(passwordEncoder.matches("test123", user.getPassword()), "Password is not encrypted");
         assertEquals(searchUser.getEmail(), user.getEmail(), "Email does not match");
         assertEquals(searchUser.getFirstName(), user.getFirstName(), "First name does not match");
         assertEquals(searchUser.getLastName(), user.getLastName(), "Last name does not match");
@@ -212,9 +187,78 @@ public class UserServiceTestRefactoring {
 
         assertEquals("testuser7", updateUser.getUsername(), "Username does not match");
         assertEquals("testuser7@gmail.com", updateUser.getEmail(), "Email does not match");
+        assertTrue(passwordEncoder.matches("test123", updateUser.getPassword()), "Password is not encrypted");
         assertEquals("test7", updateUser.getFirstName(), "First name does not match");
         assertEquals("last7", updateUser.getLastName(), "Last name does not match");
         assertEquals("+12345687465", updateUser.getPhoneNumber(), "Phone Number does not match");
         assertEquals(3, updateUser.getAddresses().size(), "Address size does not match");
+
+        User persisted = userService.findById(user.getId());
+
+        assertEquals("testuser7", persisted.getUsername(), "Username does not match");
+        assertEquals("testuser7@gmail.com", persisted.getEmail(), "Email does not match");
+        assertTrue(passwordEncoder.matches("test123", persisted.getPassword()), "Password is not encrypted");
+        assertEquals("test7", persisted.getFirstName(), "First name does not match");
+        assertEquals("last7", persisted.getLastName(), "Last name does not match");
+        assertEquals("+12345687465", persisted.getPhoneNumber(), "Phone Number does not match");
+        assertEquals(3, persisted.getAddresses().size(), "Address size does not match");
+    }
+
+    @Test
+    void updateUser_duplicateUsername() {
+        AddressRequestDTO addressRequestDTO = createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = createAddress(false);
+        AddressRequestDTO addressRequestDTO2 = createAddress(false);
+        List<AddressRequestDTO> addresses = new ArrayList<>(List.of(addressRequestDTO, addressRequestDTO1, addressRequestDTO2));
+
+        Address address = AddressMapper.toEntity(addressRequestDTO);
+        Address address1 = AddressMapper.toEntity(addressRequestDTO1);
+
+        User user = createTestUser("testuser6", "test123", "testuser6@gmail.com", addresses);
+        User user1 = createTestUser("testuser7", "test123", "testuser7@gmail.com", addresses);
+
+        ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class,
+                () -> userService.updateUser(user.getId(), createUpdateDTOTestUser("testuser7", "test7", "last7", "testuser8@gmail.com", "+12345687465", addresses)));
+
+        assertEquals("Username is already in use", ex.getMessage());
+
+        User persisted = userService.findById(user.getId());;
+
+        assertEquals("testuser6", persisted.getUsername());
+        assertEquals("testuser6@gmail.com", persisted.getEmail(), "Email does not match");
+        assertTrue(passwordEncoder.matches("test123", persisted.getPassword()), "Password is not encrypted");
+        assertEquals("test", persisted.getFirstName(), "First name does not match");
+        assertEquals("user", persisted.getLastName(), "Last name does not match");
+        assertEquals("+12345678981", persisted.getPhoneNumber(), "Phone Number does not match");
+        assertEquals(3, persisted.getAddresses().size(), "Address size does not match");
+    }
+
+    @Test
+    void updateUser_duplicateEmail() {
+        AddressRequestDTO addressRequestDTO = createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = createAddress(false);
+        AddressRequestDTO addressRequestDTO2 = createAddress(false);
+        List<AddressRequestDTO> addresses = new ArrayList<>(List.of(addressRequestDTO, addressRequestDTO1, addressRequestDTO2));
+
+        Address address = AddressMapper.toEntity(addressRequestDTO);
+        Address address1 = AddressMapper.toEntity(addressRequestDTO1);
+
+        User user = createTestUser("testuser6", "test123", "testuser6@gmail.com", addresses);
+        User user1 = createTestUser("testuser7", "test123", "testuser7@gmail.com", addresses);
+
+        ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class,
+                () -> userService.updateUser(user.getId(), createUpdateDTOTestUser("testuser8", "test", "last", "testuser7@gmail.com", "+12345687465", addresses)));
+
+        assertEquals("Email is already in use", ex.getMessage());
+
+        User persisted = userService.findById(user.getId());;
+
+        assertEquals("testuser6", persisted.getUsername());
+        assertEquals("testuser6@gmail.com", persisted.getEmail(), "Email does not match");
+        assertTrue(passwordEncoder.matches("test123", persisted.getPassword()), "Password is not encrypted");
+        assertEquals("test", persisted.getFirstName(), "First name does not match");
+        assertEquals("user", persisted.getLastName(), "Last name does not match");
+        assertEquals("+12345678981", persisted.getPhoneNumber(), "Phone Number does not match");
+        assertEquals(3, persisted.getAddresses().size(), "Address size does not match");
     }
 }

@@ -36,24 +36,20 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private void validateAndSetEmail(User oldUser, String newEmail) {
+    private void validateEmail(User oldUser, String newEmail) {
         if (newEmail != null && !oldUser.getEmail().equals(newEmail)) {
             if (userRepository.existsByEmail(newEmail)) {
                 throw new ResourceAlreadyExistsException("Email is already in use");
             }
         }
-        oldUser.setEmail(newEmail);
-        log.info("SET email for user [targetUserId={}]", oldUser.getId());
     }
 
-    private void validateAndSetUsername(User oldUser, String username) {
+    private void validateUsername(User oldUser, String username) {
         if (username != null && !oldUser.getUsername().equals(username)) {
             if (userRepository.existsByUsername(username)) {
                 throw new ResourceAlreadyExistsException("Username is already in use");
             }
         }
-        oldUser.setUsername(username);
-        log.info("SET username for user [targetUserId={}]", oldUser.getId());
     }
 
     @Override
@@ -114,8 +110,10 @@ public class UserServiceImpl implements UserService {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
-        validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
-        validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
+        validateUsername(oldUser, userUpdateRequestDTO.getUsername());
+        validateEmail(oldUser, userUpdateRequestDTO.getEmail());
+        oldUser.setUsername(userUpdateRequestDTO.getUsername());
+        oldUser.setEmail(userUpdateRequestDTO.getEmail());
         oldUser.setFirstName(userUpdateRequestDTO.getFirstName());
         oldUser.setLastName(userUpdateRequestDTO.getLastName());
         oldUser.getAddresses().clear();
@@ -132,11 +130,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
         if (userUpdateRequestDTO.getUsername() != null) {
-            validateAndSetUsername(oldUser, userUpdateRequestDTO.getUsername());
+            validateUsername(oldUser, userUpdateRequestDTO.getUsername());
+            oldUser.setUsername(userUpdateRequestDTO.getUsername());
         }
 
         if (userUpdateRequestDTO.getEmail() != null) {
-            validateAndSetEmail(oldUser, userUpdateRequestDTO.getEmail());
+            validateEmail(oldUser, userUpdateRequestDTO.getEmail());
+            oldUser.setEmail(userUpdateRequestDTO.getEmail());
         }
 
         if (userUpdateRequestDTO.getFirstName() != null) {
