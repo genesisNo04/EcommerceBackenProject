@@ -20,7 +20,7 @@ public final class UserTestFactory {
                 email);
     }
 
-    public static UserRequestDTO createTestUser(String username, String password, String email, String firstName, String lastName, List<AddressRequestDTO> addresses) {
+    public static UserRequestDTO createTestUser(String username, String password, String email, String firstName, String lastName, String phoneNumber, List<AddressRequestDTO> addresses) {
         return new UserRequestDTO(
                 username,
                 password,
@@ -28,6 +28,6 @@ public final class UserTestFactory {
                 firstName,
                 lastName,
                 addresses,
-                "+12345678981" );
+                phoneNumber);
     }
 }

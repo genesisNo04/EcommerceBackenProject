@@ -16,4 +16,15 @@ public final class AddressTestFactory {
                 "12345",
                 isDefault);
     }
+
+    public static AddressRequestDTO createAddress(String street, String city, String state, String country, String zipcode, boolean isDefault) {
+        Random random = new Random();
+        return new AddressRequestDTO(
+                street,
+                city,
+                state,
+                country,
+                zipcode,
+                isDefault);
+    }
 }

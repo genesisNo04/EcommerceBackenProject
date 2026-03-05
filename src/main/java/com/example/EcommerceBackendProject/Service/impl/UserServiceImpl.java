@@ -131,11 +131,17 @@ public class UserServiceImpl implements UserService {
 
         if (userUpdateRequestDTO.getUsername() != null) {
             validateUsername(oldUser, userUpdateRequestDTO.getUsername());
-            oldUser.setUsername(userUpdateRequestDTO.getUsername());
         }
 
         if (userUpdateRequestDTO.getEmail() != null) {
             validateEmail(oldUser, userUpdateRequestDTO.getEmail());
+        }
+
+        if (userUpdateRequestDTO.getUsername() != null) {
+            oldUser.setUsername(userUpdateRequestDTO.getUsername());
+        }
+
+        if (userUpdateRequestDTO.getEmail() != null) {
             oldUser.setEmail(userUpdateRequestDTO.getEmail());
         }
 
