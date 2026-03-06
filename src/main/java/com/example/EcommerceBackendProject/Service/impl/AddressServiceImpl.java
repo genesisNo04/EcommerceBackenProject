@@ -83,7 +83,7 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: "+ addressId));
 
         log.info("UPDATED address [addressId={}] for [targetUserId={}]", updatedAddress.getId(), userId);
 

@@ -23,7 +23,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
     Optional<Address> findByUserIdAndId(Long userId, Long addressId);
 
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("UPDATE Address a SET a.isDefault = false WHERE a.user.id = :userId")
     void resetDefaultForUser(@Param("userId") Long userId);
 
