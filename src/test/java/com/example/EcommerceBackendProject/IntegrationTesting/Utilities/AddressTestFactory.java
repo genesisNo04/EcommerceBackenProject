@@ -7,7 +7,7 @@ import java.util.Random;
 
 public final class AddressTestFactory {
 
-    public static AddressRequestDTO createAddress(boolean isDefault) {
+    public static AddressRequestDTO createAddress(Boolean isDefault) {
         Random random = new Random();
         return new AddressRequestDTO(
                 random.nextInt() + " Main st",
@@ -18,7 +18,7 @@ public final class AddressTestFactory {
                 isDefault);
     }
 
-    public static AddressRequestDTO createAddress(String street, String city, String state, String country, String zipcode, boolean isDefault) {
+    public static AddressRequestDTO createAddress(String street, String city, String state, String country, String zipcode, Boolean isDefault) {
         return new AddressRequestDTO(
                 street,
                 city,
@@ -28,7 +28,7 @@ public final class AddressTestFactory {
                 isDefault);
     }
 
-    public static AddressUpdateRequestDTO createUpdateAddress(String street, String city, String state, String country, String zipcode, boolean isDefault) {
+    public static AddressUpdateRequestDTO createUpdateAddress(String street, String city, String state, String country, String zipcode, Boolean isDefault) {
         return new AddressUpdateRequestDTO(
                 street,
                 city,

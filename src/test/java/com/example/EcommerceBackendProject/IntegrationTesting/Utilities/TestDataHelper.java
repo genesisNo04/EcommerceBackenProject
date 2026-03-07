@@ -26,4 +26,17 @@ public class TestDataHelper {
         );
         return userService.createCustomerUser(dto);
     }
+
+    public User createUser(String username, String password, String email) {
+        UserRequestDTO dto = UserTestFactory.createTestUser(
+                username,
+                password,
+                email,
+                "test",
+                "user",
+                "+12345678981",
+                List.of()
+        );
+        return userService.createCustomerUser(dto);
+    }
 }

@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -141,5 +144,47 @@ public class AddressServiceCreateTest {
         NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> addressService.createAddress(addressRequestDTO, 999L));
 
         assertEquals("No user found with id: " + 999L, ex.getMessage());
+    }
+
+    @Test
+    void resolveAddress_success() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO2 = AddressTestFactory.createAddress("1235 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO3 = AddressTestFactory.createAddress("1236 Main st", "Sacramento", "CA", "USA", "12345", false);
+        List<AddressRequestDTO> addresses = List.of(addressRequestDTO, addressRequestDTO1, addressRequestDTO2, addressRequestDTO3);
+        User user = testDataHelper.createUser();
+
+        List<Address> createdAddress = addressService.resolveAddresses(addresses, user);
+
+        assertEquals(4, createdAddress.size());
+
+        createdAddress.forEach(addr -> assertEquals(user.getId(), addr.getUser().getId()));
+
+    }
+
+    @Test
+    void resolveAddress_emptyList() {
+        List<AddressRequestDTO> addresses = List.of();
+        User user = testDataHelper.createUser();
+
+        List<Address> createdAddress = addressService.resolveAddresses(addresses, user);
+
+        assertEquals(user.getAddresses().size(), addresses.size());
+        assertEquals(user.getAddresses(), createdAddress);
+    }
+
+    @Test
+    void resolveAddress_defaultAddress_onlyOne() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO2 = AddressTestFactory.createAddress("1235 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO3 = AddressTestFactory.createAddress("1236 Main st", "Sacramento", "CA", "USA", "12345", true);
+        List<AddressRequestDTO> addresses = List.of(addressRequestDTO, addressRequestDTO1, addressRequestDTO2, addressRequestDTO3);
+        User user = testDataHelper.createUser();
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> addressService.resolveAddresses(addresses, user));
+
+        assertEquals("Only one default address allowed", ex.getMessage());
     }
 }

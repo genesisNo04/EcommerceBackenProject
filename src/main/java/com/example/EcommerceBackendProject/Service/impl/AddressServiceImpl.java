@@ -215,7 +215,7 @@ public class AddressServiceImpl implements AddressService {
         address.setZipCode(addressRequestDTO.getZipCode());
 
         address.setIsDefault(addressRequestDTO.getIsDefault());
-        return address;
+        return addressRepository.save(address);
     }
 
     private Address patchAddressInternally(Address address, AddressUpdateRequestDTO addressUpdateRequestDTO) {
@@ -250,7 +250,7 @@ public class AddressServiceImpl implements AddressService {
             address.setZipCode(addressUpdateRequestDTO.getZipCode());
         }
 
-        return address;
+        return addressRepository.save(address);
     }
 
     private void deleteAddressInternally(Address address) {
