@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
+import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Service.UserService;
@@ -36,6 +37,19 @@ public class TestDataHelper {
                 "user",
                 "+12345678981",
                 List.of()
+        );
+        return userService.createCustomerUser(dto);
+    }
+
+    public User createUser(String username, String password, String email, String firstName, String lastName, String phoneNumber, List<AddressRequestDTO> addresses) {
+        UserRequestDTO dto = UserTestFactory.createTestUser(
+                username,
+                password,
+                email,
+                firstName,
+                lastName,
+                phoneNumber,
+                addresses
         );
         return userService.createCustomerUser(dto);
     }

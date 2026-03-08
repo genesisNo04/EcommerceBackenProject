@@ -89,7 +89,33 @@ public class AddressServiceDeleteAddress {
     }
 
     @Test
-    void setDefaultAddress() {
+    void deleteAnyAddress() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+
+        User user = testDataHelper.createUser();
+
+        Address createdAddress = addressService.createAddress(addressRequestDTO, user.getId());
+
+        addressService.deleteAnyAddress(createdAddress.getId());
+
+        Address searchAddress = addressRepository.findById(createdAddress.getId()).orElse(null);
+
+        assertNull(searchAddress);
+    }
+
+    @Test
+    void deleteAnyAddress_noAddressFound() {
+        User user = testDataHelper.createUser();
+
+        AddressRequestDTO addressUpdateRequestDTO = AddressTestFactory.createAddress("1234 Main st", "Los Angeles", "CA", "USA", "54321", true);
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> addressService.deleteAnyAddress(999L));
+
+        assertEquals("Address not found", ex.getMessage());
+    }
+
+    @Test
+    void deleteAnyAddress_deleteDefault() {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
         AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", false);
 
@@ -98,21 +124,12 @@ public class AddressServiceDeleteAddress {
         Address createdAddress = addressService.createAddress(addressRequestDTO, user.getId());
         Address createdAddress1 = addressService.createAddress(addressRequestDTO1, user.getId());
 
-        addressService.setDefaultAddress(createdAddress1.getId(), user.getId());
+        addressService.deleteAnyAddress(createdAddress.getId());
 
         Address searchAddress = addressRepository.findById(createdAddress.getId()).orElse(null);
         Address searchAddress1 = addressRepository.findById(createdAddress1.getId()).orElse(null);
 
         assertTrue(searchAddress1.getIsDefault());
-        assertFalse(searchAddress.getIsDefault());
-    }
-
-    @Test
-    void setDefaultAddress_noAddressFound() {
-        User user = testDataHelper.createUser();
-
-        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> addressService.setDefaultAddress(999L, user.getId()));
-
-        assertEquals("Address not found", ex.getMessage());
+        assertNull(searchAddress);
     }
 }

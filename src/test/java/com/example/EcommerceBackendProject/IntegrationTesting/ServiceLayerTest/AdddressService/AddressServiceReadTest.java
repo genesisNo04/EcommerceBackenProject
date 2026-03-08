@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,5 +95,23 @@ public class AddressServiceReadTest {
         NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> addressService.getDefaultAddress(999l));
 
         assertEquals("No user found with id: " + 999L, ex.getMessage());
+    }
+
+    @Test
+    void findAll() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO2 = AddressTestFactory.createAddress("1235 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO3 = AddressTestFactory.createAddress("1236 Main st", "Sacramento", "CA", "USA", "12345", false);
+        List<AddressRequestDTO> addresses = List.of(addressRequestDTO, addressRequestDTO1, addressRequestDTO2, addressRequestDTO3);
+        User user = testDataHelper.createUser("testuser", "test123", "test@gmail.com", "test", "user", "+1234567890", addresses);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Address> returnAddresses = addressService.findAllAddress(pageable);
+
+        assertEquals(4, returnAddresses.getContent().size());
+        assertEquals(4, returnAddresses.getTotalElements());
+        assertEquals(user.getAddresses().size(), returnAddresses.getContent().size());
+        assertEquals(new ArrayList<>(user.getAddresses()), new ArrayList<>(returnAddresses.getContent()));
     }
 }

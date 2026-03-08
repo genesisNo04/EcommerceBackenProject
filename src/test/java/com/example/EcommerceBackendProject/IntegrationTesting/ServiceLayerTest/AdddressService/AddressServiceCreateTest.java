@@ -156,11 +156,17 @@ public class AddressServiceCreateTest {
         User user = testDataHelper.createUser();
 
         List<Address> createdAddress = addressService.resolveAddresses(addresses, user);
+        Address first = createdAddress.get(0);
 
         assertEquals(4, createdAddress.size());
+        assertEquals("123 Main st", first.getStreet());
+        assertEquals("Sacramento", first.getCity());
+        assertEquals("CA", first.getState());
+        assertEquals("USA", first.getCountry());
+        assertEquals("12345", first.getZipCode());
+        assertTrue(first.getIsDefault());
 
         createdAddress.forEach(addr -> assertEquals(user.getId(), addr.getUser().getId()));
-
     }
 
     @Test
@@ -170,8 +176,16 @@ public class AddressServiceCreateTest {
 
         List<Address> createdAddress = addressService.resolveAddresses(addresses, user);
 
-        assertEquals(user.getAddresses().size(), addresses.size());
-        assertEquals(user.getAddresses(), createdAddress);
+        assertTrue(createdAddress.isEmpty());
+    }
+
+    @Test
+    void resolveAddress_nullList() {
+        User user = testDataHelper.createUser();
+
+        List<Address> createdAddress = addressService.resolveAddresses(null, user);
+
+        assertTrue(createdAddress.isEmpty());
     }
 
     @Test

@@ -162,7 +162,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address updateAnyAddress(Long addressId, AddressRequestDTO addressRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: " + addressId));
 
         log.info("UPDATED address for [addressId={}] ", addressId);
 
@@ -173,7 +173,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: " + addressId));
 
         log.info("PATCHED address for [addressId={}]", addressId);
 
