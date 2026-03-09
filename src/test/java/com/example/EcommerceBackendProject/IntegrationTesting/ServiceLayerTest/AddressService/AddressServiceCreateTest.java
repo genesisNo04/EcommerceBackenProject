@@ -1,4 +1,4 @@
-package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AdddressService;
+package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AddressService;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
@@ -8,7 +8,6 @@ import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.AddressT
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import com.example.EcommerceBackendProject.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +25,6 @@ public class AddressServiceCreateTest {
 
     @Autowired
     private AddressService addressService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -200,5 +196,19 @@ public class AddressServiceCreateTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> addressService.resolveAddresses(addresses, user));
 
         assertEquals("Only one default address allowed", ex.getMessage());
+    }
+
+    @Test
+    void resolveAddress_noDefaultAddress_onlyOne() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", false);
+        List<AddressRequestDTO> addresses = List.of(addressRequestDTO, addressRequestDTO1);
+
+        User user = testDataHelper.createUser();
+
+        List<Address> result = addressService.resolveAddresses(addresses, user);
+
+        assertEquals(2, result.size());
+        assertTrue(result.stream().noneMatch(Address::getIsDefault));
     }
 }

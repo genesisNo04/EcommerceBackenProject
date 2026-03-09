@@ -1,4 +1,4 @@
-package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AdddressService;
+package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AddressService;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
@@ -9,7 +9,6 @@ import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.AddressT
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import com.example.EcommerceBackendProject.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,9 +23,6 @@ public class AddressServiceUpdateTest {
 
     @Autowired
     private AddressService addressService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -53,9 +49,9 @@ public class AddressServiceUpdateTest {
         assertEquals("54321", updatedAddress.getZipCode());
         assertTrue(updatedAddress.getIsDefault());
 
-        Address saveddAddress = addressRepository.findById(updatedAddress.getId()).orElseThrow();
+        Address savedAddress = addressRepository.findById(updatedAddress.getId()).orElseThrow();
 
-        assertEquals("1234 Main st", updatedAddress.getStreet());
+        assertEquals("1234 Main st", savedAddress.getStreet());
     }
 
     @Test
@@ -117,6 +113,42 @@ public class AddressServiceUpdateTest {
         assertEquals("USA", updatedAddress.getCountry());
         assertEquals("54321", updatedAddress.getZipCode());
         assertTrue(updatedAddress.getIsDefault());
+
+        Address savedAddress = addressRepository.findById(updatedAddress.getId()).orElseThrow();
+
+        assertEquals("1234 Main st", savedAddress.getStreet());
+        assertTrue(savedAddress.getIsDefault());
+    }
+
+    @Test
+    void patchAddress_promoteDefault() {
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "Sacramento", "CA", "USA", "12345", false);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress("1234 Main st", "Sacramento", "CA", "USA", "12345", true);
+
+        User user = testDataHelper.createUser();
+
+        Address createdAddress = addressService.createAddress(addressRequestDTO, user.getId());
+        Address createdAddress1 = addressService.createAddress(addressRequestDTO1, user.getId());
+
+        AddressUpdateRequestDTO addressUpdateRequestDTO = AddressTestFactory.createUpdateAddress("1235 Main st", "Los Angeles", "CA", "USA", "54321", false);
+
+        Address updatedAddress = addressService.patchAddress(createdAddress1.getId(), addressUpdateRequestDTO, user.getId());
+
+        assertEquals("1235 Main st", updatedAddress.getStreet());
+        assertEquals("Los Angeles", updatedAddress.getCity());
+        assertEquals("CA", updatedAddress.getState());
+        assertEquals("USA", updatedAddress.getCountry());
+        assertEquals("54321", updatedAddress.getZipCode());
+        assertFalse(updatedAddress.getIsDefault());
+
+        Address savedAddress = addressRepository.findById(createdAddress.getId()).orElseThrow();
+        Address savedAddress1 = addressRepository.findById(createdAddress1.getId()).orElseThrow();
+
+        assertEquals("1235 Main st", savedAddress1.getStreet());
+        assertFalse(savedAddress1.getIsDefault());
+
+        assertEquals("123 Main st", savedAddress.getStreet());
+        assertTrue(savedAddress.getIsDefault());
     }
 
     @Test
@@ -137,6 +169,11 @@ public class AddressServiceUpdateTest {
         assertEquals("USA", updatedAddress.getCountry());
         assertEquals("12345", updatedAddress.getZipCode());
         assertTrue(updatedAddress.getIsDefault());
+
+        Address savedAddress = addressRepository.findById(updatedAddress.getId()).orElseThrow();
+
+        assertEquals("123 Main st", savedAddress.getStreet());
+        assertTrue(savedAddress.getIsDefault());
     }
 
     @Test
@@ -157,6 +194,11 @@ public class AddressServiceUpdateTest {
         assertEquals("USA", updatedAddress.getCountry());
         assertEquals("12345", updatedAddress.getZipCode());
         assertTrue(updatedAddress.getIsDefault());
+
+        Address savedAddress = addressRepository.findById(updatedAddress.getId()).orElseThrow();
+
+        assertEquals("1234 Main st", savedAddress.getStreet());
+        assertTrue(savedAddress.getIsDefault());
     }
 
     @Test

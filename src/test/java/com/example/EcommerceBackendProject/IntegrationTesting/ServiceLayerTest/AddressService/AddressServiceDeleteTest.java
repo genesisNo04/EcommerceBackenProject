@@ -1,4 +1,4 @@
-package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AdddressService;
+package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AddressService;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
@@ -8,7 +8,6 @@ import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.AddressT
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import com.example.EcommerceBackendProject.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class AddressServiceDeleteAddress {
+public class AddressServiceDeleteTest {
 
     @Autowired
     private AddressService addressService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AddressRepository addressRepository;

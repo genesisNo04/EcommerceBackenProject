@@ -1,4 +1,4 @@
-package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AdddressService;
+package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.AddressService;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
@@ -8,7 +8,6 @@ import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.AddressT
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import com.example.EcommerceBackendProject.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,9 +30,6 @@ public class AddressServiceReadTest {
 
     @Autowired
     private AddressService addressService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -60,7 +56,7 @@ public class AddressServiceReadTest {
 
         assertEquals(3, searchResult.getTotalElements());
         assertEquals(3, searchResult.getContent().size());
-        assertEquals(addresses.stream().map(Address::getId).collect(Collectors.toSet()), searchResult.stream().map(Address::getId).collect(Collectors.toSet()));
+        assertEquals(addresses.stream().map(Address::getId).collect(Collectors.toSet()), searchResult.getContent().stream().map(Address::getId).collect(Collectors.toSet()));
     }
 
     @Test

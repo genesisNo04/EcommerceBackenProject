@@ -1,19 +1,27 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
+import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Service.ProductService;
 import com.example.EcommerceBackendProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TestDataHelper {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProductService productService;
 
     public User createUser() {
         UserRequestDTO dto = UserTestFactory.createTestUser(
@@ -52,5 +60,30 @@ public class TestDataHelper {
                 addresses
         );
         return userService.createCustomerUser(dto);
+    }
+
+    public Product createProduct() {
+        ProductRequestDTO productRequestDTO = ProductTestFactory.createProductDTO("test",
+                "test",
+                10,
+                Set.of(),
+                BigDecimal.valueOf(29.99),
+                "testurl");
+        return productService.createProduct(productRequestDTO);
+    }
+
+    public Product createProduct(String productName,
+                                 String description,
+                                 Integer stockQuantity,
+                                 Set<Long> categoriesId,
+                                 BigDecimal price,
+                                 String imageUrl) {
+        ProductRequestDTO productRequestDTO = ProductTestFactory.createProductDTO(productName,
+                description,
+                stockQuantity,
+                categoriesId,
+                price,
+                imageUrl);
+        return productService.createProduct(productRequestDTO);
     }
 }
