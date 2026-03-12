@@ -111,12 +111,12 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceAlreadyExistsException("Category already exist with name: " + categoryRequestDTO.getName());
         }
 
+        category.setName(categoryRequestDTO.getName());
+        category.setDescription(categoryRequestDTO.getDescription());
+
         for (Product product : new HashSet<>(category.getProducts())) {
             product.removeCategory(category);
         }
-
-        category.setName(categoryRequestDTO.getName());
-        category.setDescription(categoryRequestDTO.getDescription());
 
         Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
                 .orElseThrow(() -> new NoResourceFoundException("No product with id: " + id))).collect(Collectors.toSet());
@@ -125,7 +125,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info("UPDATED category [categoryId={}]", categoryId);
 
-        return category;
+        return categoryRepository.save(category);
     }
 
     @Override
@@ -134,6 +134,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoResourceFoundException("No Category with id: " + categoryId));
         if (categoryUpdateRequestDTO.getName() != null) {
+            if (!categoryUpdateRequestDTO.getName().equals(category.getName()) && categoryRepository.existsByName(categoryUpdateRequestDTO.getName())) {
+                throw new ResourceAlreadyExistsException("Category already exist with name: " + categoryUpdateRequestDTO.getName());
+            }
             category.setName(categoryUpdateRequestDTO.getName());
         }
 
@@ -142,11 +145,13 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         if (categoryUpdateRequestDTO.getProductIds() != null) {
-            category.getProducts().forEach(product -> product.removeCategory(category));
-            category.getProducts().clear();
+            for (Product product : new HashSet<>(category.getProducts())) {
+                product.removeCategory(category);
+            }
 
             Set<Product> products = categoryUpdateRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
                     .orElseThrow(() -> new NoResourceFoundException("No Product with id: " + id))).collect(Collectors.toSet());
+
             products.forEach(p -> p.addCategory(category));
         }
 

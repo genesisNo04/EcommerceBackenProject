@@ -71,7 +71,7 @@ public class CategoryServiceUpdateTest {
     void updateCategory_failed_categoryNotFound() {
         CategoryRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createCategoryDTO("ELECTRONICUpdate", "ElectronicUpdate", Set.of());
 
-        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> categoryService.updateCategory(999L,categoryUpdateRequestDTO));
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> categoryService.updateCategory(999L, categoryUpdateRequestDTO));
 
         assertEquals("No Category with id: " + 999L, ex.getMessage());
     }
@@ -86,7 +86,7 @@ public class CategoryServiceUpdateTest {
 
         CategoryRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createCategoryDTO("HOME", "ElectronicUpdate", Set.of());
 
-        ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class, () -> categoryService.updateCategory(createdCategory.getId(),categoryUpdateRequestDTO));
+        ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class, () -> categoryService.updateCategory(createdCategory.getId(), categoryUpdateRequestDTO));
 
         assertEquals("Category already exist with name: " + categoryRequestDTO1.getName(), ex.getMessage());
     }
@@ -127,5 +127,63 @@ public class CategoryServiceUpdateTest {
         assertFalse(savedCategory.getProducts().stream().anyMatch(p -> p.getId().equals(product.getId())));
         assertTrue(saveProduct1.getCategories().stream().anyMatch(c -> c.getId().equals(savedCategory.getId())));
         assertFalse(saveProduct.getCategories().stream().anyMatch(c -> c.getId().equals(savedCategory.getId())));
+    }
+
+    @Test
+    void patchCategory_success_partialFields() {
+        Product product = testDataHelper.createProduct();
+
+        CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO("ELECTRONIC", "Electronic", Set.of(product.getId()));
+
+        Category createdCategory = categoryService.createCategory(categoryRequestDTO);
+
+        CategoryUpdateRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createUpdateCategoryDTO(null, "ElectronicUpdate", null);
+
+        Category updatedCategory = categoryService.patchCategory(createdCategory.getId(),categoryUpdateRequestDTO);
+
+        Category savedCategory = categoryRepository.findById(updatedCategory.getId()).orElseThrow();
+        Product saveProduct = productRepository.findById(product.getId()).orElseThrow();
+
+        assertEquals("ELECTRONIC", savedCategory.getName());
+        assertEquals("ElectronicUpdate", savedCategory.getDescription());
+        assertTrue(savedCategory.getProducts().stream().anyMatch(p -> p.getId().equals(product.getId())));
+        assertTrue(saveProduct.getCategories().stream().anyMatch(c -> c.getId().equals(savedCategory.getId())));
+    }
+
+    @Test
+    void patchCategory_failed_categoryNotFound() {
+        CategoryUpdateRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createUpdateCategoryDTO("ELECTRONICUpdate", "ElectronicUpdate", Set.of());
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> categoryService.patchCategory(999L, categoryUpdateRequestDTO));
+
+        assertEquals("No Category with id: " + 999L, ex.getMessage());
+    }
+
+    @Test
+    void patchCategory_failed_duplicateName() {
+        CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO("ELECTRONIC", "Electronic", Set.of());
+        CategoryRequestDTO categoryRequestDTO1 = CategoryTestFactory.createCategoryDTO("HOME", "Home", Set.of());
+
+        Category createdCategory = categoryService.createCategory(categoryRequestDTO);
+        categoryService.createCategory(categoryRequestDTO1);
+
+        CategoryUpdateRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createUpdateCategoryDTO("HOME", "ElectronicUpdate", Set.of());
+
+        ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class, () -> categoryService.patchCategory(createdCategory.getId(), categoryUpdateRequestDTO));
+
+        assertEquals("Category already exist with name: " + categoryRequestDTO1.getName(), ex.getMessage());
+    }
+
+    @Test
+    void patchCategory_failed_noProductFound() {
+        CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO("ELECTRONIC", "Electronic", Set.of());
+
+        Category createdCategory = categoryService.createCategory(categoryRequestDTO);
+
+        CategoryUpdateRequestDTO categoryUpdateRequestDTO = CategoryTestFactory.createUpdateCategoryDTO("HOME", "ElectronicUpdate", Set.of(999L));
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> categoryService.patchCategory(createdCategory.getId(), categoryUpdateRequestDTO));
+
+        assertEquals("No Product with id: " + 999L, ex.getMessage());
     }
 }

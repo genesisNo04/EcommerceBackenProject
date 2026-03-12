@@ -1,10 +1,13 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
+import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.User;
+import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.ProductService;
 import com.example.EcommerceBackendProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class TestDataHelper {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     public User createUser() {
         UserRequestDTO dto = UserTestFactory.createTestUser(
@@ -85,5 +91,17 @@ public class TestDataHelper {
                 price,
                 imageUrl);
         return productService.createProduct(productRequestDTO);
+    }
+
+    public Category createCategory() {
+        CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO("ELECTRONIC", "Electronic", Set.of());
+        return categoryService.createCategory(categoryRequestDTO);
+    }
+
+    public Category createCategory(String name,
+                                 String description,
+                                 Set<Long> productsId) {
+        CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO(name, description, productsId);
+        return categoryService.createCategory(categoryRequestDTO);
     }
 }
