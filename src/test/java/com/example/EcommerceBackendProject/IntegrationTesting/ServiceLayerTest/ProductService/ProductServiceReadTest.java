@@ -79,9 +79,9 @@ public class ProductServiceReadTest {
 
         assertEquals(2, products.getContent().size());
         assertEquals(2, products.getTotalElements());
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product.getId())));
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product1.getId())));
-        assertFalse(products.stream().anyMatch(p -> p.getId().equals(product2.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product1.getId())));
+        assertFalse(products.getContent().stream().anyMatch(p -> p.getId().equals(product2.getId())));
     }
 
     @Test
@@ -113,9 +113,9 @@ public class ProductServiceReadTest {
 
         assertEquals(2, products.getContent().size());
         assertEquals(2, products.getTotalElements());
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product.getId())));
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product1.getId())));
-        assertFalse(products.stream().anyMatch(p -> p.getId().equals(product2.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product1.getId())));
+        assertFalse(products.getContent().stream().anyMatch(p -> p.getId().equals(product2.getId())));
     }
 
     @Test
@@ -147,8 +147,8 @@ public class ProductServiceReadTest {
 
         assertEquals(3, products.getContent().size());
         assertEquals(3, products.getTotalElements());
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product.getId())));
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product1.getId())));
-        assertTrue(products.stream().anyMatch(p -> p.getId().equals(product2.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product1.getId())));
+        assertTrue(products.getContent().stream().anyMatch(p -> p.getId().equals(product2.getId())));
     }
 }

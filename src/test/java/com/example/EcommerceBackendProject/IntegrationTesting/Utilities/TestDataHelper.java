@@ -1,14 +1,13 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
-import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
-import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
-import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
-import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
+import com.example.EcommerceBackendProject.DTO.*;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
+import com.example.EcommerceBackendProject.Entity.Review;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Service.CategoryService;
 import com.example.EcommerceBackendProject.Service.ProductService;
+import com.example.EcommerceBackendProject.Service.ReviewService;
 import com.example.EcommerceBackendProject.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +27,9 @@ public class TestDataHelper {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     public User createUser() {
         UserRequestDTO dto = UserTestFactory.createTestUser(
@@ -103,5 +105,21 @@ public class TestDataHelper {
                                  Set<Long> productsId) {
         CategoryRequestDTO categoryRequestDTO = CategoryTestFactory.createCategoryDTO(name, description, productsId);
         return categoryService.createCategory(categoryRequestDTO);
+    }
+
+    public Review createReview(int rating,
+                               String comment) {
+        Product product = createProduct();
+        User user = createUser();
+        ReviewRequestDTO reviewRequestDTO = ReviewTestFactory.createReviewRequestDto(rating, comment);
+        return reviewService.createReview(reviewRequestDTO, user.getId(), product.getId());
+    }
+
+    public Review createReview(int rating,
+                               String comment,
+                               User user,
+                               Product product) {
+        ReviewRequestDTO reviewRequestDTO = ReviewTestFactory.createReviewRequestDto(rating, comment);
+        return reviewService.createReview(reviewRequestDTO, user.getId(), product.getId());
     }
 }

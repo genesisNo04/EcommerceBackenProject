@@ -191,4 +191,92 @@ public class ProductServiceUpdateTest {
 
         assertEquals("One or more categories is not found", ex.getMessage());
     }
+
+    @Test
+    void addCategoryToProduct() {
+        Category category = testDataHelper.createCategory("ELECTRONIC", "Electronic", Set.of());
+        Category category1 = testDataHelper.createCategory("ENTERTAINMENT", "Entertainment", Set.of());
+
+        Product product = testDataHelper.createProduct("PS5",
+                "Playstation",
+                100,
+                Set.of(category.getId()),
+                BigDecimal.valueOf(499.99),
+                "url");
+
+        productService.addCategory(product.getId(), category1.getId());
+
+        Product savedProduct = productRepository.findById(product.getId()).orElseThrow();
+
+        assertEquals(2, savedProduct.getCategories().size());
+        assertTrue(savedProduct.getCategories().stream().anyMatch(c -> c.getId().equals(category.getId())));
+        assertTrue(savedProduct.getCategories().stream().anyMatch(c -> c.getId().equals(category1.getId())));
+    }
+
+    @Test
+    void addCategoryToProduct_noProductFound() {
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> productService.addCategory(999L, 999L));
+
+        assertEquals("No product found", ex.getMessage());
+    }
+
+    @Test
+    void addCategoryToProduct_noCategoryFound() {
+        Category category = testDataHelper.createCategory("ELECTRONIC", "Electronic", Set.of());
+
+        Product product = testDataHelper.createProduct("PS5",
+                "Playstation",
+                100,
+                Set.of(category.getId()),
+                BigDecimal.valueOf(499.99),
+                "url");
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> productService.addCategory(product.getId(), 999L));
+
+        assertEquals("No Category with id: " + 999L, ex.getMessage());
+    }
+
+    @Test
+    void removeCategoryToProduct() {
+        Category category = testDataHelper.createCategory("ELECTRONIC", "Electronic", Set.of());
+        Category category1 = testDataHelper.createCategory("ENTERTAINMENT", "Entertainment", Set.of());
+
+        Product product = testDataHelper.createProduct("PS5",
+                "Playstation",
+                100,
+                Set.of(category.getId(), category1.getId()),
+                BigDecimal.valueOf(499.99),
+                "url");
+
+        productService.removeCategory(product.getId(), category1.getId());
+
+        Product savedProduct = productRepository.findById(product.getId()).orElseThrow();
+
+        assertEquals(1, savedProduct.getCategories().size());
+        assertTrue(savedProduct.getCategories().stream().anyMatch(c -> c.getId().equals(category.getId())));
+        assertFalse(savedProduct.getCategories().stream().anyMatch(c -> c.getId().equals(category1.getId())));
+    }
+
+    @Test
+    void removeCategoryToProduct_noProductFound() {
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> productService.removeCategory(999L, 999L));
+
+        assertEquals("No product found", ex.getMessage());
+    }
+
+    @Test
+    void removeCategoryToProduct_noCategoryFound() {
+        Category category = testDataHelper.createCategory("ELECTRONIC", "Electronic", Set.of());
+
+        Product product = testDataHelper.createProduct("PS5",
+                "Playstation",
+                100,
+                Set.of(category.getId()),
+                BigDecimal.valueOf(499.99),
+                "url");
+
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> productService.removeCategory(product.getId(), 999L));
+
+        assertEquals("No Category with id: " + 999L, ex.getMessage());
+    }
 }
