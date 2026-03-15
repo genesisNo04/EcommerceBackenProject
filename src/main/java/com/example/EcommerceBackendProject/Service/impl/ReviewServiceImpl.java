@@ -132,7 +132,10 @@ public class ReviewServiceImpl implements ReviewService {
             throw new BadRequestException("Start date cannot be later than End date");
         }
 
-        spec = spec.and(ReviewSpecification.createdBetween(start, end));
+        if (start != null || end != null) {
+            spec = spec.and(ReviewSpecification.createdBetween(start, end));
+        }
+
         Page<Review> reviews = reviewRepository.findAll(spec, pageable);
         log.info("FETCHED reviews [total={}] for user [targetUserId={}] product [productId={}] ratingRange=[{}-{}]", reviews.getTotalElements(), userId, productId, startRating, endRating);
 
