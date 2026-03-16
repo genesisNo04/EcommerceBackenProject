@@ -47,8 +47,8 @@ public class ShoppingCartItemServiceAddItemTest {
         ShoppingCart savedCart = shoppingCartRepository.findById(user.getCart().getId()).orElseThrow();
 
         assertEquals(1, savedCart.getItems().size());
-        assertEquals(2, savedCart.getItems().stream().toList().get(0).getQuantity());
-        assertTrue(savedCart.getItems().stream().map(ShoppingCartItem::getId).collect(Collectors.toSet()).containsAll(Set.of(item.getId())));
+        assertEquals(2, savedCart.getItems().stream().toList().getFirst().getQuantity());
+        assertTrue(savedCart.getItems().stream().map(ShoppingCartItem::getId).collect(Collectors.toSet()).contains(item.getId()));
         assertTrue(savedCart.getItems().stream().map(i -> i.getProduct().getId()).collect(Collectors.toSet()).contains(product.getId()));
     }
 
@@ -66,8 +66,29 @@ public class ShoppingCartItemServiceAddItemTest {
         ShoppingCart savedCart = shoppingCartRepository.findById(user.getCart().getId()).orElseThrow();
 
         assertEquals(1, savedCart.getItems().size());
-        assertEquals(4, savedCart.getItems().stream().toList().get(0).getQuantity());
-        assertTrue(savedCart.getItems().stream().map(ShoppingCartItem::getId).collect(Collectors.toSet()).containsAll(Set.of(item.getId())));
+        assertEquals(4, savedCart.getItems().stream().toList().getFirst().getQuantity());
+        assertTrue(savedCart.getItems().stream().map(ShoppingCartItem::getId).collect(Collectors.toSet()).contains(item.getId()));
+        assertTrue(savedCart.getItems().stream().map(i -> i.getProduct().getId()).collect(Collectors.toSet()).contains(product.getId()));
+    }
+
+    @Test
+    void addItemToCart_success_existingItem_exactStockLimit() {
+        Product product = testDataHelper.createProduct();
+        User user = testDataHelper.createUser();
+
+        ShoppingCartItemRequestDTO shoppingCartItemRequestDTO = ShoppingCartItemTestFactory.createShoppingCartItemDto(product.getId(), 2);
+
+        ShoppingCartItem item = shoppingCartItemService.addItemToCart(shoppingCartItemRequestDTO, user.getId());
+
+        ShoppingCartItemRequestDTO shoppingCartItemRequestDTO1 = ShoppingCartItemTestFactory.createShoppingCartItemDto(product.getId(), 8);
+
+        shoppingCartItemService.addItemToCart(shoppingCartItemRequestDTO1, user.getId());
+
+        ShoppingCart savedCart = shoppingCartRepository.findById(user.getCart().getId()).orElseThrow();
+
+        assertEquals(1, savedCart.getItems().size());
+        assertEquals(10, savedCart.getItems().stream().toList().getFirst().getQuantity());
+        assertTrue(savedCart.getItems().stream().map(ShoppingCartItem::getId).collect(Collectors.toSet()).contains(item.getId()));
         assertTrue(savedCart.getItems().stream().map(i -> i.getProduct().getId()).collect(Collectors.toSet()).contains(product.getId()));
     }
 
