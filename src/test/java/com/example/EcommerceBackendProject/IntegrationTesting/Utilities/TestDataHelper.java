@@ -1,14 +1,8 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.*;
-import com.example.EcommerceBackendProject.Entity.Category;
-import com.example.EcommerceBackendProject.Entity.Product;
-import com.example.EcommerceBackendProject.Entity.Review;
-import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Service.CategoryService;
-import com.example.EcommerceBackendProject.Service.ProductService;
-import com.example.EcommerceBackendProject.Service.ReviewService;
-import com.example.EcommerceBackendProject.Service.UserService;
+import com.example.EcommerceBackendProject.Entity.*;
+import com.example.EcommerceBackendProject.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +21,9 @@ public class TestDataHelper {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ShoppingCartItemService shoppingCartItemService;
 
     @Autowired
     private ReviewService reviewService;
@@ -121,5 +118,11 @@ public class TestDataHelper {
                                Product product) {
         ReviewRequestDTO reviewRequestDTO = ReviewTestFactory.createReviewRequestDto(rating, comment);
         return reviewService.createReview(reviewRequestDTO, user.getId(), product.getId());
+    }
+
+    public ShoppingCartItem createProductAndAddItemToCart(String productName, String description, int stockQuantity, BigDecimal price, int quantity, long userId) {
+        Product product = createProduct(productName, description, stockQuantity, Set.of(), price, "testurl");
+        ShoppingCartItemRequestDTO shoppingCartItemRequestDTO = ShoppingCartItemTestFactory.createShoppingCartItemDto(product.getId(), quantity);
+        return shoppingCartItemService.addItemToCart(shoppingCartItemRequestDTO, userId);
     }
 }
