@@ -2,16 +2,15 @@ package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.
 
 import com.example.EcommerceBackendProject.DTO.OrderItemRequestDTO;
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
-import com.example.EcommerceBackendProject.DTO.ShoppingCartItemRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.Product;
+import com.example.EcommerceBackendProject.Entity.OrderItem;
 import com.example.EcommerceBackendProject.Entity.ShoppingCartItem;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
+import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderItemTestFactory;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderTestFactory;
-import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.ShoppingCartItemTestFactory;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Service.OrderService;
@@ -23,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -55,6 +55,15 @@ public class OrderServiceCreateTest {
         Order savedOrder = orderRepository.findById(createdOrder.getId()).orElseThrow();
 
         assertEquals(2, savedOrder.getOrderItems().size());
+
+        OrderItem ps5Item = savedOrder.getOrderItems().stream().filter(i -> i.getProduct().getId().equals(item.getProduct().getId())).findFirst().orElseThrow();
+        assertEquals(2, ps5Item.getQuantity());
+
+        OrderItem xboxItem = savedOrder.getOrderItems().stream().filter(i -> i.getProduct().getId().equals(item1.getProduct().getId())).findFirst().orElseThrow();
+        assertEquals(1, xboxItem.getQuantity());
+
+        assertEquals(savedOrder.getId(), ps5Item.getOrder().getId());
+        assertEquals(savedOrder.getId(), xboxItem.getOrder().getId());
         assertEquals(user.getId(), savedOrder.getUser().getId());
         assertEquals(OrderStatus.CREATED, savedOrder.getOrderStatus());
         assertEquals(BigDecimal.valueOf(1499.7), savedOrder.getTotalAmount());
@@ -112,5 +121,35 @@ public class OrderServiceCreateTest {
         NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> orderService.createOrder(orderRequestDTO, user.getId()));
 
         assertEquals("No product found", ex.getMessage());
+    }
+
+    @Test
+    void createOrder_failed_invalidQuantity() {
+        User user = testDataHelper.createUser();
+
+        ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
+
+        OrderItemRequestDTO orderItemRequestDTO1 = OrderItemTestFactory.createOrderItemDto(item.getProduct().getId(), -1);
+
+        OrderRequestDTO orderRequestDTO = OrderTestFactory.createOrderDTO(List.of(orderItemRequestDTO1));
+
+        InvalidOrderItemQuantityException ex = assertThrows(InvalidOrderItemQuantityException.class, () -> orderService.createOrder(orderRequestDTO, user.getId()));
+
+        assertEquals("Invalid quantity", ex.getMessage());
+    }
+
+    @Test
+    void createOrder_failed_insufficientStock() {
+        User user = testDataHelper.createUser();
+
+        ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
+
+        OrderItemRequestDTO orderItemRequestDTO1 = OrderItemTestFactory.createOrderItemDto(item.getProduct().getId(), 11);
+
+        OrderRequestDTO orderRequestDTO = OrderTestFactory.createOrderDTO(List.of(orderItemRequestDTO1));
+
+        InvalidOrderItemQuantityException ex = assertThrows(InvalidOrderItemQuantityException.class, () -> orderService.createOrder(orderRequestDTO, user.getId()));
+
+        assertEquals("Insufficient stock", ex.getMessage());
     }
 }
