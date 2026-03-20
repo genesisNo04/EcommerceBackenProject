@@ -85,4 +85,5 @@ public class OrderServiceDeleteTest {
 
         assertEquals("Only CREATED orders can be deleted", ex.getMessage());
     }
+
 }
