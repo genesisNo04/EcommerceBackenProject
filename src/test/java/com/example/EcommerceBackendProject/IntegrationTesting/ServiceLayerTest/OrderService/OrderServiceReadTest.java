@@ -401,4 +401,34 @@ public class OrderServiceReadTest {
         assertEquals(2, orders.getContent().size());
         assertTrue(orders.getContent().stream().map(Order::getId).collect(Collectors.toSet()).containsAll(Set.of(createdOrder.getId(), createdOrder3.getId())));
     }
+
+    @Test
+    void adminFindOrder_byId() {
+        User user = testDataHelper.createUser();
+
+        ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
+        ShoppingCartItem item1 = testDataHelper.createProductAndAddItemToCart("XBOX", "Xbox", 10, BigDecimal.valueOf(499.9), 1, user.getId());
+
+        OrderItemRequestDTO orderItemRequestDTO = OrderItemTestFactory.createOrderItemDto(item.getProduct().getId(), 2);
+        OrderItemRequestDTO orderItemRequestDTO1 = OrderItemTestFactory.createOrderItemDto(item1.getProduct().getId(), 1);
+
+        OrderRequestDTO orderRequestDTO = OrderTestFactory.createOrderDTO(List.of(orderItemRequestDTO, orderItemRequestDTO1));
+
+        Order createdOrder = orderService.createOrder(orderRequestDTO, user.getId());
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Order> searchOrder = orderService.findByOrderId(createdOrder.getId(), pageable);
+
+        assertEquals(1, searchOrder.getContent().size());
+        assertEquals(1, searchOrder.getTotalElements());
+    }
+
+    @Test
+    void adminFindOrder_byId_notFound() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        NoResourceFoundException ex =  assertThrows(NoResourceFoundException.class, () -> orderService.findByOrderId(999L, pageable));
+
+        assertEquals("No order found", ex.getMessage());
+    }
 }

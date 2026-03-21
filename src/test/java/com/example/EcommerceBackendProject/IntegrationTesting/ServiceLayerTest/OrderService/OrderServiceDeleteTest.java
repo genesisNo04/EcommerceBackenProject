@@ -23,7 +23,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("Test")
+@ActiveProfiles("test")
 @Transactional
 public class OrderServiceDeleteTest {
 

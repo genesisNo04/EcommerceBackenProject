@@ -72,6 +72,8 @@ public class OrderServiceCheckoutTest {
         assertEquals(savedOrder.getId(), ps5Item.getOrder().getId());
         assertEquals(savedOrder.getId(), xboxItem.getOrder().getId());
         assertEquals(user.getId(), savedOrder.getUser().getId());
+        assertEquals(8, item.getProduct().getStockQuantity());
+        assertEquals(9, item1.getProduct().getStockQuantity());
     }
 
     @Test
@@ -113,6 +115,8 @@ public class OrderServiceCheckoutTest {
         Order savedOrder = orderRepository.findById(createdOrder.getId()).orElseThrow();
         assertEquals(OrderStatus.PENDING_PAYMENT, savedOrder.getOrderStatus());
         assertEquals(BigDecimal.valueOf(1499.7), savedOrder.getTotalAmount());
+        assertEquals(8, item.getProduct().getStockQuantity());
+        assertEquals(9, item1.getProduct().getStockQuantity());
     }
 
     @Test
@@ -165,6 +169,8 @@ public class OrderServiceCheckoutTest {
         assertEquals(savedOrder.getId(), ps5Item.getOrder().getId());
         assertEquals(savedOrder.getId(), xboxItem.getOrder().getId());
         assertEquals(user.getId(), savedOrder.getUser().getId());
+        assertEquals(8, item.getProduct().getStockQuantity());
+        assertEquals(9, item1.getProduct().getStockQuantity());
     }
 
     @Test
@@ -206,6 +212,8 @@ public class OrderServiceCheckoutTest {
         Order savedOrder = orderRepository.findById(createdOrder.getId()).orElseThrow();
         assertEquals(OrderStatus.PENDING_PAYMENT, savedOrder.getOrderStatus());
         assertEquals(BigDecimal.valueOf(1499.7), savedOrder.getTotalAmount());
+        assertEquals(8, item.getProduct().getStockQuantity());
+        assertEquals(9, item1.getProduct().getStockQuantity());
     }
 
     @Test

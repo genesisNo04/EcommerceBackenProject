@@ -9,9 +9,7 @@ import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Exception.InvalidOrderItemQuantityException;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderItemTestFactory;
-import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderTestFactory;
-import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
+import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.*;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Service.OrderService;
 import org.junit.jupiter.api.Test;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -67,6 +64,8 @@ public class OrderServiceCreateTest {
         assertEquals(user.getId(), savedOrder.getUser().getId());
         assertEquals(OrderStatus.CREATED, savedOrder.getOrderStatus());
         assertEquals(BigDecimal.valueOf(1499.7), savedOrder.getTotalAmount());
+        assertEquals(10, item.getProduct().getStockQuantity());
+        assertEquals(10, item1.getProduct().getStockQuantity());
     }
 
     @Test
