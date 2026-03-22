@@ -16,6 +16,8 @@ public interface PaymentService {
 
     void deletePayment(Long paymentId, Long userId);
 
+    Payment initiatePayment(Long orderId, Long userId, PaymentType type);
+
     Payment updatePayment(Long paymentId, PaymentRequestDTO paymentRequestDTO, Long userId);
 
     Page<Payment> findPayments(Long userId, Long orderId, PaymentStatus status, PaymentType paymentType, LocalDateTime start, LocalDateTime end, Pageable pageable);

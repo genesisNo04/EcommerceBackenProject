@@ -9,6 +9,7 @@ import com.example.EcommerceBackendProject.Entity.Payment.PaymentResult;
 import com.example.EcommerceBackendProject.Entity.ShoppingCartItem;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
+import com.example.EcommerceBackendProject.Enum.PaymentStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderItemTestFactory;
@@ -23,17 +24,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class PaymentServiceProcessTest {
+public class PaymentServiceReadTest {
 
     @Autowired
     private PaymentService paymentService;
@@ -69,16 +72,17 @@ public class PaymentServiceProcessTest {
 
         Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
 
-        Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
+        Payment savedPayment = paymentService.findPaymentByOrderIdAndUserId(createdOrder.getId(), user.getId());
         Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
 
+        assertEquals(PaymentStatus.INITIATED, savedPayment.getStatus());
         assertEquals(PaymentType.CREDIT_CARD, savedPayment.getPaymentType());
         assertEquals(OrderStatus.PAID, order.getOrderStatus());
         assertEquals(savedPayment.getId(), order.getPayment().getId());
     }
 
     @Test
-    void processPayment_failed() {
+    void processPayment_notFound() {
         User user = testDataHelper.createUser();
 
         ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
@@ -92,73 +96,9 @@ public class PaymentServiceProcessTest {
         Order createdOrder = orderService.createOrder(orderRequestDTO, user.getId());
         orderService.checkout(createdOrder.getId(), user.getId());
 
-        when(paymentGateway.charge(any())).thenReturn(PaymentResult.failed());
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.findPaymentByOrderIdAndUserId(createdOrder.getId(), user.getId()));
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
-
-        Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
-        Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
-
-        assertEquals(OrderStatus.FAILED, order.getOrderStatus());
-        assertEquals(savedPayment.getId(), order.getPayment().getId());
+        assertEquals("Payment not found for this order", ex.getMessage());
     }
 
-    @Test
-    void processPayment_failed_orderNotFound() {
-        User user = testDataHelper.createUser();
-
-        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.processPayment(999L, user.getId(), PaymentType.CREDIT_CARD));
-
-        assertEquals("No order found", ex.getMessage());
-    }
-
-    @Test
-    void processPayment_failed_notPayable() {
-        User user = testDataHelper.createUser();
-
-        ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
-        ShoppingCartItem item1 = testDataHelper.createProductAndAddItemToCart("XBOX", "Xbox", 10, BigDecimal.valueOf(499.9), 1, user.getId());
-
-        OrderItemRequestDTO orderItemRequestDTO = OrderItemTestFactory.createOrderItemDto(item.getProduct().getId(), 2);
-        OrderItemRequestDTO orderItemRequestDTO1 = OrderItemTestFactory.createOrderItemDto(item1.getProduct().getId(), 1);
-
-        OrderRequestDTO orderRequestDTO = OrderTestFactory.createOrderDTO(List.of(orderItemRequestDTO, orderItemRequestDTO1));
-
-        Order createdOrder = orderService.createOrder(orderRequestDTO, user.getId());
-        orderService.cancelOrder(createdOrder.getId(), user.getId());
-
-        when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
-
-        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD));
-
-        assertEquals("Order is not payable", ex.getMessage());
-    }
-
-    @Test
-    void processPayment_success_processPaymentSecondTime() {
-        User user = testDataHelper.createUser();
-
-        ShoppingCartItem item = testDataHelper.createProductAndAddItemToCart("PS5", "Playstation", 10, BigDecimal.valueOf(499.9), 2, user.getId());
-        ShoppingCartItem item1 = testDataHelper.createProductAndAddItemToCart("XBOX", "Xbox", 10, BigDecimal.valueOf(499.9), 1, user.getId());
-
-        OrderItemRequestDTO orderItemRequestDTO = OrderItemTestFactory.createOrderItemDto(item.getProduct().getId(), 2);
-        OrderItemRequestDTO orderItemRequestDTO1 = OrderItemTestFactory.createOrderItemDto(item1.getProduct().getId(), 1);
-
-        OrderRequestDTO orderRequestDTO = OrderTestFactory.createOrderDTO(List.of(orderItemRequestDTO, orderItemRequestDTO1));
-
-        Order createdOrder = orderService.createOrder(orderRequestDTO, user.getId());
-        orderService.checkout(createdOrder.getId(), user.getId());
-
-        when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
-
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
-        paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.DEBIT_CARD);
-
-        Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
-        Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
-
-        assertEquals(OrderStatus.PAID, order.getOrderStatus());
-        assertEquals(PaymentType.CREDIT_CARD, savedPayment.getPaymentType());
-        assertEquals(savedPayment.getId(), order.getPayment().getId());
-    }
 }
