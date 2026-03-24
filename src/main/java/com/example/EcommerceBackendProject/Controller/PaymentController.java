@@ -65,7 +65,7 @@ public class PaymentController {
     @PostMapping("/{orderId}")
     public ResponseEntity<PaymentResponseDTO> processPayment(@PathVariable Long orderId, @RequestParam PaymentType paymentType) {
         Long userId = securityUtils.getCurrentUserId();
-        Payment payment = paymentService.processPayment(orderId, userId, paymentType);
+        Payment payment = paymentService.processPayment(orderId, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(PaymentMapper.toDTO(payment));
     }
 

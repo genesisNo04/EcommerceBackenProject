@@ -70,12 +70,13 @@ public class PaymentServiceReadTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        Payment createdPayment = paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        paymentService.processPayment(createdOrder.getId(), user.getId());
 
         Payment savedPayment = paymentService.findPaymentByOrderIdAndUserId(createdOrder.getId(), user.getId());
         Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
 
-        assertEquals(PaymentStatus.INITIATED, savedPayment.getStatus());
+        assertEquals(PaymentStatus.AUTHORIZED, savedPayment.getStatus());
         assertEquals(PaymentType.CREDIT_CARD, savedPayment.getPaymentType());
         assertEquals(OrderStatus.PAID, order.getOrderStatus());
         assertEquals(savedPayment.getId(), order.getPayment().getId());

@@ -8,7 +8,6 @@ import com.example.EcommerceBackendProject.Entity.Payment.PaymentGateway;
 import com.example.EcommerceBackendProject.Entity.Payment.PaymentResult;
 import com.example.EcommerceBackendProject.Entity.ShoppingCartItem;
 import com.example.EcommerceBackendProject.Entity.User;
-import com.example.EcommerceBackendProject.Enum.OrderStatus;
 import com.example.EcommerceBackendProject.Enum.PaymentType;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.OrderItemTestFactory;
@@ -68,7 +67,8 @@ public class PaymentServiceDeleteTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        Payment createdPayment = paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        paymentService.processPayment(createdOrder.getId(), user.getId());
 
         paymentService.deletePayment(createdOrder.getId(), user.getId());
 

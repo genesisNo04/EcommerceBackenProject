@@ -67,7 +67,8 @@ public class PaymentServiceProcessTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        Payment createdPayment = paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        paymentService.processPayment(createdOrder.getId(), user.getId());
 
         Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
         Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
@@ -94,7 +95,8 @@ public class PaymentServiceProcessTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.failed());
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        Payment createdPayment = paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        paymentService.processPayment(createdOrder.getId(), user.getId());
 
         Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
         Order order = orderService.findOrderById(createdOrder.getId(), user.getId());
@@ -107,7 +109,7 @@ public class PaymentServiceProcessTest {
     void processPayment_failed_orderNotFound() {
         User user = testDataHelper.createUser();
 
-        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.processPayment(999L, user.getId(), PaymentType.CREDIT_CARD));
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.processPayment(999L, user.getId()));
 
         assertEquals("No order found", ex.getMessage());
     }
@@ -129,7 +131,8 @@ public class PaymentServiceProcessTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
 
-        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD));
+        paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> paymentService.processPayment(createdOrder.getId(), user.getId()));
 
         assertEquals("Order is not payable", ex.getMessage());
     }
@@ -151,8 +154,9 @@ public class PaymentServiceProcessTest {
 
         when(paymentGateway.charge(any())).thenReturn(PaymentResult.success("TEST-123"));
 
-        Payment createdPayment = paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
-        paymentService.processPayment(createdOrder.getId(), user.getId(), PaymentType.DEBIT_CARD);
+        Payment createdPayment = paymentService.initiatePayment(createdOrder.getId(), user.getId(), PaymentType.CREDIT_CARD);
+        paymentService.processPayment(createdOrder.getId(), user.getId());
+        paymentService.processPayment(createdOrder.getId(), user.getId());
 
         Payment savedPayment = paymentRepository.findById(createdPayment.getId()).orElseThrow();
         Order order = orderService.findOrderById(createdOrder.getId(), user.getId());

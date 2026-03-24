@@ -22,5 +22,5 @@ public interface PaymentService {
 
     Page<Payment> findPayments(Long userId, Long orderId, PaymentStatus status, PaymentType paymentType, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    Payment processPayment(Long orderId, Long userId, PaymentType paymentType);
+    Payment processPayment(Long orderId, Long userId);
 }
