@@ -117,6 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public Payment initiatePayment(Long orderId, Long userId, PaymentType type) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No order found"));
@@ -127,8 +128,8 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = new Payment(order, type);
         payment.setAmount(order.getTotalAmount());
-
         order.attachPayment(payment);
+
         Payment createdPayment = paymentRepository.save(payment);
         log.info("CREATED payment [paymentId={}] [status={}] for order [orderId={}] user [targetUserId={}]", payment.getId(), payment.getStatus(), orderId, userId);
         return createdPayment;
