@@ -13,7 +13,6 @@ import com.example.EcommerceBackendProject.Service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import org.slf4j.Logger;
@@ -112,12 +111,12 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ResourceAlreadyExistsException("Category already exist with name: " + categoryRequestDTO.getName());
         }
 
+        category.setName(categoryRequestDTO.getName());
+        category.setDescription(categoryRequestDTO.getDescription());
+
         for (Product product : new HashSet<>(category.getProducts())) {
             product.removeCategory(category);
         }
-
-        category.setName(categoryRequestDTO.getName());
-        category.setDescription(categoryRequestDTO.getDescription());
 
         Set<Product> products = categoryRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
                 .orElseThrow(() -> new NoResourceFoundException("No product with id: " + id))).collect(Collectors.toSet());
@@ -126,7 +125,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info("UPDATED category [categoryId={}]", categoryId);
 
-        return category;
+        return categoryRepository.save(category);
     }
 
     @Override
@@ -135,6 +134,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NoResourceFoundException("No Category with id: " + categoryId));
         if (categoryUpdateRequestDTO.getName() != null) {
+            if (!categoryUpdateRequestDTO.getName().equals(category.getName()) && categoryRepository.existsByName(categoryUpdateRequestDTO.getName())) {
+                throw new ResourceAlreadyExistsException("Category already exist with name: " + categoryUpdateRequestDTO.getName());
+            }
             category.setName(categoryUpdateRequestDTO.getName());
         }
 
@@ -143,17 +145,19 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         if (categoryUpdateRequestDTO.getProductIds() != null) {
-            category.getProducts().forEach(product -> product.removeCategory(category));
-            category.getProducts().clear();
+            for (Product product : new HashSet<>(category.getProducts())) {
+                product.removeCategory(category);
+            }
 
             Set<Product> products = categoryUpdateRequestDTO.getProductIds().stream().map(id -> productRepository.findById(id)
                     .orElseThrow(() -> new NoResourceFoundException("No Product with id: " + id))).collect(Collectors.toSet());
+
             products.forEach(p -> p.addCategory(category));
         }
 
         log.info("PATCHED category [categoryId={}]", categoryId);
 
-        return category;
+        return categoryRepository.save(category);
     }
 
     @Override

@@ -118,7 +118,26 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment processPayment(Long orderId, Long userId, PaymentType paymentType) {
+    public Payment initiatePayment(Long orderId, Long userId, PaymentType type) {
+        Order order = orderRepository.findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new NoResourceFoundException("No order found"));
+
+        if (order.getPayment() != null) {
+            throw new IllegalStateException("Payment already exist");
+        }
+
+        Payment payment = new Payment(order, type);
+        payment.setAmount(order.getTotalAmount());
+        order.attachPayment(payment);
+
+        Payment createdPayment = paymentRepository.save(payment);
+        log.info("CREATED payment [paymentId={}] [status={}] for order [orderId={}] user [targetUserId={}]", payment.getId(), payment.getStatus(), orderId, userId);
+        return createdPayment;
+    }
+
+    @Override
+    @Transactional
+    public Payment processPayment(Long orderId, Long userId) {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NoResourceFoundException("No order found"));
 
@@ -132,19 +151,23 @@ public class PaymentServiceImpl implements PaymentService {
 
         PaymentResult result = paymentGateway.charge(new PaymentRequest(order.getId(), order.getTotalAmount()));
 
-        Payment payment;
+        Payment payment = paymentRepository.findByOrderIdAndOrderUserId(orderId, userId).orElseThrow(() -> new NoResourceFoundException("No payment found"));
+
+        if (payment.getStatus() != PaymentStatus.INITIATED) {
+            throw new InvalidPaymentStatusException("Only INITIATED payments can be processed");
+        }
+
+        payment.setProviderReference(result.getReferenceId());
 
         if (result.isSuccess()) {
             order.markPaid();
-            payment = Payment.createPayment(order, paymentType, result.getReferenceId(), PaymentStatus.AUTHORIZED);
-            order.attachPayment(payment);
-            paymentRepository.save(payment);
+            payment.setStatus(PaymentStatus.AUTHORIZED);
         } else {
             order.markFailed();
-            payment = Payment.createPayment(order, paymentType, result.getReferenceId(), PaymentStatus.FAILED);
-            order.attachPayment(payment);
-            paymentRepository.save(payment);
+            payment.setStatus(PaymentStatus.FAILED);
         }
+
+        paymentRepository.save(payment);
 
         log.info("PROCESSED payment [paymentId={}] [status={}] for order [orderId={}] user [targetUserId={}]", payment.getId(), payment.getStatus(), orderId, userId);
 

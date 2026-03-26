@@ -28,9 +28,12 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
         order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
 
         when(orderRepository.findByIdAndUserId(1L, 1L)).thenReturn(Optional.of(order));
+        when(paymentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(paymentGateway.charge(any(PaymentRequest.class))).thenReturn(new PaymentResult(true, "1234"));
 
-        Payment payment = paymentService.processPayment(1L, 1L, PaymentType.CREDIT_CARD);
+        Payment payment = paymentService.initiatePayment(1L, 1L, PaymentType.CREDIT_CARD);
+        when(paymentRepository.findByOrderIdAndOrderUserId(1L, 1L)).thenReturn(Optional.of(payment));
+        paymentService.processPayment(1L, 1L);
 
         assertEquals(PaymentStatus.AUTHORIZED, payment.getStatus());
         assertEquals(PaymentType.CREDIT_CARD, payment.getPaymentType());
@@ -46,8 +49,8 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
         assertEquals(1L, request.getOrderId());
         assertEquals(order.getTotalAmount(), request.getAmount());
 
-        verify(orderRepository).findByIdAndUserId(1L, 1L);
-        verify(paymentRepository).save(any(Payment.class));
+        verify(orderRepository, times(2)).findByIdAndUserId(1L, 1L);
+        verify(paymentRepository, times(2)).save(any(Payment.class));
         verifyNoMoreInteractions(orderRepository, paymentGateway, paymentRepository);
     }
 
@@ -59,9 +62,12 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
         order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
 
         when(orderRepository.findByIdAndUserId(1L, 1L)).thenReturn(Optional.of(order));
+        when(paymentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(paymentGateway.charge(any(PaymentRequest.class))).thenReturn(new PaymentResult(false, "1234"));
 
-        Payment payment = paymentService.processPayment(1L, 1L, PaymentType.CREDIT_CARD);
+        Payment payment = paymentService.initiatePayment(1L, 1L, PaymentType.CREDIT_CARD);
+        when(paymentRepository.findByOrderIdAndOrderUserId(1L, 1L)).thenReturn(Optional.of(payment));
+        paymentService.processPayment(1L, 1L);
 
         assertEquals(PaymentStatus.FAILED, payment.getStatus());
         assertEquals(PaymentType.CREDIT_CARD, payment.getPaymentType());
@@ -77,14 +83,14 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
         assertEquals(1L, request.getOrderId());
         assertEquals(order.getTotalAmount(), request.getAmount());
 
-        verify(orderRepository).findByIdAndUserId(1L, 1L);
-        verify(paymentRepository).save(any(Payment.class));
+        verify(orderRepository, times(2)).findByIdAndUserId(1L, 1L);
+        verify(paymentRepository, times(2)).save(any(Payment.class));
         verifyNoMoreInteractions(orderRepository, paymentGateway, paymentRepository);
     }
 
     @Test
     void processPayment_orderNotFound() {
-        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.processPayment(1L, 1L, PaymentType.CREDIT_CARD));
+        NoResourceFoundException ex = assertThrows(NoResourceFoundException.class, () -> paymentService.processPayment(1L, 1L));
 
         assertEquals("No order found", ex.getMessage());
 
@@ -99,19 +105,21 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
         Order order = new Order();
         order.setId(1L);
         order.setTotalAmount(BigDecimal.valueOf(1000));
-        order.setOrderStatus(OrderStatus.PAID);
-
-        Payment initialPayment = createTestPayment(order, PaymentType.CREDIT_CARD, PaymentStatus.INITIATED, "1234");
-        order.setPayment(initialPayment);
+        order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
 
         when(orderRepository.findByIdAndUserId(1L, 1L)).thenReturn(Optional.of(order));
+        when(paymentRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(paymentGateway.charge(any(PaymentRequest.class))).thenReturn(new PaymentResult(true, "1234"));
 
-        Payment payment = paymentService.processPayment(1L, 1L, PaymentType.CREDIT_CARD);
+        Payment payment = paymentService.initiatePayment(1L, 1L, PaymentType.CREDIT_CARD);
+        when(paymentRepository.findByOrderIdAndOrderUserId(1L, 1L)).thenReturn(Optional.of(payment));
+        paymentService.processPayment(1L, 1L);
+        Payment processedPayment = paymentService.processPayment(1L, 1L);
 
-        assertSame(initialPayment, payment);
-        verify(orderRepository).findByIdAndUserId(1L, 1L);
-        verify(paymentRepository, never()).save(any(Payment.class));
-        verify(paymentGateway, never()).charge(any(PaymentRequest.class));
+        assertSame(payment, processedPayment);
+        verify(orderRepository, times(3)).findByIdAndUserId(1L, 1L);
+        verify(paymentRepository, times(2)).save(any(Payment.class));
+        verify(paymentGateway).charge(any(PaymentRequest.class));
         verifyNoMoreInteractions(orderRepository, paymentGateway, paymentRepository);
     }
 
@@ -127,7 +135,7 @@ public class PaymentServiceProcessTest extends  BasePaymentServiceTest {
 
         when(orderRepository.findByIdAndUserId(1L, 1L)).thenReturn(Optional.of(order));
 
-        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> paymentService.processPayment(1L, 1L, PaymentType.CREDIT_CARD));
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> paymentService.processPayment(1L, 1L));
 
         assertEquals("Order is not payable", ex.getMessage());
 

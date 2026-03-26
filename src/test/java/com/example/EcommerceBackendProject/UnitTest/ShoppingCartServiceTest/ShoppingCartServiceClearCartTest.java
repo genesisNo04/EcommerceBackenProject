@@ -8,7 +8,6 @@ import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.ProductTestUtils.createTestProduct;

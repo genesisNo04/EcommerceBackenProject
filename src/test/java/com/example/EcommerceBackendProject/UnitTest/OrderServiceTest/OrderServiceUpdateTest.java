@@ -20,7 +20,6 @@ import java.util.Set;
 
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createOrderItemDto;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.OrderItemsTestUtils.createTestOrderItem;
-import static com.example.EcommerceBackendProject.UnitTest.Utilities.PaymentTestUtils.createTestPayment;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.ProductTestUtils.createTestProduct;
 import static com.example.EcommerceBackendProject.UnitTest.Utilities.UserTestUtils.createTestUser;
 import static org.junit.jupiter.api.Assertions.*;

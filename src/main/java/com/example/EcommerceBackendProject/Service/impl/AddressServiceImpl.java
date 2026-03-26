@@ -5,19 +5,15 @@ import com.example.EcommerceBackendProject.DTO.AddressUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
 import com.example.EcommerceBackendProject.Mapper.AddressMapper;
 import com.example.EcommerceBackendProject.Repository.AddressRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;
-import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.AddressService;
-import com.example.EcommerceBackendProject.Utilities.LoggingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -87,7 +83,7 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new NoResourceFoundException("No user found with id: " + userId));
 
         Address updatedAddress = addressRepository.findByUserIdAndId(userId, addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: "+ addressId));
 
         log.info("UPDATED address [addressId={}] for [targetUserId={}]", updatedAddress.getId(), userId);
 
@@ -166,7 +162,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address updateAnyAddress(Long addressId, AddressRequestDTO addressRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: " + addressId));
 
         log.info("UPDATED address for [addressId={}] ", addressId);
 
@@ -177,7 +173,7 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public Address patchAnyAddress(Long addressId, AddressUpdateRequestDTO addressUpdateRequestDTO) {
         Address updatedAddress = addressRepository.findById(addressId)
-                .orElseThrow(() -> new NoResourceFoundException("No address with this id: "+ addressId));
+                .orElseThrow(() -> new NoResourceFoundException("No address found with id: " + addressId));
 
         log.info("PATCHED address for [addressId={}]", addressId);
 
@@ -219,7 +215,7 @@ public class AddressServiceImpl implements AddressService {
         address.setZipCode(addressRequestDTO.getZipCode());
 
         address.setIsDefault(addressRequestDTO.getIsDefault());
-        return address;
+        return addressRepository.save(address);
     }
 
     private Address patchAddressInternally(Address address, AddressUpdateRequestDTO addressUpdateRequestDTO) {
@@ -254,7 +250,7 @@ public class AddressServiceImpl implements AddressService {
             address.setZipCode(addressUpdateRequestDTO.getZipCode());
         }
 
-        return address;
+        return addressRepository.save(address);
     }
 
     private void deleteAddressInternally(Address address) {

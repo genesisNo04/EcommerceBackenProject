@@ -82,7 +82,20 @@ public class Product {
     }
 
     public void removeCategory(Category category) {
-        this.categories.remove(category);
+        boolean removed = this.categories.remove(category);
         category.getProducts().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return id != null && id.equals(product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

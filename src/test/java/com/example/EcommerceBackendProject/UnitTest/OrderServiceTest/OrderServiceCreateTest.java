@@ -2,7 +2,6 @@ package com.example.EcommerceBackendProject.UnitTest.OrderServiceTest;
 
 import com.example.EcommerceBackendProject.DTO.OrderRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Order;
-import com.example.EcommerceBackendProject.Entity.OrderItem;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Entity.User;
 import com.example.EcommerceBackendProject.Enum.OrderStatus;
