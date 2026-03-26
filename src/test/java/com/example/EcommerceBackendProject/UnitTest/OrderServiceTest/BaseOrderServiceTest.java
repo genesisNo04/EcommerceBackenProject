@@ -1,6 +1,5 @@
 package com.example.EcommerceBackendProject.UnitTest.OrderServiceTest;
 
-import com.example.EcommerceBackendProject.Entity.ShoppingCart;
 import com.example.EcommerceBackendProject.Repository.OrderRepository;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
 import com.example.EcommerceBackendProject.Repository.UserRepository;

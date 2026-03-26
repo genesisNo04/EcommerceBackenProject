@@ -1,6 +1,5 @@
 package com.example.EcommerceBackendProject.UnitTest.AuthServiceTest;
 
-import com.example.EcommerceBackendProject.DTO.LoginRequestDTO;
 import com.example.EcommerceBackendProject.DTO.LoginResponseDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.Entity.CustomUserDetails;

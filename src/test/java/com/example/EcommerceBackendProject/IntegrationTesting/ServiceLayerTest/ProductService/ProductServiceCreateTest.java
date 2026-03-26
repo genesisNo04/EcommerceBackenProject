@@ -1,11 +1,9 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.ProductService;
 
-import com.example.EcommerceBackendProject.DTO.CategoryRequestDTO;
 import com.example.EcommerceBackendProject.DTO.ProductRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Category;
 import com.example.EcommerceBackendProject.Entity.Product;
 import com.example.EcommerceBackendProject.Exception.NoResourceFoundException;
-import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.CategoryTestFactory;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.ProductTestFactory;
 import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.TestDataHelper;
 import com.example.EcommerceBackendProject.Repository.ProductRepository;
@@ -19,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @ActiveProfiles("test")
