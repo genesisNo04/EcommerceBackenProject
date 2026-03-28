@@ -4,15 +4,18 @@ import com.example.EcommerceBackendProject.DTO.ApiErrorResponseDTO;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.aspectj.weaver.tools.ISupportsMessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.security.access.AccessDeniedException;
@@ -304,7 +307,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponseDTO> handleException(Exception ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
 
         log.error("ERROR request [statusCode={}] at [{}]. Reason: {}",
                 status.value(),
@@ -410,4 +413,22 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 LocalDateTime.now()));
     }
+
+//    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+//    public ResponseEntity<ApiErrorResponseDTO> handleUnsuportedMediaTypeError(DataIntegrityViolationException ex, HttpServletRequest request) {
+//        HttpStatus status = HttpStatus.CONFLICT;
+//
+//        log.error("CONFLICT request [statusCode={}] at [{}]. Reason: {}",
+//                status.value(),
+//                request.getRequestURI(),
+//                ex.getMessage(),
+//                ex);
+//
+//        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+//                status.value(),
+//                status.name(),
+//                ex.getMessage(),
+//                request.getRequestURI(),
+//                LocalDateTime.now()));
+//    }
 }
