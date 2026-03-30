@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -414,21 +415,39 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()));
     }
 
-//    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-//    public ResponseEntity<ApiErrorResponseDTO> handleUnsuportedMediaTypeError(DataIntegrityViolationException ex, HttpServletRequest request) {
-//        HttpStatus status = HttpStatus.CONFLICT;
-//
-//        log.error("CONFLICT request [statusCode={}] at [{}]. Reason: {}",
-//                status.value(),
-//                request.getRequestURI(),
-//                ex.getMessage(),
-//                ex);
-//
-//        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
-//                status.value(),
-//                status.name(),
-//                ex.getMessage(),
-//                request.getRequestURI(),
-//                LocalDateTime.now()));
-//    }
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleUnsupportedMediaTypeError(HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+
+        log.error("UNSUPPORTED MEDIA request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponseDTO> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+        log.error("UNSUPPORTED MEDIA request [statusCode={}] at [{}]. Reason: {}",
+                status.value(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
+        return ResponseEntity.status(status).body(new ApiErrorResponseDTO(
+                status.value(),
+                status.name(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                LocalDateTime.now()));
+    }
 }
