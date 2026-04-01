@@ -7,14 +7,12 @@ import com.example.EcommerceBackendProject.Exception.UserAccessDeniedException;
 import com.example.EcommerceBackendProject.Security.JwtService;
 import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -38,7 +36,7 @@ public class UserControllerSearchTest {
 
     @MockitoBean
     private SecurityUtils securityUtils;
-    
+
     private static final String USER_URL = "/v1/users";
     User user;
 
