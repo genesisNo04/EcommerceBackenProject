@@ -11,9 +11,7 @@ import com.example.EcommerceBackendProject.IntegrationTesting.Utilities.UserTest
 import com.example.EcommerceBackendProject.Security.JwtService;
 import com.example.EcommerceBackendProject.Security.SecurityUtils;
 import com.example.EcommerceBackendProject.Service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +22,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
-
-
-
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -59,6 +53,7 @@ public class UserControllerUpdateTest {
         User updatedUser = new User(null, "+1234567891", "lastupdate", "userupdate",
                 "encodedPassword", "user1update@gmail.com", "testuserupdate");
         updatedUser.setId(1L);
+        updatedUser.setAddresses(List.of());
 
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(true);
         AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress(false);
@@ -75,7 +70,7 @@ public class UserControllerUpdateTest {
         ArgumentCaptor<UserUpdateRequestDTO> captor = ArgumentCaptor.forClass(UserUpdateRequestDTO.class);
 
         when(securityUtils.getCurrentUserId()).thenReturn(1L);
-        when(userService.updateUser(1L, userUpdateRequestDTO)).thenReturn(updatedUser);
+        when(userService.updateUser(eq(1L), any())).thenReturn(updatedUser);
 
         mockMvc.perform(put(USER_URL)
                 .contentType(mediaType)
@@ -89,12 +84,47 @@ public class UserControllerUpdateTest {
                 .andExpect(jsonPath("$.address").isArray())
                 .andExpect(jsonPath("$.phoneNumber").value("+1234567891"));
 
-        UserUpdateRequestDTO captured = captor.capture();
+        verify(userService).updateUser(eq(1L), captor.capture());
+        UserUpdateRequestDTO captured = captor.getValue();
         assertEquals("testuserupdate", captured.getUsername());
         assertEquals("userupdate", captured.getFirstName());
         assertEquals("lastupdate", captured.getLastName());
         assertEquals("user1update@gmail.com", captured.getEmail());
         assertEquals("+1234567891", captured.getPhoneNumber());
         assertEquals(2, captured.getAddress().size());
+    }
+
+    @Test
+    void updateUser_failed_nullUsername() throws Exception {
+        User updatedUser = new User(null, "+1234567891", "lastupdate", "userupdate",
+                "encodedPassword", "user1update@gmail.com", "testuserupdate");
+        updatedUser.setId(1L);
+        updatedUser.setAddresses(List.of());
+
+        AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(true);
+        AddressRequestDTO addressRequestDTO1 = AddressTestFactory.createAddress(false);
+
+        UserUpdateRequestDTO userUpdateRequestDTO =
+                UserTestFactory.createUpdateDTOTestUser(
+                        null,
+                        "userupdate",
+                        "lastupdate",
+                        "user1update@gmail.com",
+                        "+1234567891",
+                        List.of(addressRequestDTO, addressRequestDTO1)
+                );
+
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
+        when(userService.updateUser(eq(1L), any())).thenReturn(updatedUser);
+
+        mockMvc.perform(put(USER_URL)
+                        .contentType(mediaType)
+                        .content(mapper.writeValueAsString(userUpdateRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.path").value(USER_URL))
+                .andExpect(jsonPath("$.timestamp").exists());
     }
 }

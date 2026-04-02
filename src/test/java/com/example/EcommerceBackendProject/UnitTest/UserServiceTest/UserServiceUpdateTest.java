@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.UnitTest.UserServiceTest;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.UserPatchRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.Address;
 import com.example.EcommerceBackendProject.Entity.User;
@@ -144,7 +145,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
         assertEquals(2, user.getAddresses().size(), "Address size not match");
         assertEquals("+12345678981", user.getPhoneNumber(), "Phone Number not match");
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 "testuserupdate",
                 null,
                 "test123update",
@@ -187,7 +188,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
         assertEquals(2, user.getAddresses().size(), "Address size not match");
         assertEquals("+12345678981", user.getPhoneNumber(), "Phone Number not match");
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 "testuserupdate",
                 "testuserupdate@gmail.com",
                 "test123update",
@@ -230,7 +231,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
         assertEquals(2, user.getAddresses().size(), "Address size not match");
         assertEquals("+12345678981", user.getPhoneNumber(), "Phone Number not match");
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 null,
                 null,
                 "test123update",
@@ -259,7 +260,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
     @Test
     void patchCustomerUser_userNotFound() {
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 "testuserupdate",
                 null,
                 "test123update",
@@ -281,7 +282,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
     void patchCustomerUser_duplicateUsername() {
         User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", List.of());
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 "testuserupdate",
                 null,
                 "test123update",
@@ -305,7 +306,7 @@ public class UserServiceUpdateTest extends BaseUserServiceTest{
     void patchCustomerUser_duplicateEmail() {
         User user = createTestUser("testuser", "test123", "testuser@gmail.com", "test", "user", "+12345678981", List.of());
 
-        UserUpdateRequestDTO dto = createUserUpdateDTO(
+        UserPatchRequestDTO dto = createUserPatchDTO(
                 "testuserupdate",
                 "test@gmail.com",
                 "test123update",

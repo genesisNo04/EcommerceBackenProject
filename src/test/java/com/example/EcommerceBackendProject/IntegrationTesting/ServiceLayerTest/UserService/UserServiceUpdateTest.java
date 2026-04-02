@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.ServiceLayerTest.UserService;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.UserPatchRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
@@ -138,9 +139,9 @@ public class UserServiceUpdateTest {
         UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", "+12345687465", addresses);
         User user = userService.createCustomerUser(userRequestDTO);
 
-        UserUpdateRequestDTO userUpdateRequestDTO = UserTestFactory.createUpdateDTOTestUser("testuser7", "test7", "last7", "testuser7@gmail.com", "+12345687465", addresses);
+        UserPatchRequestDTO userPatchRequestDTO = UserTestFactory.createPatchDTOTestUser("testuser7", "test7", "last7", "testuser7@gmail.com", "+12345687465", addresses);
 
-        User updateUser = userService.patchUser(user.getId(), userUpdateRequestDTO);
+        User updateUser = userService.patchUser(user.getId(), userPatchRequestDTO);
 
         assertEquals("testuser7", updateUser.getUsername(), "Username does not match");
         assertEquals("testuser7@gmail.com", updateUser.getEmail(), "Email does not match");
@@ -171,9 +172,9 @@ public class UserServiceUpdateTest {
         UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", "+12345678981", addresses);
         User user = userService.createCustomerUser(userRequestDTO);
 
-        UserUpdateRequestDTO userUpdateRequestDTO = UserTestFactory.createUpdateDTOTestUser("testuser7", null, "last7", "testuser8@gmail.com", null, addresses);
+        UserPatchRequestDTO userPatchRequestDTO = UserTestFactory.createPatchDTOTestUser("testuser7", null, "last7", "testuser8@gmail.com", null, addresses);
 
-        User updateUser = userService.patchUser(user.getId(), userUpdateRequestDTO);
+        User updateUser = userService.patchUser(user.getId(), userPatchRequestDTO);
 
         assertEquals("testuser7", updateUser.getUsername(), "Username does not match");
         assertEquals("testuser8@gmail.com", updateUser.getEmail(), "Email does not match");
@@ -204,9 +205,9 @@ public class UserServiceUpdateTest {
         UserRequestDTO userRequestDTO = UserTestFactory.createTestUser("testuser1", "test123", "testuser1@gmail.com", "user", "test", "+12345678981", addresses);
         User user = userService.createCustomerUser(userRequestDTO);
 
-        UserUpdateRequestDTO userUpdateRequestDTO = UserTestFactory.createUpdateDTOTestUser(null, null, null, null, null, null);
+        UserPatchRequestDTO userPatchRequestDTO = UserTestFactory.createPatchDTOTestUser(null, null, null, null, null, null);
 
-        User updateUser = userService.patchUser(user.getId(), userUpdateRequestDTO);
+        User updateUser = userService.patchUser(user.getId(), userPatchRequestDTO);
 
         assertEquals("testuser1", updateUser.getUsername(), "Username does not match");
         assertEquals("testuser1@gmail.com", updateUser.getEmail(), "Email does not match");
@@ -240,10 +241,10 @@ public class UserServiceUpdateTest {
         UserRequestDTO userRequestDTO1 = UserTestFactory.createTestUser("testuser7", "test123", "testuser7@gmail.com", "user", "test", "+12345678981", addresses);
         User user1 = userService.createCustomerUser(userRequestDTO1);
 
-        UserUpdateRequestDTO userUpdateRequestDTO = UserTestFactory.createUpdateDTOTestUser("testuser7", "test7", "last7", "testuser8@gmail.com", "+12345687465", addresses);
+        UserPatchRequestDTO userPatchRequestDTO = UserTestFactory.createPatchDTOTestUser("testuser7", "test7", "last7", "testuser8@gmail.com", "+12345687465", addresses);
 
         ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class,
-                () -> userService.patchUser(user.getId(), userUpdateRequestDTO));
+                () -> userService.patchUser(user.getId(), userPatchRequestDTO));
 
         assertEquals("Username is already in use", ex.getMessage());
 
@@ -271,10 +272,10 @@ public class UserServiceUpdateTest {
         UserRequestDTO userRequestDTO1 = UserTestFactory.createTestUser("testuser7", "test123", "testuser7@gmail.com", "user", "test", "+12345678981", addresses);
         User user1 = userService.createCustomerUser(userRequestDTO1);
 
-        UserUpdateRequestDTO userUpdateRequestDTO = UserTestFactory.createUpdateDTOTestUser("testuser8", "test7", "last7", "testuser7@gmail.com", "+12345687465", addresses);
+        UserPatchRequestDTO userPatchRequestDTO = UserTestFactory.createPatchDTOTestUser("testuser8", "test7", "last7", "testuser7@gmail.com", "+12345687465", addresses);
 
         ResourceAlreadyExistsException ex = assertThrows(ResourceAlreadyExistsException.class,
-                () -> userService.patchUser(user.getId(), userUpdateRequestDTO));
+                () -> userService.patchUser(user.getId(), userPatchRequestDTO));
 
         assertEquals("Email is already in use", ex.getMessage());
 

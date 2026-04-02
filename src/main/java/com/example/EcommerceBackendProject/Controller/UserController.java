@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.Controller;
 
 import com.example.EcommerceBackendProject.DTO.ChangePasswordDTO;
+import com.example.EcommerceBackendProject.DTO.UserPatchRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserResponseDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
@@ -33,9 +34,9 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<UserResponseDTO> partiallyUpdateUser(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+    public ResponseEntity<UserResponseDTO> partiallyUpdateUser(@Valid @RequestBody UserPatchRequestDTO userPatchRequestDTO) {
         Long id = securityUtils.getCurrentUserId();
-        User user = userService.patchUser(id, userUpdateRequestDTO);
+        User user = userService.patchUser(id, userPatchRequestDTO);
         UserResponseDTO userResponseDTO = UserMapper.toDTO(user);
 
         return ResponseEntity.ok(userResponseDTO);

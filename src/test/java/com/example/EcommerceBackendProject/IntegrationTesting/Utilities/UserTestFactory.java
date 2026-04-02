@@ -1,6 +1,7 @@
 package com.example.EcommerceBackendProject.IntegrationTesting.Utilities;
 
 import com.example.EcommerceBackendProject.DTO.AddressRequestDTO;
+import com.example.EcommerceBackendProject.DTO.UserPatchRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.User;
@@ -12,6 +13,17 @@ public final class UserTestFactory {
     public static UserUpdateRequestDTO createUpdateDTOTestUser(String username, String firstName, String lastName,
                                                          String email, String phoneNumber, List<AddressRequestDTO> addresses) {
         return new UserUpdateRequestDTO(
+                username,
+                firstName,
+                lastName,
+                addresses,
+                phoneNumber,
+                email);
+    }
+
+    public static UserPatchRequestDTO createPatchDTOTestUser(String username, String firstName, String lastName,
+                                                             String email, String phoneNumber, List<AddressRequestDTO> addresses) {
+        return new UserPatchRequestDTO(
                 username,
                 firstName,
                 lastName,

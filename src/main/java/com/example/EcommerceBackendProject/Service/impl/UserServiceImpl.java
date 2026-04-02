@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.Service.impl;
 
+import com.example.EcommerceBackendProject.DTO.UserPatchRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserRequestDTO;
 import com.example.EcommerceBackendProject.DTO.UserUpdateRequestDTO;
 import com.example.EcommerceBackendProject.Entity.ShoppingCart;
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User patchUser(Long userId, UserUpdateRequestDTO userUpdateRequestDTO) {
+    public User patchUser(Long userId, UserPatchRequestDTO userUpdateRequestDTO) {
         User oldUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResourceFoundException("User not found"));
 
