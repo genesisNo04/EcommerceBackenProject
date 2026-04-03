@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.DTO;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,19 +16,20 @@ import java.util.List;
 @AllArgsConstructor
 public class UserUpdateRequestDTO {
 
-    @NotNull
+    @NotBlank
     private String username;
 
-    @NotNull
+    @NotBlank
     private String firstName;
 
-    @NotNull
+    @NotBlank
     private String lastName;
 
     @NotEmpty
+    @Valid
     private List<AddressRequestDTO> address;
 
-    @NotNull
+    @NotBlank
     private String phoneNumber;
 
     @Email
