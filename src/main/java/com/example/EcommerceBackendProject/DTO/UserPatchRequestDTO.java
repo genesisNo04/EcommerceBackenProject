@@ -1,5 +1,6 @@
 package com.example.EcommerceBackendProject.DTO;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class UserPatchRequestDTO {
 
     private String lastName;
 
+    @Valid
     private List<AddressRequestDTO> address;
 
     private String phoneNumber;
