@@ -22,13 +22,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AddressController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AddressControllerCreateTest {
+public class AddressControllerUpdateTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,12 +45,12 @@ public class AddressControllerCreateTest {
     @MockitoBean
     private SecurityUtils securityUtils;
 
-    private static final String ADDRESS_URL = "/v1/users/addresses";
+    private static final String ADDRESS_URL = "/v1/users/addresses/1";
     private static final MediaType mediaType = MediaType.APPLICATION_JSON;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    void createAddress_success() throws Exception {
+    void updateAddress_success() throws Exception {
         User user = new User(null, "+1234567891", "last", "user",
                 "encodedPassword", "user1@gmail.com", "testuser");
         user.setId(1L);
@@ -58,12 +61,12 @@ public class AddressControllerCreateTest {
         ArgumentCaptor<AddressRequestDTO> captor = ArgumentCaptor.forClass(AddressRequestDTO.class);
 
         when(securityUtils.getCurrentUserId()).thenReturn(1L);
-        when(addressService.createAddress(any(AddressRequestDTO.class), eq(1L))).thenReturn(address);
+        when(addressService.updateAddress(eq(1L), any(AddressRequestDTO.class), eq(1L))).thenReturn(address);
 
-        mockMvc.perform(post(ADDRESS_URL)
-                .contentType(mediaType)
-                .content(mapper.writeValueAsString(addressRequestDTO)))
-                .andExpect(status().isCreated())
+        mockMvc.perform(put(ADDRESS_URL)
+                        .contentType(mediaType)
+                        .content(mapper.writeValueAsString(addressRequestDTO)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.userId").value(1L))
                 .andExpect(jsonPath("$.street").value("123 Main st"))
@@ -74,15 +77,22 @@ public class AddressControllerCreateTest {
                 .andExpect(jsonPath("$.isDefault").value(true));
 
         verify(securityUtils).getCurrentUserId();
-        verify(addressService).createAddress(captor.capture(), eq(1L));
+        verify(addressService).updateAddress(eq(1L), captor.capture(), eq(1L));
+        AddressRequestDTO captured = captor.getValue();
+        assertEquals("123 Main st", captured.getStreet());
+        assertEquals("city", captured.getCity());
+        assertEquals("state", captured.getState());
+        assertEquals("country", captured.getCountry());
+        assertEquals("12345", captured.getZipCode());
+        assertTrue(captured.getIsDefault());
         verifyNoMoreInteractions(addressService);
     }
 
     @Test
-    void createAddress_failed_emptyStreet() throws Exception {
+    void updateAddress_failed_emptyStreet() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("", "city", "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -96,10 +106,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_nullStreet() throws Exception {
+    void updateAddress_failed_nullStreet() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(null, "city", "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -113,10 +123,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_emptyCity() throws Exception {
+    void updateAddress_failed_emptyCity() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "", "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -130,10 +140,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_nullCity() throws Exception {
+    void updateAddress_failed_nullCity() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", null, "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -147,10 +157,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_emptyState() throws Exception {
+    void updateAddress_failed_emptyState() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -164,10 +174,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_nullState() throws Exception {
+    void updateAddress_failed_nullState() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", null, "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -181,10 +191,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_emptyCountry() throws Exception {
+    void updateAddress_failed_emptyCountry() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -198,10 +208,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_nullCountry() throws Exception {
+    void updateAddress_failed_nullCountry() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", null, "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -215,10 +225,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_emptyZipCode() throws Exception {
+    void updateAddress_failed_emptyZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -232,10 +242,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_nullZipCode() throws Exception {
+    void updateAddress_failed_nullZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", null, true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -249,10 +259,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_malformedZipCode() throws Exception {
+    void updateAddress_failed_malformedZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12asd512", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isBadRequest())
@@ -266,10 +276,10 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_unsupportedMediaType() throws Exception {
+    void updateAddress_failed_unsupportedMediaType() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(MediaType.TEXT_PLAIN)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isUnsupportedMediaType())
@@ -283,8 +293,8 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_invalidJson() throws Exception {
-        mockMvc.perform(post(ADDRESS_URL)
+    void updateAddress_failed_invalidJson() throws Exception {
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content("{**JSON**}"))
                 .andExpect(status().isBadRequest())
@@ -298,8 +308,8 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_emptyBody() throws Exception {
-        mockMvc.perform(post(ADDRESS_URL)
+    void updateAddress_failed_emptyBody() throws Exception {
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(""))
                 .andExpect(status().isBadRequest())
@@ -313,11 +323,11 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_userNotAuthenticated() throws Exception {
+    void updateAddress_failed_userNotAuthenticated() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
         when(securityUtils.getCurrentUserId()).thenThrow(new UserAccessDeniedException("No authentication"));
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isForbidden())
@@ -332,12 +342,12 @@ public class AddressControllerCreateTest {
     }
 
     @Test
-    void createAddress_failed_userNotFound() throws Exception {
+    void updateAddress_failed_userNotFound() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
         when(securityUtils.getCurrentUserId()).thenReturn(1L);
-        when(addressService.createAddress(any(), eq(1L))).thenThrow(new NoResourceFoundException("User not found"));
+        when(addressService.updateAddress(eq(1L), any(), eq(1L))).thenThrow(new NoResourceFoundException("User not found"));
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
                 .andExpect(status().isNotFound())
@@ -348,6 +358,6 @@ public class AddressControllerCreateTest {
                 .andExpect(jsonPath("$.message").value("User not found"));
 
         verify(securityUtils).getCurrentUserId();
-        verify(addressService).createAddress(any(), eq(1L));
+        verify(addressService).updateAddress(eq(1L), any(), eq(1L));
     }
 }
