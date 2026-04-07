@@ -22,8 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -87,6 +86,45 @@ public class AddressControllerPatchTest {
         assertEquals("country", captured.getCountry());
         assertEquals("12345", captured.getZipCode());
         assertTrue(captured.getIsDefault());
+        verifyNoMoreInteractions(addressService);
+    }
+
+    @Test
+    void patchAddress_success_partiallyUpdate() throws Exception {
+        User user = new User(null, "+1234567891", "last", "user",
+                "encodedPassword", "user1@gmail.com", "testuser");
+        user.setId(1L);
+        Address address = new Address(user, "123 Main st", "cityupdate", "state", "countryupdate", "54321", true);
+        address.setId(1L);
+        AddressUpdateRequestDTO addressRequestDTO = AddressTestFactory.createUpdateAddress(null, "cityupdate", null, "countryupdate", "54321", null);
+
+        ArgumentCaptor<AddressUpdateRequestDTO> captor = ArgumentCaptor.forClass(AddressUpdateRequestDTO.class);
+
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
+        when(addressService.patchAddress(eq(1L), any(AddressUpdateRequestDTO.class), eq(1L))).thenReturn(address);
+
+        mockMvc.perform(patch(ADDRESS_URL)
+                        .contentType(mediaType)
+                        .content(mapper.writeValueAsString(addressRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.userId").value(1L))
+                .andExpect(jsonPath("$.street").value("123 Main st"))
+                .andExpect(jsonPath("$.city").value("cityupdate"))
+                .andExpect(jsonPath("$.state").value("state"))
+                .andExpect(jsonPath("$.country").value("countryupdate"))
+                .andExpect(jsonPath("$.zipCode").value("54321"))
+                .andExpect(jsonPath("$.isDefault").value(true));
+
+        verify(securityUtils).getCurrentUserId();
+        verify(addressService).patchAddress(eq(1L), captor.capture(), eq(1L));
+        AddressUpdateRequestDTO captured = captor.getValue();
+        assertNull(captured.getStreet());
+        assertEquals("cityupdate", captured.getCity());
+        assertNull(captured.getState());
+        assertEquals("countryupdate", captured.getCountry());
+        assertEquals("54321", captured.getZipCode());
+        assertNull(captured.getIsDefault());
         verifyNoMoreInteractions(addressService);
     }
 
@@ -191,5 +229,6 @@ public class AddressControllerPatchTest {
 
         verify(securityUtils).getCurrentUserId();
         verify(addressService).patchAddress(eq(1L), any(), eq(1L));
+        verifyNoMoreInteractions(addressService);
     }
 }
