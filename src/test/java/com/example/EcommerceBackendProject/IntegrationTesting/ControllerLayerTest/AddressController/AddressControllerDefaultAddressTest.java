@@ -66,7 +66,6 @@ public class AddressControllerDefaultAddressTest {
 
     @Test
     void getDefaultAddress_failed_userNotAuthenticated() throws Exception {
-
         when(securityUtils.getCurrentUserId()).thenThrow(new UserAccessDeniedException("Not authenticated"));
 
         mockMvc.perform(get(ADDRESS_URL))
@@ -113,5 +112,67 @@ public class AddressControllerDefaultAddressTest {
 
         verify(securityUtils).getCurrentUserId();
         verify(addressService).getDefaultAddress(eq(1L));
+    }
+
+    @Test
+    void setDefaultAddress_success() throws Exception {
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
+
+        mockMvc.perform(patch("/v1/users/addresses/{addressId}/default", 2L))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+
+        verify(securityUtils).getCurrentUserId();
+        verify(addressService).setDefaultAddress(anyLong(), anyLong());
+    }
+
+    @Test
+    void setDefaultAddress_failed_userNotAuthenticated() throws Exception {
+        when(securityUtils.getCurrentUserId()).thenThrow(new UserAccessDeniedException("Not authenticated"));
+
+        mockMvc.perform(patch("/v1/users/addresses/{addressId}/default", 2L))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
+                .andExpect(jsonPath("$.error").value("FORBIDDEN"))
+                .andExpect(jsonPath("$.message").value("Not authenticated"))
+                .andExpect(jsonPath("$.path").value("/v1/users/addresses/2/default"))
+                .andExpect(jsonPath("$.timestamp").exists());
+
+        verify(securityUtils).getCurrentUserId();
+        verifyNoInteractions(addressService);
+    }
+
+    @Test
+    void setDefaultAddress_failed_userNotFound() throws Exception {
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
+        doThrow(new NoResourceFoundException("User not found")).when(addressService).setDefaultAddress(anyLong(), anyLong());
+
+        mockMvc.perform(patch("/v1/users/addresses/{addressId}/default", 2L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.path").value("/v1/users/addresses/2/default"))
+                .andExpect(jsonPath("$.timestamp").exists());
+
+        verify(securityUtils).getCurrentUserId();
+        verify(addressService).setDefaultAddress(anyLong(), anyLong());
+    }
+
+    @Test
+    void setDefaultAddress_failed_addressNotFound() throws Exception {
+        when(securityUtils.getCurrentUserId()).thenReturn(1L);
+        doThrow(new NoResourceFoundException("Address not found")).when(addressService).setDefaultAddress(anyLong(), anyLong());
+
+        mockMvc.perform(patch("/v1/users/addresses/{addressId}/default", 2L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("Address not found"))
+                .andExpect(jsonPath("$.path").value("/v1/users/addresses/2/default"))
+                .andExpect(jsonPath("$.timestamp").exists());
+
+        verify(securityUtils).getCurrentUserId();
+        verify(addressService).setDefaultAddress(anyLong(), anyLong());
     }
 }
