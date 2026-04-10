@@ -123,7 +123,8 @@ public class AddressControllerDefaultAddressTest {
                 .andExpect(content().string(""));
 
         verify(securityUtils).getCurrentUserId();
-        verify(addressService).setDefaultAddress(anyLong(), anyLong());
+        verify(addressService).setDefaultAddress(2L, 1L);
+        verifyNoMoreInteractions(addressService);
     }
 
     @Test
@@ -156,7 +157,8 @@ public class AddressControllerDefaultAddressTest {
                 .andExpect(jsonPath("$.timestamp").exists());
 
         verify(securityUtils).getCurrentUserId();
-        verify(addressService).setDefaultAddress(anyLong(), anyLong());
+        verify(addressService).setDefaultAddress(2L, 1L);
+        verifyNoMoreInteractions(addressService);
     }
 
     @Test
@@ -173,6 +175,7 @@ public class AddressControllerDefaultAddressTest {
                 .andExpect(jsonPath("$.timestamp").exists());
 
         verify(securityUtils).getCurrentUserId();
-        verify(addressService).setDefaultAddress(anyLong(), anyLong());
+        verify(addressService).setDefaultAddress(2L, 1L);
+        verifyNoMoreInteractions(addressService);
     }
 }
