@@ -20,22 +20,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.security.test.context.support.WithMockUser;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @WebMvcTest(AdminAddressController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(MethodSecurityConfig.class)
-public class AdminAddressControllerCreateTest {
+public class AdminAddressControllerUpdateTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,13 +53,13 @@ public class AdminAddressControllerCreateTest {
     @MockitoBean
     private PageableSortValidator pageableSortValidator;
 
-    private static final String ADDRESS_URL = "/v1/admin/addresses";
+    private static final String ADDRESS_URL = "/v1/admin/addresses" + "/1";
     private static final MediaType mediaType = MediaType.APPLICATION_JSON;
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_success() throws Exception {
+    void adminUpdateAddress_success() throws Exception {
         User user = new User(null, "+1234567891", "last", "user",
                 "encodedPassword", "user1@gmail.com", "testuser");
         user.setId(1L);
@@ -68,14 +69,13 @@ public class AdminAddressControllerCreateTest {
 
         ArgumentCaptor<AddressRequestDTO> captor = ArgumentCaptor.forClass(AddressRequestDTO.class);
 
-        when(addressService.createAddress(any(AddressRequestDTO.class), eq(1L))).thenReturn(address);
+        when(addressService.updateAnyAddress(eq(1L), any(AddressRequestDTO.class))).thenReturn(address);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .with(csrf())
-                        .param("userId", "1")
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.userId").value(1L))
                 .andExpect(jsonPath("$.street").value("123 Main st"))
@@ -85,7 +85,7 @@ public class AdminAddressControllerCreateTest {
                 .andExpect(jsonPath("$.zipCode").value("12345"))
                 .andExpect(jsonPath("$.isDefault").value(true));
 
-        verify(addressService).createAddress(captor.capture(), eq(1L));
+        verify(addressService).updateAnyAddress(eq(1L), captor.capture());
         AddressRequestDTO dto = captor.getValue();
         assertEquals("123 Main st", dto.getStreet());
         assertEquals("city", dto.getCity());
@@ -98,7 +98,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    void adminCreateAddress_noAdminRole() throws Exception {
+    void adminUpdateAddress_noAdminRole() throws Exception {
         User user = new User(null, "+1234567891", "last", "user",
                 "encodedPassword", "user1@gmail.com", "testuser");
         user.setId(1L);
@@ -106,9 +106,9 @@ public class AdminAddressControllerCreateTest {
         address.setId(1L);
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
-        when(addressService.createAddress(any(AddressRequestDTO.class), eq(1L))).thenReturn(address);
+        when(addressService.updateAnyAddress(eq(1L), any(AddressRequestDTO.class))).thenReturn(address);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .with(csrf())
                         .param("userId", "1")
                         .contentType(mediaType)
@@ -125,10 +125,10 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_missingParam() throws Exception {
+    void adminUpdateAddress_failed_missingParam() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
-        mockMvc.perform(post(ADDRESS_URL)
+        mockMvc.perform(put(ADDRESS_URL)
                         .with(csrf())
                         .contentType(mediaType)
                         .content(mapper.writeValueAsString(addressRequestDTO)))
@@ -144,7 +144,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_invalidParam() throws Exception {
+    void adminUpdateAddress_failed_invalidParam() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -164,7 +164,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyStreet() throws Exception {
+    void adminUpdateAddress_failed_emptyStreet() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("", "city", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -184,7 +184,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_nullStreet() throws Exception {
+    void adminUpdateAddress_failed_nullStreet() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress(null, "city", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -204,7 +204,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyCity() throws Exception {
+    void adminUpdateAddress_failed_emptyCity() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -224,7 +224,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_nullCity() throws Exception {
+    void adminUpdateAddress_failed_nullCity() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", null, "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -244,7 +244,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyState() throws Exception {
+    void adminUpdateAddress_failed_emptyState() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -264,7 +264,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_nullState() throws Exception {
+    void adminUpdateAddress_failed_nullState() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", null, "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -284,7 +284,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyCountry() throws Exception {
+    void adminUpdateAddress_failed_emptyCountry() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -304,7 +304,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_nullCountry() throws Exception {
+    void adminUpdateAddress_failed_nullCountry() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", null, "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -324,7 +324,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyZipCode() throws Exception {
+    void adminUpdateAddress_failed_emptyZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -344,7 +344,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_nullZipCode() throws Exception {
+    void adminUpdateAddress_failed_nullZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", null, true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -364,7 +364,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_malformedZipCode() throws Exception {
+    void adminUpdateAddress_failed_malformedZipCode() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12asd512", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -384,7 +384,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_unsupportedMediaType() throws Exception {
+    void adminUpdateAddress_failed_unsupportedMediaType() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -404,7 +404,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_missingContentType() throws Exception {
+    void adminUpdateAddress_failed_missingContentType() throws Exception {
         AddressRequestDTO dto = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
 
         mockMvc.perform(post(ADDRESS_URL)
@@ -418,7 +418,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_invalidJson() throws Exception {
+    void adminUpdateAddress_failed_invalidJson() throws Exception {
         mockMvc.perform(post(ADDRESS_URL)
                         .with(csrf())
                         .param("userId", "1")
@@ -436,7 +436,7 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_emptyBody() throws Exception {
+    void adminUpdateAddress_failed_emptyBody() throws Exception {
         mockMvc.perform(post(ADDRESS_URL)
                         .with(csrf())
                         .param("userId", "1")
@@ -454,9 +454,9 @@ public class AdminAddressControllerCreateTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void adminCreateAddress_failed_userNotFound() throws Exception {
+    void adminUpdateAddress_failed_userNotFound() throws Exception {
         AddressRequestDTO addressRequestDTO = AddressTestFactory.createAddress("123 Main st", "city", "state", "country", "12345", true);
-        when(addressService.createAddress(any(), eq(1L))).thenThrow(new NoResourceFoundException("User not found"));
+        when(addressService.updateAnyAddress(any(), eq(1L))).thenThrow(new NoResourceFoundException("User not found"));
 
         mockMvc.perform(post(ADDRESS_URL)
                         .with(csrf())
@@ -470,6 +470,6 @@ public class AdminAddressControllerCreateTest {
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.message").value("User not found"));
 
-        verify(addressService).createAddress(any(), eq(1L));
+        verify(addressService).updateAnyAddress(any(), eq(1L));
     }
 }
